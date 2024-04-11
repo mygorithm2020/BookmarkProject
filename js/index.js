@@ -28,11 +28,24 @@ Drawer.prototype.close = function() {
     this.el.style.transform = "translate(400px)";
 }
 
-const categoryEx = new Drawer(document.querySelector(".drawer"));
+const drawer = new Drawer(document.querySelector(".drawer"));
 document.getElementById("enquiry").addEventListener("click", e =>{
-    if (categoryEx.isOpen){
-        categoryEx.close();
+    if (drawer.isOpen){
+        drawer.close();
     } else {
-        categoryEx.open();
+        drawer.open();
     }
 });
+
+document.getElementById("category-open").addEventListener("click", e => {
+    const cate = document.getElementById("category-box-expand");    
+    if (cate.style.display == "none"){
+        cate.style.display = "block";
+        cate.style.opacity = 1;
+        cate.style.transition = "0.5s";
+    } else {
+        cate.style.opacity = 0;
+        cate.style.transition = "0.5s";
+        cate.style.display = "none";        
+    }
+})

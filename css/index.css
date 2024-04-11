@@ -1,0 +1,16 @@
+#basic_box {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#main_banner {
+    max-height: 300px;
+    display: flex;
+    /* 임시로 */
+    overflow: hidden;  
+}
+
+.banner_input {
+    max-width: 90%;
+    margin: 5px;
+}
