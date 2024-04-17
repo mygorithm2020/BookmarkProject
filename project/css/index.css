@@ -1,8 +1,5 @@
-#basic_box {
-    max-width: 1200px;
-    margin: 0 auto;
-}
 
+/* 배너용 */
 #main_banner {
     max-height: 300px;
     display: flex;

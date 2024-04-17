@@ -1,0 +1,48 @@
+[
+    {
+        "CategoryId" : "2ca3d809ed7449978a4f9d8efc147145",
+        "MainCategoryId" : "2ca3d809ed7449978a4f9d8efc147145",
+        "Layer" : 1,
+        "CategoryName" : "portal",
+        "CategoryNameKR" : "포털",
+        "IsDeleted" : 0,
+        "CreateDate" : "2024-04-16 14:26:49",
+        "UpdateDate" : "2024-04-16 14:26:49"
+    },{
+        "CategoryId" : "e831b74ffbff481891ad25506083b033",
+        "MainCategoryId" : "2ca3d809ed7449978a4f9d8efc147145",
+        "Layer" : 2,
+        "CategoryName" : "domestic",
+        "CategoryNameKR" : "국내",
+        "IsDeleted" : 0,
+        "CreateDate" : "2024-04-16 14:26:49",
+        "UpdateDate" : "2024-04-16 14:26:49"
+    },{
+        "CategoryId" : "41d92e7d08914affa40c2d82b7d7f036",
+        "MainCategoryId" : "2ca3d809ed7449978a4f9d8efc147145",
+        "Layer" : 2,
+        "CategoryName" : "abroad",
+        "CategoryNameKR" : "해외",
+        "IsDeleted" : 0,
+        "CreateDate" : "2024-04-16 14:26:49",
+        "UpdateDate" : "2024-04-16 14:26:49"
+    },{
+        "CategoryId" : "06d0ffa42d7c46368b6049d6a080b730",
+        "MainCategoryId" : "06d0ffa42d7c46368b6049d6a080b730",
+        "Layer" : 1,
+        "CategoryName" : "sport",
+        "CategoryNameKR" : "스포츠",
+        "IsDeleted" : 0,
+        "CreateDate" : "2024-04-16 14:26:49",
+        "UpdateDate" : "2024-04-16 14:26:49"
+    },{
+        "CategoryId" : "b0ad6dc8e1b348ca8fddfdb7cab8ff7b",
+        "MainCategoryId" : "b0ad6dc8e1b348ca8fddfdb7cab8ff7b",
+        "Layer" : 1,
+        "CategoryName" : "comunity",
+        "CategoryNameKR" : "커뮤니티",
+        "IsDeleted" : 0,
+        "CreateDate" : "2024-04-16 14:26:49",
+        "UpdateDate" : "2024-04-16 14:26:49"
+    }
+]

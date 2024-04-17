@@ -1,0 +1,16 @@
+#site-card-box {
+    list-style-type: none;
+    padding: 0;
+}
+
+.site-card {
+    margin: 5px;
+    padding: 20px;
+    border: 2px solid darkcyan;
+    border-radius: 5%;
+}
+
+.site-detail-box {
+    list-style: none;
+    padding: 0;
+}

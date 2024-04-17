@@ -1,0 +1,14 @@
+/* 개발 중에 임시로 사용하는 구분 파일 */
+/* 임시로 전체 틀 육안으로 구분하기 위해서 */
+.layer1 {
+    border: 2px solid black; 
+    margin: 2% 0;
+}
+
+.layer2 {
+    border: 2px solid blue;
+}
+
+.layer3 {
+    border: 1px dashed brown;
+}

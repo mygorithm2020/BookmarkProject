@@ -3,44 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>북마커</title>
-    <link rel="stylesheet" href="./css/index.css">
+    <title>BookMarker</title>
+    <link rel="stylesheet" href="../css/dev.css">
+    <link rel="stylesheet" href="../css/settings.css">
+    <link rel="stylesheet" href="../css/index.css">
+    
 </head>
 <body>
-    <div id="basic_box">
-        <header style="border: 2px solid black;">
+    <div class="basic_box">
+        <header class="layer1">
             <h1>헤더</h1>
             <div>
                 <h1>
                     <a href="index.html">
-                        <img src="./images/3254335.jpg" style="width: 50px;">
+                        <img src="../images/tempLogo.png" style="width: 200px;">
                     </a>
-                    logo
                 </h1>            
             </div>
-            <div style="border: 2px solid blue;">
+            <div class="layer2">
                 <h2>로그인 및 페이지 기본 기능</h2>
                 <input type="button" value="공유하기">
                 <input type="button" value="마이페이지">
                 <input type="button" value="로그인">
                 <button>회원가입</button>
             </div>
+            <!-- Add icon library -->
+
+
+            
     
         </header>
-        <section id="main_banner" style="border: 2px solid black;">
+        <section id="main_banner" class="layer1">
             <h1>배너</h1>
-            <input class="banner_input" type="image" src="./images/banner.png" alt="제출버튼">
-            <input class="banner_input" type="image" src="./images/banner.png" alt="제출버튼">
-            <input class="banner_input" type="image" src="./images/banner.png" alt="제출버튼">
-            
-                    
-    
+            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">
+            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">
+            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">
+                                
         </section>
-        <nav style="border: 2px solid black;">
+        <nav class="layer1">
             <h2>카테고리</h2>
             <input id="category-open" type="button" value="카테고리 확장 버튼">
             <ul>
-                <li><a href="">포털</a></li>
+                <li><a href="./categoryPortal.html">포털</a></li>
                 <li><a href="">인공지능 AI</a></li>
                 <li><a href="">종합쇼핑몰</a></li>
                 <li><a href="">교통</a></li>
@@ -131,14 +135,14 @@
                 </ul>
             </div>
         </nav>
-        <main style="border: 2px solid black;">
+        <main class="layer1">
             <h1>메인</h1>
             <div>
                 <h2>추천 사이트</h2>            
             </div>
             <div>
                 <h2>로그인 버튼(유도)</h2>
-                <button><img src="./images/login.png"></button>
+                <button><img src="../images/login.png"></button>
                 
             </div>
             <div>
@@ -177,10 +181,10 @@
             </div>
     
         </aside>
-        <footer style="border: 2px solid black;">
+        <footer class="layer1">
             <h1>footer</h1>
-            <div style="border: 2px solid blue;">            
-                <div style="border: 1px dashed brown;">
+            <div class="layer2">            
+                <div class="layer3">
                     <button>콘텐츠</button>
                     <ul>
                         <li>
@@ -191,7 +195,7 @@
                         </li>
                     </ul>
                 </div>
-                <div style="border: 1px dashed brown;">
+                <div class="layer3">
                     <button>정보</button>
                     <ul>
                         <li>
@@ -202,7 +206,7 @@
                         </li>
                     </ul>
                 </div>
-                <div style="border: 1px dashed brown;">
+                <div class="layer3">
                     <button>법률관련</button>
                     <ul>
                         <li>
@@ -222,7 +226,7 @@
                         </li>
                     </ul>
                 </div>
-                <div style="border: 1px dashed brown;">
+                <div class="layer3">
                     <button>고객지원</button>
                     <ul>
                         <li>
@@ -234,9 +238,9 @@
                     </ul>
                 </div>
             </div>
-            <div style="border: 2px solid blue;">
+            <div class="layer2">
                 <a href="index.html">
-                    <img src="./images/3254335.jpg" style="width: 50px;">
+                    <img src="../images/3254335.jpg" style="width: 50px;">
                 </a>
                 <span>
                     Copyright @ 2024 모든 권리는 보호 받습니다.
@@ -247,7 +251,7 @@
         </footer>
     
     
-        <script src="./js/index.js"></script>
+        <script src="../js/index.js"></script>
 
     </div>        
     
