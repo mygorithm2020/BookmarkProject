@@ -3,42 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="수많은 웹사이트를 간단하게 공유하고 추천받는 사이트">
     <title>BookMarker</title>
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- html 연결용(react로 나중에 처리 가능) -->
+    <script
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+    crossorigin="anonymous">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#header").load("header.html")
+            $("#footer").load("footer.html")
+            /* id 지정을 통해서도 가능합니다. 
+            $("#header").load("header.html #navbar")
+            */       
+        });
+    </script> 
+
+    <!-- 내부 css 파일 연결 -->
     <link rel="stylesheet" href="../css/dev.css">
     <link rel="stylesheet" href="../css/settings.css">
+    <link rel="stylesheet" href="../css/header.css">
+    
     <link rel="stylesheet" href="../css/index.css">
+    
     
 </head>
 <body>
     <div class="basic_box">
-        <header class="layer1">
-            <h1>헤더</h1>
-            <div>
-                <h1>
-                    <a href="index.html">
-                        <img src="../images/tempLogo.png" style="width: 200px;">
-                    </a>
-                </h1>            
-            </div>
-            <div class="layer2">
-                <h2>로그인 및 페이지 기본 기능</h2>
-                <input type="button" value="공유하기">
-                <input type="button" value="마이페이지">
-                <input type="button" value="로그인">
-                <button>회원가입</button>
-            </div>
-            <!-- Add icon library -->
-
-
-            
-    
-        </header>
+        <header id="header" class="layer1"></header>
         <section id="main_banner" class="layer1">
             <h1>배너</h1>
             <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">
             <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">
-            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">
-                                
+            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">    
         </section>
         <nav class="layer1">
             <h2>카테고리</h2>
@@ -47,45 +51,6 @@
                 <li><a href="./categoryPortal.html">포털</a></li>
                 <li><a href="">인공지능 AI</a></li>
                 <li><a href="">종합쇼핑몰</a></li>
-                <li><a href="">교통</a></li>
-                <li><a href="">숙박</a></li>
-                <li><a href="">스포츠</a></li>
-                <li><a href="">커뮤니티</a></li>
-                <li><a href="">OTT</a></li>
-                <li><a href="">동영상</a></li>
-                <li><a href="">뉴스/신문</a></li>
-                <li><a href="">음악</a></li>
-                <li><a href="">도서</a></li>
-                <li><a href="">요리/식품</a></li>
-                <li><a href="">유아/아동</a></li>
-                <li><a href="">게임</a></li>
-                <li><a href="">웨딩</a></li>
-                <li><a href="">사진</a></li>
-                <li><a href="">건강</a></li>
-                <li><a href="">자동차</a></li>
-                <li><a href="">휴대폰</a></li>
-                <li><a href="">영화</a></li>
-                <li><a href="">TV/방송</a></li>
-                <li><a href="">교육</a></li>
-                <li><a href="">인터넷강의</a></li>
-                <li><a href="">법률</a></li>
-                <li><a href="">정부/공공</a></li>
-                <li><a href="">필수 유틸리티</a></li>
-                <li><a href="">주거</a></li>
-                <li><a href="">여행</a></li>
-                <li><a href="">골프</a></li>
-                <li><a href="">취업</a></li>
-                <li><a href="">취미</a></li>
-                <li><a href="">모임</a></li>
-                <li><a href="">드라마</a></li>
-                <li><a href="">기타</a></li>
-                <li><a href="">운전</a></li>
-                <li><a href="">민원</a></li>
-                <li><a href="">자전거</a></li>
-                <li><a href="">컴퓨터</a></li>
-                <li><a href="">숙박</a></li>
-                <li><a href="">스포츠</a></li>
-                <li><a href="">스포츠</a></li>
             </ul>
             <div id="category-box-expand" style="display: none; position: relative;">
                 <h1>확장된 카테고리</h1>
@@ -181,76 +146,7 @@
             </div>
     
         </aside>
-        <footer class="layer1">
-            <h1>footer</h1>
-            <div class="layer2">            
-                <div class="layer3">
-                    <button>콘텐츠</button>
-                    <ul>
-                        <li>
-                            새 자료
-                        </li>
-                        <li>
-                            블로그
-                        </li>
-                    </ul>
-                </div>
-                <div class="layer3">
-                    <button>정보</button>
-                    <ul>
-                        <li>
-                            가격
-                        </li>
-                        <li>
-                            후원
-                        </li>
-                    </ul>
-                </div>
-                <div class="layer3">
-                    <button>법률관련</button>
-                    <ul>
-                        <li>
-                            <a href="">이용 약관</a>                        
-                        </li>
-                        <li>
-                            라이선스 합의
-                        </li>
-                        <li>
-                            개인정보 보호
-                        </li>
-                        <li>
-                            저작권 정보
-                        </li>
-                        <li>
-                            쿠키 정책
-                        </li>
-                    </ul>
-                </div>
-                <div class="layer3">
-                    <button>고객지원</button>
-                    <ul>
-                        <li>
-                            자주 묻는 질문
-                        </li>
-                        <li>
-                            <input id="enquiry" type="button" value="문의사항">
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="layer2">
-                <a href="index.html">
-                    <img src="../images/3254335.jpg" style="width: 50px;">
-                </a>
-                <span>
-                    Copyright @ 2024 모든 권리는 보호 받습니다.
-                </span>            
-    
-            </div>
-    
-        </footer>
-    
-    
+        <footer id="footer" class="layer1"></footer>
         <script src="../js/index.js"></script>
 
     </div>        

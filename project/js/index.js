@@ -28,14 +28,23 @@ Drawer.prototype.close = function() {
     this.el.style.transform = "translate(400px)";
 }
 
-const drawer = new Drawer(document.querySelector(".drawer"));
-document.getElementById("enquiry").addEventListener("click", e =>{
-    if (drawer.isOpen){
-        drawer.close();
-    } else {
-        drawer.open();
-    }
+// header용 footer용도 따로 파야겠네...
+window.addEventListener("load", () => {
+    const drawer = new Drawer(document.querySelector(".drawer"));
+    // 임의로 이렇게 처리할게 아니라 실제로 파일이 불러진 이후에 처리되는게 맞는거 같은데...
+    setTimeout(() => {
+        document.getElementById("enquiry").addEventListener("click", e =>{
+            if (drawer.isOpen){
+                drawer.close();
+            } else {
+                drawer.open();
+            }
+        });
+        
+    }, 1000);
+    
 });
+
 
 document.getElementById("category-open").addEventListener("click", e => {
     const cate = document.getElementById("category-box-expand");    

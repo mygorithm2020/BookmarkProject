@@ -1,6 +1,31 @@
 import siteList from './data/site.json' with { type : "json"};
 
-console.log(siteList);
+console.log(siteList[0]);
+
+class MyBookmark {
+    constructor(siteId, name, url, img, des, views){
+        this._key = "my-bookmark";
+        this.SiteId = siteId;
+        this.Name = name;
+        this.Url = url;
+        this.Img = img;
+        this.Des = des;
+        this.Views = views;
+    }
+
+    addItem(item){
+        this.items.push(item);        
+    }
+
+    removeItem(itemId){
+        for (let idx = 0; idx < this.items.length; idx++){
+            if (this.items[idx].SiteId === itemId){
+                this.items.splice(idx, 1);
+                break;
+            }
+        }
+    }
+}
 
 // 즉각호출패턴
 (function () {
@@ -26,6 +51,10 @@ console.log(siteList);
                         </ul>
                     </div>
                 </a>
+                <div>
+                    <input type="button" value="좋아요 싫어요">
+                    <input type="button" value="내 즐겨찾기 등록">
+                </div>
             </li>
             `
         }        
@@ -34,8 +63,48 @@ console.log(siteList);
     if (cardList.length == 0){
         cardList += `<p>해당 카테고리에 등록된 사이트가 없습니다.</p>`
     }
-    siteCardBoxEl.innerHTML = cardList;
+    // siteCardBoxEl.innerHTML = cardList;
+
+    let mybooks = new MyBookmark();
+    
+    const itemString = localStorage.getItem(mybooks._key);
+    let items = [];
+    if (itemString){
+        items = JSON.parse(itemString);
+    } 
+
+    // 로컬스토리지에 장바구니 추가
+    document.querySelectorAll(".add-my-bookmark").forEach((v) => {
+        v.addEventListener("click", (e) => {
+            console.log(e.target.dataset.siteid);
+            // 로그인 상태라면
+            if (false){
+
+            } else{
+                let newSite = new MyBookmark(
+                    e.target.dataset.siteid, 
+                    e.target.dataset.name,
+                    e.target.dataset.url,
+                    e.target.dataset.img,
+                    e.target.dataset.description,
+                    e.target.dataset.views,
+                );
+    
+                console.log(newSite);
+                for (let idx = 0; idx < items.length; idx ++){
+                    if (items[idx].SiteId === newSite.SiteId){
+                        return
+                    }
+                }
+                items.push(newSite);
+                localStorage.setItem(newSite._key, JSON.stringify(items));   
+
+            }    
+        })
+    });
+    
 })();
+
 
 
 
