@@ -2,7 +2,6 @@
 /* 임시로 전체 틀 육안으로 구분하기 위해서 */
 .layer1 {
     border: 2px solid black; 
-    margin: 2% 0;
 }
 
 .layer2 {
@@ -12,3 +11,4 @@
 .layer3 {
     border: 1px dashed brown;
 }
+
