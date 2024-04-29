@@ -4,6 +4,8 @@ header {
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
+    padding: 20px;
+    background: #f2f4f7;
 }
 
 #header_left {
@@ -35,6 +37,9 @@ header {
 #header_nav>li {
     display: inline-block;
     margin: 10px;
+    padding: 4px;
+    background-color: lightcyan;
+    border-radius: 20px;
 }
 
 #header_nav>li a{
@@ -45,6 +50,8 @@ header {
 footer {
     max-width: 1280px;
     margin: 0 auto;
+    padding: 14px;
+    background: #f2f4f7;
 }
 
 #footer_nav>li {

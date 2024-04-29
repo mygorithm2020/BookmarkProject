@@ -1,10 +1,33 @@
 nav {
     max-width: 1280px;
-    margin: 0 auto;
+    margin: 5px auto;
     display: flex;
+    padding: 10px;
+    font-size: 18px;
+    background: lightblue;    
+}
+
+#category-open {
+    max-width: 50px;
+    max-height: 40px;
+}
+
+nav ul {
+    margin: 15px;
 }
 
 nav ul > li {
     display: inline-block;
     margin: 5px;
+    min-width: 80px;
+    text-align: center;    
+}
+
+#nav_list_box li a {
+    color: black;
+}
+
+nav a:hover {
+    color: blue;
+    font-weight: bold;
 }
