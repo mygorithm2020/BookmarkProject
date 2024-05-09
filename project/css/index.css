@@ -1,33 +1,23 @@
 
-/* 배너용 */
+/* 메인 배너용 */
 #main_banner {
     max-width: 1280px;
     max-height: 300px;
-    margin: 0 auto;
+    margin: 14px auto;
     display: flex;
+    flex-direction: row;
     /* 임시로 */
     overflow: hidden;  
 }
 
 .banner_input {
-    max-width: 50%;
-    margin-right: 20px;
-    box-shadow: 5px 0px gray;
+    flex: 1;
+    height: 300px;    
 }
+
+/* main 영역 세부 구현 */
 
 .site-map-text {
     margin: 10px;
     padding-left: 20px;
-}
-
-#site-card-box {
-    display: grid;
-    grid-template-columns: 33.3% 33.3% 33.3%;
-    padding: 0;
-}
-
-#site-card-box>li {
-    border: 4px solid #f1f3f6;
-    margin: 4px;
-    padding: 10px;
 }

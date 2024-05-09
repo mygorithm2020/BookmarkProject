@@ -65,6 +65,7 @@ class MyBookmark {
     }
     // siteCardBoxEl.innerHTML = cardList;
 
+    // 기존에 등록된 장바구니 목록 확인
     let mybooks = new MyBookmark();
     
     const itemString = localStorage.getItem(mybooks._key);
@@ -91,6 +92,7 @@ class MyBookmark {
                 );
     
                 console.log(newSite);
+                // 이미 있으면 ㄴㄴ
                 for (let idx = 0; idx < items.length; idx ++){
                     if (items[idx].SiteId === newSite.SiteId){
                         return

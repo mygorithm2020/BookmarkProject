@@ -24,6 +24,29 @@
 #### JS
     localStorage
 
+#### HTML
+    실제 코드를 작성하기전에 최소한으로 구조는 잡고 시작한다.
+    큰 틀을 잡아놓고 그 세부적인 내용을 계속해서 깊이를 늘려가며 구현
+    기본 레이아웃 부터 잡고, 세부적으로 틀을 잡고 구현
+    크게 보면
+    - <header>
+    - <nav>(header나 main 내부로 이동 가능)
+    - <main>
+    - <footer>
+    로 나누고 세부적으로는
+    <section>
+    <article>
+    <div>
+    등으로 구분한다.
+    
+
+#### CSS
+    레이아웃 용 CSS, 위에서부터 큰 틀을 적용하는데 사용하며 가능한 flex안에서 끝낸다.
+    - grid
+    - flex
+    - position
+    - float
+
 
 
 ### 환경세팅

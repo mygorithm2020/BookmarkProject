@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="수많은 웹사이트를 간단하게 공유하고 추천받는 사이트">
     <title>BookMark - Portal</title>
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +20,7 @@
         $(document).ready(function(){
             $("#header").load("header.html")
             $("#footer").load("footer.html")
+            $("nav").load("navigation.html")
             /* id 지정을 통해서도 가능합니다. 
             $("#header").load("header.html #navbar")
             */       
@@ -29,53 +31,71 @@
     <link rel="stylesheet" href="../css/dev.css">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/navigation.css">
+    <link rel="stylesheet" href="../css/siteCard.css">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
     <link rel="stylesheet" href="../css/categoryPortal.css">
     
 </head>
 <body>
-    <div class="basic_box">
-        <header id="header" class="layer1"></header>
-    </div>
-    <div class="basic_box">
-        <nav class="layer1">
-            <ul>
-                <li><a href="" style="font-weight: bold; font-size: 2em;">포털</a></li>
-                <li><a href="">인공지능 AI</a></li>
-                <li><a href="">종합쇼핑몰</a></li>
-                <li><a href="">교통</a></li>
-                <li><a href="">숙박</a></li>
-                <li><a href="">스포츠</a></li>
-                <li><a href="">커뮤니티</a></li>
-                <li><a href="">OTT</a></li>
-                <li><a href="">동영상</a></li>
-                <li><a href="">뉴스/신문</a></li>
-                <li><a href="">음악</a></li>
-            </ul>
-        </nav>        
-    </div>
-    <section class="layer1 basic_box">
-        <div class="layer2" id="site-box">
-            정렬기준 정의
-            <ul id="site-card-box" class="layer3">
-                <li class="site-card">
-                    <a href="https://www.naver.com" target="_blank" rel="external">
-                        <div>
-                            <img src="https://www.naver.com/favicon.ico?1">
-                            <ul class="site-detail-box">
-                                <li>네이버</li>
-                                <li>https://www.naver.com/</li>
-                                <li>네이버 메인에서 다양한 정보와 유용한 컨텐츠를 만나 보세요</li>
-                                <li>클릭 수</li>
-                                <li>좋아요</li>
-                                <li>싫어요</li>
-                                <li>등록일?? 이건 고민</li>                                
-                            </ul>
-                        </div>
-                    </a>
+    <header id="header">
+
+    </header>
+    <nav class="layer1">
+        
+    </nav>        
+    <main class="layer1">
+        <section id="main_banner" class="layer1">
+            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">
+            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">
+            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">    
+        </section>
+        <section id="main_content01">
+            <div>
+                <h2 class="site-map-text">포털</h2>
+                <div>
+                    <form>
+                        <select name="items" >
+                          <option value="click_count" selected>클릭순</option>
+                          <option value="recommendation">추천</option>
+                          <option value="like">좋아요</option>                          
+                          <option value="upload_date">등록일</option>
+                          <option value="random">랜덤</option>
+                        </select>
+                      </form>
+                      <form>
+                        <select name="sort_by" >
+                          <option value="descending" selected>내림차순</option>
+                          <option value="ascending">오름차순</option>                          
+                        </select>
+                      </form>
+                </div>
+            </div>
+            
+            <ul id="site-card-box">
+                <li class="site-card">                    
                     <div>
-                        <input type="button" name="좋아요요요??" value="좋아요 싫어요">
+                        <a href="https://www.naver.com" target="_blank" rel="external">
+                            <div class="site_card_top">
+                                <img class="site_card_img" src="https://www.naver.com/favicon.ico?1">
+                                <div>
+                                    네이버<br>
+                                    https://www.naver.com/
+                                </div>
+                            </div>
+                            <ul class="site-detail-box">
+                                <li>클릭 수 20만</li>
+                                <li>좋아요 1만</li>
+                                <li>싫어요 1만</li>                                
+                            </ul>   
+                            <p class="site_card_description">
+                                네이버 메인에서 다양한 정보와 유용한 컨텐츠를 만나 보세요                                
+                            </p>                            
+                        </a>                                                        
+                    </div>                    
+                    <div class="site_card_bottom">
+                        <input type="button" name="좋아요요요??" value="좋아요">
                         <input type="button" value="내 즐겨찾기 등록" class="add-my-bookmark"
                          data-siteId="0ed4da2192f14c5598df83542fbf9a76"
                          data-name="네이버"
@@ -86,19 +106,206 @@
                          >
                     </div>
                 </li>
+                <li class="site-card">                    
+                    <div>
+                        <a href="https://www.daum.net/" target="_blank" rel="external">
+                            <div class="site_card_top">
+                                <img class="site_card_img" src="https://t1.daumcdn.net/top/favicon.ico">
+                                <div>
+                                    다음<br>
+                                    https://www.daum.net/
+                                </div>
+                            </div>
+                            <ul class="site-detail-box">
+                                <li>클릭 수 20만</li>
+                                <li>좋아요 1만</li>
+                                <li>싫어요 1만</li>                                
+                            </ul>   
+                            <p class="site_card_description">
+                                이용자 선택권을 강화한 뉴스, 세상의 모든 정보를 연결하는 검색. Daum에서 나의 관심 콘텐츠를 즐겨보세요.                            
+                            </p>
+                            
+                        </a>                                                        
+                    </div>                    
+                    <div class="site_card_bottom">
+                        <input type="button" name="좋아요요요??" value="좋아요">
+                        <input type="button" value="내 즐겨찾기 등록" class="add-my-bookmark"
+                         data-siteId="0ed4da2192f14c5598df83542fbf9a76"
+                         data-name="네이버"
+                         data-url="https://www.naver.com/"
+                         data-img="https://www.naver.com/favicon.ico?1"
+                         data-description="네이버 메인에서 다양한 정보와 유용한 컨텐츠를 만나 보세요"
+                         data-views="10"
+                         >
+                    </div>
+                </li>
+                <li class="site-card">                    
+                    <div>
+                        <a href="https://www.google.co.kr/" target="_blank" rel="external">
+                            <div class="site_card_top">
+                                <img class="site_card_img" src="https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png">
+                                <div>
+                                    구글<br>
+                                    https://www.google.co.kr
+                                </div>
+                            </div>
+                            <ul class="site-detail-box">
+                                <li>클릭 수 20만</li>
+                                <li>좋아요 1만</li>
+                                <li>싫어요 1만</li>                                
+                            </ul>   
+                            <p class="site_card_description">
+                                검색 서비스, 웹, 이미지, 동영상, 지도, 뉴스, 학술 검색 및 번역 서비스 제공.
+                            </p>
+                            
+                        </a>                                                        
+                    </div>                    
+                    <div class="site_card_bottom">
+                        <input type="button" name="좋아요요요??" value="좋아요">
+                        <input type="button" value="내 즐겨찾기 등록" class="add-my-bookmark"
+                         data-siteId="0ed4da2192f14c5598df83542fbf9a76"
+                         data-name="네이버"
+                         data-url="https://www.naver.com/"
+                         data-img="https://www.naver.com/favicon.ico?1"
+                         data-description="네이버 메인에서 다양한 정보와 유용한 컨텐츠를 만나 보세요"
+                         data-views="10"
+                         >
+                    </div>
+                </li>
+                <li class="site-card">                    
+                    <div>
+                        <a href="https://www.nate.com" target="_blank" rel="external">
+                            <div class="site_card_top">
+                                <img class="site_card_img" src="https://main.nateimg.co.kr/img/v7/OpenGraphTag_nate_240x240.png">
+                                <div>
+                                    네이트<br>
+                                    https://www.nate.com
+                                </div>
+                            </div>
+                            <ul class="site-detail-box">
+                                <li>클릭 수 20만</li>
+                                <li>좋아요 1만</li>
+                                <li>싫어요 1만</li>                                
+                            </ul>   
+                            <p class="site_card_description">
+                                새로워진 네이트에서 당신의 오늘을 만나보세요                             
+                            </p>
+                            
+                        </a>                                                        
+                    </div>                    
+                    <div class="site_card_bottom">
+                        <input type="button" name="좋아요요요??" value="좋아요">
+                        <input type="button" value="내 즐겨찾기 등록" class="add-my-bookmark"
+                         data-siteId="0ed4da2192f14c5598df83542fbf9a76"
+                         data-name="네이버"
+                         data-url="https://www.naver.com/"
+                         data-img="https://www.naver.com/favicon.ico?1"
+                         data-description="네이버 메인에서 다양한 정보와 유용한 컨텐츠를 만나 보세요"
+                         data-views="10"
+                         >
+                    </div>
+                </li>
+                <li class="site-card">                    
+                    <div>
+                        <a href="https://www.bing.com/" target="_blank" rel="external">
+                            <div class="site_card_top">
+                                <img class="site_card_img" src="https://www.bing.com/th?id=OHR.PortMarseille_ROW8263177346_tmb.jpg&rf=">
+                                <div>
+                                    빙(Bing)<br>
+                                    https://www.bing.com
+                                </div>
+                            </div>
+                            <ul class="site-detail-box">
+                                <li>클릭 수 20만</li>
+                                <li>좋아요 1만</li>
+                                <li>싫어요 1만</li>                                
+                            </ul>   
+                            <p class="site_card_description">
+                                Bing을 사용하면 정보를 기반으로 작업을 수행할 수 있고 검색에서 작업 수행까지 더 빠르고 쉽게 진행할 수 있습니다.                            
+                            </p>
+                            <div>
+                                
+                            </div>
+                        </a>                                                        
+                    </div>                    
+                    <div class="site_card_bottom">
+                        <input type="button" name="좋아요요요??" value="좋아요">
+                        <input type="button" value="내 즐겨찾기 등록" class="add-my-bookmark"
+                         data-siteId="0ed4da2192f14c5598df83542fbf9a76"
+                         data-name="네이버"
+                         data-url="https://www.naver.com/"
+                         data-img="https://www.naver.com/favicon.ico?1"
+                         data-description="네이버 메인에서 다양한 정보와 유용한 컨텐츠를 만나 보세요"
+                         data-views="10"
+                         >
+                    </div>
+                </li>
+                <li class="site-card">                    
+                    <div>
+                        <a href="https://www.naver.com" target="_blank" rel="external">
+                            <div class="site_card_top">
+                                <img class="site_card_img" src="https://www.naver.com/favicon.ico?1">
+                                <div>
+                                    네이버<br>
+                                    https://www.naver.com/
+                                </div>
+                            </div>
+                            <ul class="site-detail-box">
+                                <li>클릭 수 20만</li>
+                                <li>좋아요 1만</li>
+                                <li>싫어요 1만</li>                                
+                            </ul>   
+                            <p class="site_card_description">
+                                네이버 메인에서 다양한 정보와 유용한 컨텐츠를 만나 보세요                                
+                            </p>
+                            <div>
+                                
+                            </div>
+                        </a>                                                        
+                    </div>                    
+                    <div class="site_card_bottom">
+                        <input type="button" name="좋아요요요??" value="좋아요">
+                        <input type="button" value="내 즐겨찾기 등록" class="add-my-bookmark"
+                         data-siteId="0ed4da2192f14c5598df83542fbf9a76"
+                         data-name="네이버"
+                         data-url="https://www.naver.com/"
+                         data-img="https://www.naver.com/favicon.ico?1"
+                         data-description="네이버 메인에서 다양한 정보와 유용한 컨텐츠를 만나 보세요"
+                         data-views="10"
+                         >
+                    </div>
+                </li>                
             </ul>
-            페이지 정의
-        </div>            
-
-    </section>
-    
-    <div class="basic_box">
-        <footer id="footer" class="layer1"></footer>
-    </div>    
-
-    <script type="module" src="../js/categoryPortal.js">
-
-    </script>
-    
+        </section>
+    </main>
+    <aside>
+        <div class="drawer">
+            <h2>문의 사항</h2>
+            <form>
+                <ul>
+                    <li>
+                        <label>제목</label>
+                        <input type="text" placeholder="제목">
+                    </li>
+                    <li>
+                        <label>내용</label>
+                        <input type="text" placeholder="예시 : 새로운 카테고리를 추가해주세요!">
+                    </li>
+                    <li>
+                        <label>이메일</label>
+                        <input type="email" placeholder="example00@naver.com">
+                    </li>
+                </ul>
+                <button>남기기</button>
+            </form>
+            
+            <ul>
+                <li>항목 1</li>
+                <li>항목 2</li>
+            </ul>
+        </div>
+    </aside>
+    <footer id="footer"></footer>
+    <script src="../js/index.js"></script>
 </body>
 </html>

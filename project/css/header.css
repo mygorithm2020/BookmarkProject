@@ -1,3 +1,5 @@
+/* 헤더와 푸터용 css 파일 */
+
 
 header {
     max-width: 1280px;
@@ -47,23 +49,80 @@ header {
     font-weight: bold;    
 }
 
+
+
+/* 메인 배너용 */
+#main_banner {
+    max-width: 1280px;
+    max-height: 300px;
+    margin: 14px auto;
+    display: flex;
+    flex-direction: row;
+    /* 임시로 */
+    overflow: hidden;  
+}
+
+.banner_input {
+    flex: 1;
+    height: 300px;    
+}
+
+/* main 영역 세부 구현 */
+
+.site-map-text {
+    margin: 10px;
+    padding-left: 20px;
+}
+
+
+
+/* footer */
+
 footer {
     max-width: 1280px;
-    margin: 0 auto;
-    padding: 14px;
+    margin: 10px auto;
+    padding: 10px;
     background: #f2f4f7;
 }
 
+#footer_nav {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+
 #footer_nav>li {
-    display: inline-block;
-    margin: 10px;
+    font-size: 1rem;
+    font-weight: bold;    
+    margin-right: 15px;
 }
 
 .area_user {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    border-bottom: 1px solid black;
+    
 }
 
 .area_user>div {
     flex: 1;
+    margin: 5px;
+    padding: 5px;
+}
+
+.area_user>div>p {
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+.area_user_card_list>li{
+    padding-top: 5px;
+}
+
+#footer_copyright{
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    gap: 10px;
 }
