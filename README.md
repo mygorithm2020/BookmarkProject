@@ -8,6 +8,7 @@
 - 기술 스택 : HTML, CSS, JavaScript
 - 목표 : 정적 사이트 구축 및 무료 호스팅 등록
 - 요약 : 여러 기기 및 여러 브라우저에서 자유롭게 사용할 수 있는 나만의 북마크 관리용 사이트, 더불어 너무나도 많은 웹사이트 중 나에게 맞는 카테고리의 사이트를 찾아보고 추천받을 수 있는 사이트
+- 프로젝트 실행 방법: VScode에서 index.html파일 라이브 서버 실행 또는 브라우저에서 index.html 파일 열기
 <!-- - 책 : [초보자를 위한 JavaScript 200제(고재도, 노지연 지음)](https://www.yes24.com/Product/Goods/70746749)  -->
 <!-- - 링크 :  -->
 <!-- - 결과 : [숫자 야구 게임 실습](./business/baseball/)
@@ -20,6 +21,7 @@
 
 ### 내용
     javascript 기본 사용법 및 문법, HTML 문서의 DOM을 활용한 응용 및 웹 서비스 기초
+    url 등록시 html에서 파비콘을 찾거나 root/favicon.ico를 찾거나 둘다 없으면 수작업으로 페이지 메인 로고찾기
 
 #### JS
     localStorage

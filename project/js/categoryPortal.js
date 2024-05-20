@@ -29,6 +29,9 @@ class MyBookmark {
 
 // 즉각호출패턴
 (function () {
+
+    console.log(window.location);
+
     let siteCardBoxEl = document.getElementById("site-card-box");
     let cardList = "";
     for (let i =0 ; i<siteList.length; i++){

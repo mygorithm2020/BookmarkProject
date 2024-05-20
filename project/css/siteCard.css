@@ -20,15 +20,32 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
-}
-
-.site_card_top>img{
-    max-width: 25%;
     height: 70px;
+    
 }
 
-.site_card_top>div{
-    flex: 65;
+/* .site_card_top>img{
+    max-width: 35%;
+    
+    
+} */
+
+.site_card_top>div:nth-child(1){
+    width: 25%;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+    
+}
+
+.site_card_img {
+    height: 90%;
+    max-width: 90%;
+}
+
+.site_card_top>div:nth-child(2){
+    width: 70%;
     padding: 5px;
     display: flex;
     align-items: center;
