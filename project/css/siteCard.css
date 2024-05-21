@@ -21,6 +21,7 @@
     flex-direction: row;
     gap: 10px;
     height: 70px;
+    justify-content: flex-start;
     
 }
 

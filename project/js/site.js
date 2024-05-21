@@ -7,6 +7,7 @@ export class Site {
         this.URL = siteInfo.URL;
         this.Image = siteInfo.Image;
         this.Description = siteInfo.Description;
+        this.Keyword = siteInfo.Keyword;
         this.Views = siteInfo.Views;
         this.Like = siteInfo.Like;
         this.CreatedDt = siteInfo.CreatedDt;
