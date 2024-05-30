@@ -4,22 +4,32 @@ CREATE TABLE TA_Site(
     SiteId CHAR(32) NOT NULL PRIMARY,
     CategoryId CHAR(32) FOREIGN KEY,
 
-    Name NVARCHAR(32) ,
+    -- 입력 정보 --
+    Name NVARCHAR(32),
     NameKR NVARCHAR(32),
     URL NVARCHAR(256) NOT NULL,
     IPAddress NVARCHAR(32),
+    LogoImg NVARCHAR(128),
     AppLinkAndroid NVARCHAR(256),
     AppLinkIOS NVARCHAR(256),
-    Img NVARCHAR(128),
+    -- 기본 정보 --
+    Title NVARCHAR(32),
+    FaviconImg NVARCHAR(128),
     Description NVARCHAR(1024),
-    Keyword NVARCHAR(1024),
+    Keywords NVARCHAR(1024),
+    -- og 정보 --
+    OGTitle NVARCHAR(32),
+    OGSiteName NVARCHAR(32),
+    OGImg NVARCHAR(128),
+    OGDescription NVARCHAR(1024),
+    OGURL NVARCHAR(256) NOT NULL,
+    -- 추가 정보 --
     Views BIGINT,
     Like BIGINT,
     Dislike BIGINT,
     Admin NVARCHAR(64),
     Email NVARCHAR(64),    
-    
-    
+        
     IsDeleted SMALLINT NOT NULL,
     CreateDate DATETIME NOT NULL,
     UpdateDate DATETIME NOT NULL

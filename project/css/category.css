@@ -1,0 +1,33 @@
+#main_banner {
+    display:none;
+}
+
+.prior_content{
+    display: flex;
+    justify-content: space-between;
+}
+
+#sort_criterion{
+    display: flex;
+    justify-content: space-around;
+    margin-right: 30px;
+    align-items: center;
+}
+
+#sort_criterion > form {
+    margin: 5px;
+}
+
+#sort_criterion > form > select {
+    background-color: cadetblue;
+    font-size: 1rem;
+    color: white;
+    padding: 5px;
+}
+
+#sort_criterion > button {
+    margin: 5px;
+    padding: 5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}

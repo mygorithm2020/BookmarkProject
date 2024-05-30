@@ -12,8 +12,11 @@ nav {
     max-height: 40px;
 }
 
+nav > input {
+    min-width: 50px;
+}
+
 nav ul {
-    
     font-size: 18px;
 }
 

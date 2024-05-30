@@ -12,12 +12,15 @@ import { Site } from "./site.js";
     
     const asd = document.querySelector("title");
     asd.textContent += ` - ${pageKey}`;
+
     
+    const siteMapTextEl = document.querySelector(".site-map-text");
 
 
     let siteInfo = null;
     switch(pageKey){
         case "ai":
+            siteMapTextEl.innerHTML = "인공지능 AI";
             siteInfo = {
                 SiteId : "0ed4da2192f14c5598df83542fbf9a72",
                 Name : "ChatGPT&hairsp;",
@@ -105,6 +108,7 @@ import { Site } from "./site.js";
             break;
                         
         case "shopping":
+            siteMapTextEl.innerHTML = "쇼핑";
             siteInfo = {
                 SiteId : "0ed4da2192f14c5598df83542fbf9a76",
                 Name : "쿠팡",
@@ -180,6 +184,8 @@ import { Site } from "./site.js";
             siteList.push(siteInfo);
             break;
         case "SNS":
+            siteMapTextEl.innerHTML = "소셜미디어";
+
             siteInfo = {
                 SiteId : "0ed4da2192f14c5598df83542fbf9a76",
                 Name : "사람과 세상을 향한 모든 연결의 시작, 카카오톡 | 카카오",
@@ -192,8 +198,58 @@ import { Site } from "./site.js";
                 UpdatedDt : new Date(),
             };
             siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "Facebook",
+                URL : "https://www.facebook.com/",
+                Image : "https://www.facebook.com/images/fb_icon_325x325.png", //
+                Description : "Facebook에 로그인하세요. 친구, 가족, 지인들과 함께 하는 즐거운 Facebook 생활이 시작됩니다.",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "WhatsApp | 안전하며 신뢰할 수 있는 무료 개인 메시지 및 전화",
+                URL : "https://www.whatsapp.com/",
+                Image : "https://static.whatsapp.net/rsrc.php/v3/yz/r/ujTY9i_Jhs1.png", //
+                Description : "WhatsApp Messenger로 친구 및 가족과 계속 연락을 주고받으세요. 무료로 제공되는 WhatsApp을 이용하면 전 세계에서 전화로 쉽고 안전하며 신뢰할 수 있는 방식으로 메시지를 주고받고 전화를 할 수 있습니다.",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "Instagram",
+                URL : "https://www.instagram.com/",
+                Image : "https://static.cdninstagram.com/rsrc.php/v3/yI/r/VsNE-OHk_8a.png", //
+                Description : "계정을 만들거나 Instagram에 로그인하여 나를 이해하는 사람들과 회원님의 관심사를 공유해보세요.",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "TikTok - 트렌드의 시작, 틱톡",
+                URL : "https://www.tiktok.com/",
+                Image : "https://www.tiktok.com/favicon.ico", //
+                Description : "트렌드가 시작되는 동영상 엔터테인먼트 플랫폼 틱톡을 남들과는 다르게, 나만의 방식으로 재밌게 즐겨보세요.",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
             break;
         case "job":
+            siteMapTextEl.innerHTML = "일자리";
+
             siteInfo = {
                 SiteId : "0ed4da2192f14c5598df83542fbf9a76",
                 Name : "잡코리아 - NEW JOB, NEW ME JOBKOREA.CO.KR",
@@ -206,8 +262,69 @@ import { Site } from "./site.js";
                 UpdatedDt : new Date(),
             };
             siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "땡큐 베리 매치 사람인 | 취업, 채용, 커리어 매칭 플랫폼",
+                URL : "https://www.saramin.co.kr/",
+                Image : "https://www.saramin.co.kr/favicon.ico?ver=3",
+                Description : "나에게 딱 맞는 커리어만 매치! 사람인에서 새로운 기회를 제안 받고 기업정보, 연봉정보, 면접후기 등 취업, 채용에 꼭 필요한 정보를 확인해보세요.",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "모든 생애 모든 알바 알바천국",
+                URL : "https://www.alba.co.kr/",
+                Image : "https://image.alba.kr/icon/bi_800.png",
+                Description : "알바 채용, 아르바이트, 지역별, 직종별, 주말, 단기, 청소년, 대학생, 알바스토리, 최저시급, 근로계약서 작성 안내",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "워크넷 - 구인/구직",
+                URL : "https://www.work.go.kr/",
+                Image : "https://www.work.go.kr/images/common/ico/w_favicon.ico",
+                Description : "",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "국민 대표 일자리 앱! 벼룩시장",
+                URL : "https://www.findjob.co.kr/",
+                Image : "http://image.findall.co.kr/FAImage/findjob/banner/banner-findjob-story-w.png",
+                Description : "누구나 좋아하는 브랜드 일자리부터 AI 추천일자리까지, 벼룩시장에서 만나보세요!",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "알바를 리스펙 알바몬",
+                URL : "https://www.albamon.com/",
+                Image : "https://contents.albamon.kr/monimg/msa/images/sns_img/og_23-08-01_alba_respect.png",
+                Description : "알바 정보부터 알바 채용까지, 알바 취업포털 알바몬",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
             break;
         case "programmer":
+            siteMapTextEl.innerHTML = "개발";
             siteInfo = {
                 SiteId : "0ed4da2192f14c5598df83542fbf9a76",
                 Name : "프로그래머스",
@@ -220,8 +337,33 @@ import { Site } from "./site.js";
                 UpdatedDt : new Date(),
             };
             siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "Baekjoon Online Judge",
+                URL : "https://www.acmicpc.net/",
+                Image : "https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/images/boj-og.png",
+                Description : "",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "클라우드 컴퓨팅 서비스 | Google Cloud",
+                URL : "https://cloud.google.com/",
+                Image : "https://www.gstatic.com/devrel-devsite/prod/v0d244f667a3683225cca86d0ecf9b9b81b1e734e55a030bdcd3f3094b835c987/cloud/images/favicons/onecloud/favicon.ico",
+                Description : "데이터 관리, 하이브리드 및 멀티 클라우드, AI와 머신러닝 등 Google의 클라우드 컴퓨팅 서비스로 비즈니스 당면 과제를 해결하세요.",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
             break;
         case "community":
+            siteMapTextEl.innerHTML = "커뮤니티";
             siteInfo = {
                 SiteId : "0ed4da2192f14c5598df83542fbf9a76",
                 Name : "에펨코리아 펨코 - 유머, 축구, 게임, 풋볼매니저",
@@ -234,8 +376,45 @@ import { Site } from "./site.js";
                 UpdatedDt : new Date(),
             };
             siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "## CONNECTING HEARTS! 디시인사이드입니다. ## ",
+                URL : "https://www.dcinside.com/",
+                Image : "https://nstatic.dcinside.com/dc/w/images/logo_icon.ico",
+                Description : "국내 최대 인터넷 커뮤니티 포털이자 인터넷 트렌드의 중심, 디시인사이드입니다. 실시간 베스트 등의 갤러리 커뮤니티 서비스를 제공합니다.",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "뽐뿌 - 사람이 좋아 함께하는 곳",
+                URL : "https://ppomppu.co.kr/",
+                Image : "https://www.ppomppu.co.kr/images/icon_app_20160427.png",
+                Description : "쇼핑몰핫딜, 쿠폰 및 이벤트, 사용기, 휴대폰 등 쇼핑 정보 제공",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "보배드림 - 중고차 플랫폼, 수입차, 수입중고차 및 중고차시세, 내차시세 제공",
+                URL : "https://bobaedream.co.kr/",
+                Image : "http://image.bobaedream.co.kr/renew2017/assets/images/bobae.png",
+                Description : "중고차, 커뮤니티, 수입차, 외제차, 수입중고차, 스포츠카, 튜닝카 전문 중고차쇼핑몰. 중고자동차, 슈퍼카, 올드카, 캠핑카 화물차, 특장차, 픽업트럭 매매 및 판매, 중고차시세 제공, 국내 최대 자동차 커뮤니티",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
             break;
         case "ott":
+            siteMapTextEl.innerHTML = "OTT";
             siteInfo = {
                 SiteId : "0ed4da2192f14c5598df83542fbf9a76",
                 Name : "넷플릭스 대한민국 - 인터넷으로 시리즈와 영화를 시청하세요",
@@ -248,8 +427,69 @@ import { Site } from "./site.js";
                 UpdatedDt : new Date(),
             };
             siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "TVING",
+                URL : "https://www.tving.com/",
+                Image : "https://www.tving.com/img/tving_logo_meta_new.png",
+                Description : "티빙 오리지널부터 드라마, 예능, 영화, 해외시리즈까지! 무제한으로 스트리밍해 보세요.",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "쿠팡플레이 - 와우회원은 무료!",
+                URL : "https://www.coupangplay.com/",
+                Image : "https://assets.coupangplay.com/images/og-meta-img.png",
+                Description : "",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "Wavve(웨이브)",
+                URL : "https://www.wavve.com/",
+                Image : "http://img.wavve.com/service30/profile/wavve2022.png",
+                Description : "세상 얕은 콘텐츠부터 세상 딥한 콘텐츠까지 JUST DIVE! Wavve",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "왓챠",
+                URL : "https://watcha.com/",
+                Image : "https://do6ll9a75gxk6.cloudfront.net/images/og.af1d8fcdd63eafb6a46f.png",
+                Description : "모든 영화, 드라마, 다큐멘터리, 애니메이션을 언제 어디서나 최고의 화질로 무제한 감상하세요.",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "새로운 감동과 가능성을 발견해 보세요 우리가 좋아하는 모든 이야기, 지금 스트리밍 중",
+                URL : "https://www.disneyplus.com",
+                Image : "https://static-assets.bamgrid.com/product/disneyplus/images/share-default.8bf3102623e935e7bc126df36b956b98.jpg",
+                Description : "디즈니, 픽사, 마블, 스타워즈, 내셔널지오그래픽, Star를 다 함께 즐길 수 있는 곳. 인기 영화, 고전 작품, 시리즈, 오리지널을 모두 한자리에서 만나보세요.",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
             break;
         case "music":
+            siteMapTextEl.innerHTML = "음악";
             siteInfo = {
                 SiteId : "0ed4da2192f14c5598df83542fbf9a76",
                 Name : "Melon::음악이 필요한 순간, 멜론",
@@ -262,8 +502,57 @@ import { Site } from "./site.js";
                 UpdatedDt : new Date(),
             };
             siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "NAVER VIBE(바이브)",
+                URL : "https://vibe.naver.com/",
+                Image : "https://music-phinf.pstatic.net/20201019_118/16031004163365Jexk_JPEG/about.jpg",
+                Description : "좋아하는 음악은 물론, 좋아할 음악까지 들려주는 취향 저격 뮤직 서비스",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "벅스",
+                URL : "https://music.bugs.co.kr/",
+                Image : "https://file.bugsm.co.kr/bdesign/sns/1200x630_bugs.png",
+                Description : "나를 위한 플리, 벅스! 마음을 담은 노래추천 플레이리스트, 그리고 일상을 감성으로 가득 채워줄 essential player까지",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "소리바다",
+                URL : "https://www.soribada.com/",
+                Image : "http://image.soribada.com/image/main/icon_logo.png",
+                Description : "Share The Rhythm",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
+            siteInfo = {
+                SiteId : "0ed4da2192f14c5598df83542fbf9a76",
+                Name : "지니 : 음악, 그리고 설레임",
+                URL : "https://www.genie.co.kr/",
+                Image : "https://www.genie.co.kr/resources/favicon_32.ico?v=202404231400",
+                Description : "가격은 가볍게, 추천은 확실하게! 최저가로 즐기는 프리미어 사운드! 국내 최초 실시간 TOP 200 차트",
+                Views : "10",
+                Like : "5",
+                CreatedDt : new Date(),
+                UpdatedDt : new Date(),
+            };
+            siteList.push(siteInfo);
             break;            
         case "utility":
+            siteMapTextEl.innerHTML = "유틸리티";
             siteInfo = {
                 SiteId : "0ed4da2192f14c5598df83542fbf9a76",
                 Name : "파파고",
@@ -318,7 +607,9 @@ import { Site } from "./site.js";
         v.addEventListener("click", ()=>{
             alert(v.dataset.siteid +"즐겨찾기 추가 구현중");
         });
-    })
+    });
+
+    //  바로 네비게이션 아래로 스크롤 되는 내용 추가, 아니면 헤더 높이좀 줄여라 굳이 저렇게 넓게 차지할 필요가 있나..
     
     
     
