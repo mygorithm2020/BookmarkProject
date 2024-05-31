@@ -53,6 +53,7 @@ export class Site {
                         <input type="button" name="좋아요요요??" value="좋아요">
                         <input type="button" value="내 즐겨찾기 등록" class="add-my-bookmark"
                          data-siteId=${siteList[i].SiteId}
+                         data-siteURL=${siteList[i].URL}
                          >
                     </div>
                 </li>`;
