@@ -1,6 +1,5 @@
 /* 헤더와 푸터용 css 파일 */
 
-
 header {
     max-width: 1280px;
     margin: 0 auto;
@@ -26,6 +25,7 @@ header {
 }
 #header_mid a img {
     width: 100%;
+    height: 120px;
 }
 
 #header_right {
