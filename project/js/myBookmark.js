@@ -1,31 +1,14 @@
-export class MyBookmark {
-    constructor(siteId, name, url, img, des, views){
-        this._key = "my-bookmark";
-        this.SiteId = siteId;
-        this.Name = name;
-        this.Url = url;
-        this.Img = img;
-        this.Des = des;
-        this.Views = views;
-    }
+import { Site } from "./site.js";
+import { Bookmark } from "./bookmark.js";
 
-    addItem(item){
-        this.items.push(item);        
-    }
 
-    removeItem(itemId){
-        for (let idx = 0; idx < this.items.length; idx++){
-            if (this.items[idx].SiteId === itemId){
-                this.items.splice(idx, 1);
-                break;
-            }
-        }
-    }
+// 즉시 호출 패턴 => 광역으로 변수 설정 안되게 막고, 재사용이 아닌 한번 사용하는 함수
+(function () {
+    console.log("mybookmark");
+    let itemList = Bookmark.myBookmarkList();
 
-    static myBookmarkList(){
+    let ss = document.getElementById("main_content01");
+    
+    ss.insertAdjacentHTML("beforeend", Site.listToHtml(itemList));
 
-    }
-}
-
-console.log("mybookmark");
-
+})();

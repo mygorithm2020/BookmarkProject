@@ -3,10 +3,8 @@ a:hover {
 }
 
 #notice_list {
-    width: 100%;
-    
-    border-collapse: collapse;
-    
+    width: 100%;    
+    border-collapse: collapse;    
 }
 
 .notice_card{
@@ -18,7 +16,7 @@ a:hover {
 
 
 .notice_card:nth-child(1){
-    background-color: lightgray;
+    background-color: lightblue;
 }
 
 .notice_card >th {

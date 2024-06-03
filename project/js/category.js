@@ -1,12 +1,13 @@
+import { Bookmark } from "./bookmark.js";
 import { Site } from "./site.js";
-import { MyBookmark } from "./myBookmark.js";
 
+console.log("category");
 (function(){
     console.log("ai");
     let siteList = [];
 
-    console.log(window.location);
-    console.log(window.location.search.substring(5));
+    // console.log(window.location);
+    // console.log(window.location.search.substring(5));
 
     
     const pageKey = window.location.search.substring(5);
@@ -604,64 +605,44 @@ import { MyBookmark } from "./myBookmark.js";
     // document.getElementById("main_content01").innerHTML(Site.listToHtml(siteList));
 
     // 기존에 등록된 장바구니 목록 확인
-    let mybooks = new MyBookmark();
     
-    const itemString = localStorage.getItem(mybooks._key);
-    let items = [];
-    if (itemString){
-        items = JSON.parse(itemString);
-    } 
+    // const itemString = localStorage.getItem(MyBookmark.SESSION_KEY);
+    // let items = [];
+    // if (itemString){
+    //     items = JSON.parse(itemString);
+    // } 
     
-    console.log(items);
+    // console.log(items);
 
     let addBtnElList =document.querySelectorAll(".add-my-bookmark");
     addBtnElList.forEach( (v, k) => {
-        v.addEventListener("click", ()=>{
-            alert(v.dataset.siteid +"즐겨찾기 추가 구현중");
-            alert(v.dataset.siteurl);
+        v.addEventListener("click", ()=>{            
 
             // 로그인 상태라면
             if (false){
 
             } else{
-                addMyBookmark(items, siteList, v.dataset.siteurl);
-                
+                for (let idx = 0; siteList.length; idx++){
+                    if (siteList[idx].URL === v.dataset.siteurl){
+                        const res = Bookmark.addMyBookmark(
+                            siteList[idx].SiteId,
+                            siteList[idx].Name, 
+                            siteList[idx].URL, 
+                            siteList[idx].Image, 
+                            siteList[idx].Description, 
+                            siteList[idx].Views);
+                        console.log(v.dataset.siteurl);
+                        if (res){
+                            alert("즐겨찾기에 추가");
+                        }else{
+                            alert("이미 존재");
+                        }
+                        break;
+                    }
+                }                                
             }
         });
     });
 
     //  바로 네비게이션 아래로 스크롤 되는 내용 추가, 아니면 헤더 높이좀 줄여라 굳이 저렇게 넓게 차지할 필요가 있나..
 })();
-
-function addMyBookmark(items, siteList, keyValue){
-    //  이미 있으면 리턴
-    for (let i=0 ; i < items.length; i++){
-        if (items[i].Url === keyValue){
-            alert("있어");
-            return false;
-        }
-    }               
-    
-    console.log("그치만 진행");
-
-    // 새로추가
-    siteList.forEach((es) => {
-        console.log(es.Name);
-        if (es.URL === keyValue){
-            let newSite = new MyBookmark(
-                es.SiteId,
-                es.Name,
-                es.URL,
-                es.Image,
-                es.Description,
-                es.Views,
-            );
-            
-            items.push(newSite);
-            localStorage.setItem(newSite._key, JSON.stringify(items));   
-            return true;
-        }
-    });
-
-    return false;
-}
