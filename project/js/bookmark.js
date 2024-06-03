@@ -6,7 +6,7 @@ export class Bookmark {
         this._key = "my-bookmark";
         this.SiteId = siteId;
         this.Name = name;
-        this.Url = url;
+        this.URL = url;
         this.Image = img;
         this.Des = des;
         this.Views = views;
@@ -43,7 +43,7 @@ export class Bookmark {
 
         //  이미 있으면 리턴
         for (let i =0; i< this.items.length; i++){
-            if (this.items[i].Url === url){
+            if (this.items[i].URL === url){
                 console.log("이미 존재");
                 return false;
             }
@@ -54,7 +54,7 @@ export class Bookmark {
             {
                 SiteId:siteId, 
                 Name : name, 
-                Url : url, 
+                URL : url, 
                 Image : image, 
                 Description : description, 
                 Views : views
@@ -66,10 +66,31 @@ export class Bookmark {
         return true;
     }
 
+    static removeBookmark(url){
+        
+        let newItems = [];
+
+        for (let i =0; i< this.items.length; i++){
+            if (this.items[i].URL === url){
+                continue;
+            }
+            newItems.push(this.items[i]);
+        }
+        if (this.items.length === newItems.length){
+            return false;
+        } else {
+            localStorage.setItem(this.SESSION_KEY, JSON.stringify(newItems));
+            this.items = [...newItems];
+            return true;
+        }
+
+        
+    }
+
     addMyBookmark(items, siteList, keyValue){
         
         for (let i=0 ; i < items.length; i++){
-            if (items[i].Url === keyValue){
+            if (items[i].URL === keyValue){
                 alert("있어");
                 return false;
             }

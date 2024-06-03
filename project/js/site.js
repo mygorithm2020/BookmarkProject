@@ -65,4 +65,55 @@ export class Site {
 
         return res;
     }
+
+    // 장바구니용
+    static listToHtmlCart(siteList){
+        let res = "";
+        if (siteList == null){
+            res = `<div>해당 카테고리에 등록된 사이트가 없습니다.</div>`;
+
+        }else{
+            res += `<ul id="site-card-box">`
+            for (let i = 0 ; i < siteList.length; i++){
+                if (siteList[i].Description.length > 40){
+                    siteList[i].Description = siteList[i].Description.slice(0, 40) + "...";
+                }
+                res += `
+                <li class="site-card">                    
+                    <div>
+                        <a href="${siteList[i].URL}" target="_blank" rel="external">
+                            <div class="site_card_top">
+                                <div>
+                                    <img class="site_card_img" src="${siteList[i].Image}">
+                                </div>                                
+                                <div>
+                                    ${siteList[i].Name}<br>
+                                </div>
+                            </div>
+                            <ul class="site-detail-box">
+                                <li>클릭 수 ${siteList[i].Views}</li>
+                                <li>좋아요 ${siteList[i].Like}</li>
+                                <li>싫어요 1만</li>                                
+                            </ul>   
+                            <p class="site_card_description">
+                                ${siteList[i].Description}                              
+                            </p>                            
+                        </a>                                                        
+                    </div>                    
+                    <div class="site_card_bottom">
+                        <input type="button" name="좋아요요요??" value="좋아요">
+                        <input type="button" value="내 즐겨찾기 삭제" class="remove-my-bookmark"
+                         data-siteId=${siteList[i].SiteId}
+                         data-siteURL=${siteList[i].URL}
+                         >
+                    </div>
+                </li>`;
+            }
+                            
+            res += `
+            </ul>`
+        }
+
+        return res;
+    }
 }
