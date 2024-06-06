@@ -9,7 +9,7 @@
 - 목표 : 정적 사이트 구축 및 github 무료 호스팅 등록
 - 요약 : 여러 기기 및 여러 브라우저에서 자유롭게 사용할 수 있는 나만의 북마크 관리용 사이트, 더불어 너무나도 많은 웹사이트 중 나에게 맞는 카테고리의 사이트를 찾아보고 추천받을 수 있는 사이트
 - 프로젝트 실행 방법: VScode에서 index.html파일 라이브 서버 실행 또는 브라우저에서 index.html 파일 열기
-- 링크 : https://mygorithm2020.github.io/BookmarkProject/project/pages/index.html
+- 링크 : [북마크사이트](https://mygorithm2020.github.io/BookmarkProject/project/pages/index.html)
 - 결과 미리보기  
 <br>
 <img src="project/images/portal_ex.png" width="300px">
