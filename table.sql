@@ -1,4 +1,19 @@
--- 회원
+-- 카테고리
+CREATE TABLE TA_SiteCategory(
+    CategoryId CHAR(32) NOT NULL PRIMARY,
+    ParentId CHAR(32),
+    Layer INT NOT NULL DEFAULT 1,
+    [Name] NVARCHAR(32),
+    NameKR NVARCHAR(32),
+    status INT NOT NULL,
+
+
+    IsDeleted SMALLINT NOT NULL,
+    CreatedDate DATETIME NOT NULL,
+    UpdatedDate DATETIME NOT NULL
+
+);
+
 -- 사이트
 CREATE TABLE TA_Site(
     SiteId CHAR(32) NOT NULL PRIMARY,
@@ -36,22 +51,9 @@ CREATE TABLE TA_Site(
 
 );
 
--- 카테고리
-CREATE TABLE TA_SiteCategory(
-    CategoryId CHAR(32) NOT NULL PRIMARY,
-    MainCategoryId CHAR(32),
-    Layer INT NOT NULL DEFAULT 1,
+-- 회원
 
-    [Name] NVARCHAR(32),
-    NameKR NVARCHAR(32),
-    
-    
-    
-    IsDeleted SMALLINT NOT NULL,
-    CreateDate DATETIME NOT NULL,
-    UpdateDate DATETIME NOT NULL
 
-);
 
 -- 광고
 -- 추천

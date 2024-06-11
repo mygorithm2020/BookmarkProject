@@ -6,7 +6,7 @@ console.log("category");
     console.log("ai");
     let siteList = [];
 
-    // console.log(window.location);
+    console.log(window.location);
     // console.log(window.location.search.substring(5));
 
     

@@ -1,24 +1,42 @@
 <!-- [Home](..) -->
 
 # 프로젝트
-북마크(즐겨찾기) 관리 및 추천 사이트 v1
+북마크(즐겨찾기) 관리 및 추천 사이트 v2
 
 ## 개요
-- 기간 : 2024. 04. 05 ~  2024. 05. 31(2개월)
-- 기술 스택 : HTML, CSS, JavaScript
-- 목표 : 정적 사이트 구축 및 github 무료 호스팅 등록
+- 기간 : 2024. 06. 06 ~  2024.
+- 기술 스택 : HTML, CSS, JavaScript, NodeJS, NestJS, MySQL
+- 목표 : v1 버전(정적웹사이트)에 백엔드 서버 및 DB 추가
 - 요약 : 여러 기기 및 여러 브라우저에서 자유롭게 사용할 수 있는 나만의 북마크 관리용 사이트, 더불어 너무나도 많은 웹사이트 중 나에게 맞는 카테고리의 사이트를 찾아보고 추천받을 수 있는 사이트
-- 프로젝트 실행 방법: VScode에서 index.html파일 라이브 서버 실행 또는 브라우저에서 index.html 파일 열기
-- 링크 : [북마크사이트](https://mygorithm2020.github.io/BookmarkProject/project/pages/index.html)
+- 프로젝트 실행 방법: 
+- 링크 : 
 - 결과 미리보기  
 <br>
-<img src="project/images/portal_ex.png" width="300px">
-<img src="project/images/ai_ex.png" width="300px">
+<!-- <img src="project/images/portal_ex.png" width="300px">
+<img src="project/images/ai_ex.png" width="300px"> -->
 
 
 ### 내용
-    javascript 기본 사용법 및 문법, HTML 문서의 DOM을 활용한 응용 및 웹 서비스 기초
     url 등록시 html에서 파비콘을 찾거나 root/favicon.ico를 찾거나 둘다 없으면 수작업으로 페이지 메인 로고찾기
+
+### 추가기능
+    로그인과 관련된 유저 기능
+    조회수 저장
+    좋아요 저장
+    카테고리 명확히 분류
+    신규 사이트 등록 기능
+    관리자 페이지
+        등록된 사이트 목록
+        추가 사이트 승인(사이트 노출 데이터 선택)
+        사이트 삭제
+        사이트 숨기기
+        사이트 관련 통계 대시보드 만들기(전체 접속 수, 좋아요 수, 기타 등 대략적인 시각화)
+    회원 페이지
+        내 즐겨찾기 목록 => 폴더구조로 정리
+        사이트 등록 및 추가 요청(웹사이트 담당자, 개인 구분) => url 입력시 파싱해서 main hostname만 추출해서 html 파일에 있는 기본 정보까지 불러오기
+        나만의 사이트 목록 공유하기 => 재생목록 공유하듯 본인만의 사이트 목록을 만들어서 다른사람과 공유
+    검색기능은...... 흠..................... => 모르겠넴.....
+    사이트 목록에서 남들이 공유한 목록도 볼수있게 넣기...
 
 #### JS
     localStorage
