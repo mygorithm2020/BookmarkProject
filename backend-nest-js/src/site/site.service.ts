@@ -3,13 +3,13 @@ import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 
 @Injectable()
-export class SitesService {
+export class SiteService {
   create(createSiteDto: CreateSiteDto) {
     return 'This action adds a new site';
   }
 
   findAll() {
-    return `This action returns all sites`;
+    return `This action returns all site`;
   }
 
   findOne(id: number) {
