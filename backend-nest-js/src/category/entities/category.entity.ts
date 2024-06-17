@@ -36,6 +36,13 @@ export class Category {
     NameKR : string;
 
     @Column({
+        type : "int",
+        nullable : true,
+        default : 1
+    })
+    Status : number;
+
+    @Column({
         type : "smallint",
         nullable : false,
         default : 0

@@ -56,3 +56,6 @@ async function getSiteInfo(siteUrl){
 
 
 getSiteInfo("https://www.auction.co.kr/??pid=867&gclid=Cj0KCQjw6auyBhDzARIsALIo6v9ijGI3JzCry4ixY4AC09qZh1dB_xluwB4NFpdBZMavtGVRYxiYw0IaAmjSEALw_wcB&cosemkid=go16897633308650003&gate_id=c78b393f-6b7b-4851-959a-61dbaf62ed1f&redirect=1");
+
+
+document.querySelectorAll()

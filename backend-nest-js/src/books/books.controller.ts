@@ -23,7 +23,7 @@ export class BooksController {
     return this.booksService.findOne(+id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() updateBookDto: Book) {
     return this.booksService.update(+id, updateBookDto);
   }
