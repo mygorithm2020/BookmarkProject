@@ -13,6 +13,8 @@ import * as dotenv from "dotenv";
 import { DataSource } from 'typeorm';
 import { Site } from './site/entities/site.entity';
 import { HttpModule } from '@nestjs/axios';
+import { MemberModule } from './member/member.module';
+import { Member } from './member/entities/member.entity';
 
 dotenv.config();
 
@@ -29,10 +31,10 @@ console.log(process.env.DB_HOST);
     port : 3306,
     username : process.env.DB_USERNAME,
     password : process.env.DB_PASSWORD,
-    entities : [Book, Category, Site],
+    entities : [Book, Category, Site, Member],
     database : process.env.DB_DATABASE,
     synchronize : false
-  }),  TestModule, BooksModule, CategoryModule, SiteModule],
+  }),  TestModule, BooksModule, CategoryModule, SiteModule, MemberModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -73,29 +73,27 @@ export class SiteService {
     // url 유효한지 확인
     // 여기가 문제구만.......
     let extractedSite = await this.setSiteParse(urlObj.origin);
-    console.log(extractedSite);    
-    if (extractedSite !== null){
-      site.Title = extractedSite.Title;
+      console.log(extractedSite);    
+      if (extractedSite !== null){
+        site.Title = extractedSite.Title;
 
-      site.FaviconImg = extractedSite.FaviconImg;
+        site.FaviconImg = extractedSite.FaviconImg;
 
-      site.Description = extractedSite.Description;
-      site.Keywords = extractedSite.Keywords;
-      site.OGTitle = extractedSite.OGTitle;
-      site.OGSiteName = extractedSite.OGSiteName;
-      site.OGImg = extractedSite.OGImg;
-      site.OGDescription = extractedSite.OGDescription;
-      site.OGURL = extractedSite.OGURL;    
+        site.Description = extractedSite.Description;
+        site.Keywords = extractedSite.Keywords;
+        site.OGTitle = extractedSite.OGTitle;
+        site.OGSiteName = extractedSite.OGSiteName;
+        site.OGImg = extractedSite.OGImg;
+        site.OGDescription = extractedSite.OGDescription;
+        site.OGURL = extractedSite.OGURL;    
 
-      this.correctionSiteObj(site, urlObj);      
-      
-    }
-
-    console.log(site);    
+        this.correctionSiteObj(site, urlObj);      
+      }
 
     // 데이터 삽입
     
     const newCategory = this.cRepo.create(site);
+    console.log(newCategory);
     return await this.cRepo.save(newCategory);
     
   }
@@ -130,11 +128,10 @@ export class SiteService {
     console.log("setSite");  
     const data = await this.getSiteHtml(reqUrl);
     console.log(data.substring(0, 200));      
-    console.log("============");   
+    console.log("============");  
+
     try{
       const root = Parse(data);
-
-      
       res.Title = root.querySelector("title").textContent;
 
       let links = root.querySelectorAll("link");
@@ -181,7 +178,7 @@ export class SiteService {
 
   async getSiteHtml(reqUrl) : Promise<string> {
     // html body 파일 가져오기
-    const data = await firstValueFrom(
+    const data = await lastValueFrom(
       this.httpService.get<string>(reqUrl, {
         maxRedirects : 2,
         timeout : 2000,
@@ -191,6 +188,8 @@ export class SiteService {
         catchError((error: AxiosError) => {
           console.log(error.message);
           console.log(error.code);
+
+          
           
           throw `html data download failed, ${error.code}, ${error.message} `;
         }),

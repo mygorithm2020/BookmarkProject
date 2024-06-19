@@ -12,9 +12,9 @@ export class Site {
     })
     SiteId : string;
 
-    @ApiProperty()
+    @ApiProperty({required : true})
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 511,
         unique : true
     })
@@ -22,7 +22,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 255,
         nullable : true
     })
@@ -30,7 +30,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 255,
         nullable : true
         
@@ -39,7 +39,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 63,
         nullable : true
     })
@@ -47,7 +47,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 511,
         nullable : true
     })
@@ -55,7 +55,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 511,
         nullable : true
     })
@@ -63,7 +63,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 511,
         nullable : true
     })
@@ -72,7 +72,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 255,
         nullable : true
     })
@@ -80,7 +80,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 511,
         nullable : true
     })
@@ -88,7 +88,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 1023,
         nullable : true
     })
@@ -96,7 +96,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 255,
         nullable : true
     })
@@ -104,7 +104,7 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 255,
         nullable : true
     })
@@ -112,25 +112,25 @@ export class Site {
 
     @ApiProperty()
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 255,
         nullable : true
     })
     OGSiteName: string;
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 511,
         nullable : true
     })
     OGImg : string;
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 1023,
         nullable : true
     })
     OGDescription: string;
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 511,
         nullable : true
     })
@@ -154,13 +154,13 @@ export class Site {
     })
     Dislike : number;
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 127,
         nullable : true
     })
     Admin : string;
     @Column({
-        type: "nvarchar",
+        type: "varchar",
         length : 127,
         nullable : true
     })

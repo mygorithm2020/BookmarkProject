@@ -17,11 +17,18 @@ export class SiteController {
     
     // 기존에 있는지 확인
 
-    if (true){
-      throw new HttpException("mssssessage", HttpStatus.BAD_REQUEST);
-    }
+    // if (true){
+    //   throw new HttpException("mssssessage", HttpStatus.BAD_REQUEST);
+    // }
     // 없으면 새로 넣기
-    let res = this.siteService.create(createSiteDto);    
+    let res;
+
+    //왜 에러를 못잡는거야!!!!...............
+    try{
+      res = this.siteService.create(createSiteDto);      
+    } catch (err){
+      throw new HttpException("please check the url", HttpStatus.BAD_REQUEST);
+    }
     
     return res;
   }

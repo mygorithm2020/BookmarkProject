@@ -1,18 +1,17 @@
 -- 카테고리
 CREATE TABLE TA_Category(
-    CategoryId CHAR(32) NOT NULL PRIMARY,
+    CategoryId CHAR(32) NOT NULL PRIMARY KEY,
     ParentId CHAR(32),
     Layer INT NOT NULL DEFAULT 1,
-    [Name] NVARCHAR(32),
-    NameKR NVARCHAR(32),
-    status INT NOT NULL,
+    CateName VARCHAR(32),
+    CateNameKR VARCHAR(32),
+    status INT NOT NULL COMMENT "카테고리 등록상태 1:등록, 2: 사용, 3:보류",
 
-
-    IsDeleted SMALLINT NOT NULL,
+    IsDeleted SMALLINT NOT NULL DEFAULT 0,
     CreatedDate DATETIME NOT NULL,
     UpdatedDate DATETIME NOT NULL
 
-);
+) COMMENT="사이트의 카테고리 구분";
 
 -- 카테고리 계층 테이블
 -- 카테고리에 구조 및 사이트 조회에 사용할 예정이므로 본인과 본인(pa = ch)도 등록 필요
@@ -29,52 +28,68 @@ CREATE TABLE TA_CategoryLayer(
 
 -- 사이트
 CREATE TABLE TA_Site(
-    SiteId CHAR(32) NOT NULL PRIMARY,
-    CategoryId CHAR(32) FOREIGN KEY,
+    SiteId CHAR(32) NOT NULL PRIMARY KEY,
+
+    -- 보여지는 정보이며, 입력(수정)도 가능함, 아래 순위별로 데이터 채워짐
+    SiteName VARCHAR(32),
+    SiteNameKR VARCHAR(32),
+    SiteURL VARCHAR(255) NOT NULL,
+    SiteIP VARCHAR(32),
+    SiteImg VARCHAR(512),
+    AppLinkAndroid VARCHAR(255),
+    AppLinkIOS VARCHAR(255),
 
     -- og 정보 -- default
-    OGTitle NVARCHAR(32),
-    OGSiteName NVARCHAR(32),
-    OGImg NVARCHAR(128),
-    OGDescription NVARCHAR(1024),
-    OGURL NVARCHAR(256) NOT NULL,
+    OGTitle VARCHAR(255),
+    OGSiteName VARCHAR(255),
+    OGImg VARCHAR(512),
+    OGDescription VARCHAR(1024),
+    OGURL VARCHAR(255) NOT NULL,
 
     -- 기본 정보 -- 2순위
-    Title NVARCHAR(32),
-    FaviconImg NVARCHAR(128),
-    Description NVARCHAR(1024),
-    Keywords NVARCHAR(1024),
-
-    -- 입력 정보 -- 3순위
-    Name NVARCHAR(32),
-    NameKR NVARCHAR(32),
-    URL NVARCHAR(256) NOT NULL,
-    IPAddress NVARCHAR(32),
-    LogoImg NVARCHAR(128),
-    AppLinkAndroid NVARCHAR(256),
-    AppLinkIOS NVARCHAR(256),
+    Title VARCHAR(255),
+    FaviconImg VARCHAR(512),
+    Description VARCHAR(1024),
+    Keywords VARCHAR(1024),
+    
     
     -- 추가 정보 --
     Views BIGINT,
-    Like BIGINT,
-    Dislike BIGINT,
-    Admin NVARCHAR(64),
-    Email NVARCHAR(64), 
-    Status Int,      -- 보여주기, 숨기기, 등등... 등록 중...   1이면 등록 상태, 2 보여주기 4 숨기기, 
+    Like INT,
+    Dislike INT,
+    -- Admin VARCHAR(64),
+    -- Email VARCHAR(64), 
+    Status Int COMMENT= "카테고리 등록상태 1:등록, 2: 사용, 3:보류" ,      
         
-    IsDeleted SMALLINT NOT NULL,
+    IsDeleted SMALLINT NOT NULL DEFAULT 0,
     CreateDate DATETIME NOT NULL,
     UpdateDate DATETIME NOT NULL
 
 );
 
+-- categoryA categoryB
+
+-- site category..
+
+-- 카테고리간의 관계도 정의 가능
+-- 1 : N 이고 모든 카테고리별로 관계를 정의해줘야 함
+-- ----------------------
+
+-- categoryA site
+-- categoryB site
+
+-- 카테고리간의 관계는 따로 필요.....
+-- N : N 이고 
+-- => 이걸로 가자 N : N 이 맞음
+
 -- 다대다
 -- 카테고리 사이트 릴레이션
-CREATE TABLE TA_CategoryWithSite(
+CREATE TABLE TA_ReCategorySite(
+  id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'PK',
+  CategoryId CHAR(32) NOT NULL,
+  SiteId CHAR(32) NOT NULL,
 
-)
-
--- 회원
+)  INDEX IDX_ReCategorySite_CategoryId (CategoryId)
 
 
 
@@ -95,3 +110,4 @@ CREATE TABLE TA_SiteCategory(                               (1)
   CONSTRAINT testTable_PK PRIMARY KEY(id)             (8)
 );
 [출처] [MySQL] 테이블 만들기,수정하기 (Create table, Alter table)|작성자 pjok1122
+
