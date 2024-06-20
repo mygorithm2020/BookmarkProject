@@ -3,7 +3,9 @@ import { MemberService } from './member.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags("member")
 @Controller('member')
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}

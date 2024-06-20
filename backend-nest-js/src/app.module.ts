@@ -31,9 +31,12 @@ console.log(process.env.DB_HOST);
     port : 3306,
     username : process.env.DB_USERNAME,
     password : process.env.DB_PASSWORD,
-    entities : [Book, Category, Site, Member],
+    // entities : [Book, Category, Site, Member],
+    autoLoadEntities : true,
     database : process.env.DB_DATABASE,
-    synchronize : false
+    synchronize : false,
+    logging : true,
+    timezone : "z" // mysql에 들어있는 시간에서 자동으로 -9시간을 해오는거 해결
   }),  TestModule, BooksModule, CategoryModule, SiteModule, MemberModule],
   controllers: [AppController],
   providers: [AppService],

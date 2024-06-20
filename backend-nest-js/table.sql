@@ -2,16 +2,16 @@
 CREATE TABLE TA_Category(
     CategoryId CHAR(32) NOT NULL PRIMARY KEY,
     ParentId CHAR(32),
-    Layer INT NOT NULL DEFAULT 1,
-    CateName VARCHAR(32),
-    CateNameKR VARCHAR(32),
+    Layer INT NOT NULL DEFAULT 1 COMMENT "카테고리간의 계층을 의미 1이 최상위 단계",
+    CateName VARCHAR(32) NOT NULL UNIQUE,
+    CateNameKR VARCHAR(32) UNIQUE,
     status INT NOT NULL COMMENT "카테고리 등록상태 1:등록, 2: 사용, 3:보류",
 
     IsDeleted SMALLINT NOT NULL DEFAULT 0,
-    CreatedDate DATETIME NOT NULL,
-    UpdatedDate DATETIME NOT NULL
+    CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+    UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
 
-) COMMENT="사이트의 카테고리 구분";
+) COMMENT "사이트의 카테고리 구분";
 
 -- 카테고리 계층 테이블
 -- 카테고리에 구조 및 사이트 조회에 사용할 예정이므로 본인과 본인(pa = ch)도 등록 필요
@@ -21,8 +21,8 @@ CREATE TABLE TA_CategoryLayer(
 
   ChildLayer INT,
 
-  CreatedDate DATETIME NOT NULL,
-  UpdatedDate DATETIME NOT NULL
+  CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+  UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
 
 )
 
@@ -62,8 +62,8 @@ CREATE TABLE TA_Site(
     Status Int COMMENT= "카테고리 등록상태 1:등록, 2: 사용, 3:보류" ,      
         
     IsDeleted SMALLINT NOT NULL DEFAULT 0,
-    CreateDate DATETIME NOT NULL,
-    UpdateDate DATETIME NOT NULL
+    CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+    UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP)
 
 );
 
@@ -89,6 +89,7 @@ CREATE TABLE TA_ReCategorySite(
   CategoryId CHAR(32) NOT NULL,
   SiteId CHAR(32) NOT NULL,
 
+  CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP)
 )  INDEX IDX_ReCategorySite_CategoryId (CategoryId)
 
 

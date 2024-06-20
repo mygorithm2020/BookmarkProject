@@ -15,6 +15,8 @@ export class BooksController {
 
   @Get()
   findAll() {
+    // nestjs 가 자동으로 promise 객체 내부의 데이터를 반환해줌
+    // 여기서 데이터를 활용하려면 await로 받아서 사용
     return this.booksService.findAll();
   }
 

@@ -3,9 +3,10 @@ import { SiteService } from './site.service';
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 import { Site } from './entities/site.entity';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApiResult } from 'src/publicComponents/apiResult';
 
+@ApiTags("site")
 @Controller('site')
 export class SiteController {
   constructor(private readonly siteService: SiteService) {}

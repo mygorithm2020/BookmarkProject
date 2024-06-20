@@ -49,8 +49,7 @@ export class MemberService {
 
   async findAll() : Promise<Member[]> {
     console.log(`This action returns all member`);
-    // 시간 이상하게 조회되는 문제 해결해야 함....
-    // 왜 mysql에 들어있는 시간에서 자동으로 -9시간을 해오는거지.... 개 답답하네...
+    
     return await this.mRepo.find();
   }
 
