@@ -58,6 +58,7 @@ header {
     max-height: 300px;
     margin: 14px auto;
     display: flex;
+    display: none;
     flex-direction: row;
     /* 임시로 */
     overflow: hidden;  

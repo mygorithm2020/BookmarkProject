@@ -12,6 +12,9 @@ export class Site {
     })
     SiteId : string;
 
+    @Column()
+    SiteProtocol : string;
+
     @ApiProperty({required : true})
     @Column({
         type: "varchar",

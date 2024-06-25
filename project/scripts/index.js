@@ -1,3 +1,4 @@
+
 import { Site } from "./site.js";
 
 console.log("open index");
@@ -31,7 +32,8 @@ Drawer.prototype.close = function() {
 }
 
 
-window.onload = function() {
+window.onload = async function() {
+
 
     setTimeout(() => {
         // header용 footer용도 따로 파야겠네...
@@ -61,6 +63,7 @@ window.onload = function() {
         })
         .catch((error) => {
             console.error(error);
+            
         });
         
     }, 1000);

@@ -33,11 +33,20 @@ CREATE TABLE TA_Site(
     -- 보여지는 정보이며, 입력(수정)도 가능함, 아래 순위별로 데이터 채워짐
     SiteName VARCHAR(32),
     SiteNameKR VARCHAR(32),
+    SiteProtocol VARCHAR(8) NOT NULL,
     SiteURL VARCHAR(255) NOT NULL,
     SiteIP VARCHAR(32),
     SiteImg VARCHAR(512),
     AppLinkAndroid VARCHAR(255),
     AppLinkIOS VARCHAR(255),
+
+    -- 추가 정보 --
+    Views BIGINT,
+    Like INT,
+    Dislike INT,
+    -- Admin VARCHAR(64),
+    -- Email VARCHAR(64), 
+    Status Int COMMENT  "카테고리 등록상태 1:등록, 2: 사용, 3:보류" ,      
 
     -- og 정보 -- default
     OGTitle VARCHAR(255),
@@ -53,13 +62,7 @@ CREATE TABLE TA_Site(
     Keywords VARCHAR(1024),
     
     
-    -- 추가 정보 --
-    Views BIGINT,
-    Like INT,
-    Dislike INT,
-    -- Admin VARCHAR(64),
-    -- Email VARCHAR(64), 
-    Status Int COMMENT= "카테고리 등록상태 1:등록, 2: 사용, 3:보류" ,      
+    
         
     IsDeleted SMALLINT NOT NULL DEFAULT 0,
     CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP),

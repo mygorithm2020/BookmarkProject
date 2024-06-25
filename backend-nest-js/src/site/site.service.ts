@@ -23,6 +23,8 @@ export class SiteService {
 
   getUrlObj(url : string): URL{
 
+    console.log(url);
+
     if (url === null || url === undefined){
       throw "no url";
     }
@@ -31,7 +33,7 @@ export class SiteService {
     if (!url.startsWith("http")){
       url = "https://" + url;
     }
-
+    console.log(url);
     // url 파싱해서 정리
     let res = new URL(url);
     return res;
@@ -41,6 +43,7 @@ export class SiteService {
 
     // protocol을 넣을지 고민헀는데, 브라우저가 아니면 에러남 넣는게 맞음, 근데 내가 브라우저처럼 자동으로 넣어도 되는거 아님?
     // 빼고가자
+    // 아니면 따로 칼럼 파서 넣든가..... 후.....
     // https 가 아니어도 받아줄것인가....................ㅇㅇ 받자.. 받는게 맞음.
     site.URL = urlObj.host;
 
@@ -89,6 +92,7 @@ export class SiteService {
 
         this.correctionSiteObj(site, urlObj);      
       }
+      //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
 
     // 데이터 삽입
     
@@ -381,10 +385,76 @@ export class SiteService {
     return await this.cRepo.update(id, updateCategoryDto);
   }
 
+  async updateViews(id: string) : Promise<UpdateResult> {
+    console.log(`This action updateViews a #${id} site`);    
+    // console.log(await this.cRepo.update(id, updateCategoryDto));
+    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
+    return await this.cRepo.update(id, {
+      Views : () => "Views + 1",
+    })
+    .catch( (res)=> {
+      throw new HttpException(res, HttpStatus.BAD_REQUEST);
+    });
+    // await this.commentRepository.update(comment.id, {
+    //   likeCount: () => 'like_count + 1',
+    // });
+  }
+
   async remove(id: string) {
     console.log(`This action removes a #${id} category`);
     await this.cRepo.update(id, {
       IsDeleted : 1
     })
   }
+
+  static restrictedViews : {lastUpdate : Date, keyValues : Set<string>};
+
+  // 조회수 조작을 막기 위해 같은 정보로 동일하게 오면 제한, 대신 메모리로 관리하므로 시간마다 값 초기화
+  static checkRestrictedViews(str) : boolean {
+    let res = false;
+    if (!SiteService.restrictedViews){
+      SiteService.restrictedViews = {
+        lastUpdate : new Date(),
+        keyValues : new Set<string>()
+      }  
+    } else if (SiteService.restrictedViews.lastUpdate.getUTCHours !== new Date().getUTCHours){
+      SiteService.restrictedViews.lastUpdate = new Date();
+      SiteService.restrictedViews.keyValues.clear();
+    }
+
+    
+
+    if (SiteService.restrictedViews.keyValues.has(str)){
+      res = true;
+
+      // //Create a Set
+      // let diceEntries = new Set<number>();
+
+      // //Add values
+      // diceEntries.add(1);
+      // diceEntries.add(2);
+      // diceEntries.add(3);
+      // diceEntries.add(4).add(5).add(6);   //Chaining of add() method is allowed
+      
+      // //Check value is present or not
+      // diceEntries.has(1);                 //true
+      // diceEntries.has(10);                //false
+      
+      // //Size of Set 
+      // diceEntries.size;                   //6
+      
+      // //Delete a value from set
+      // diceEntries.delete(6);              // true
+      
+      // //Clear whole Set
+      // diceEntries.clear();                //Clear all entries
+    } else{
+      SiteService.restrictedViews.keyValues.add(str);
+    }
+
+    console.log(SiteService.restrictedViews);
+
+    return res;      
+  }
+
 }

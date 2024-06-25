@@ -80,7 +80,7 @@ export class Site {
                 res += `
                 <li class="site-card">                    
                     <div>
-                        <a href="${siteList[i].URL}" target="_blank" rel="external">
+                        <a class="external_link" href="https://${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
                             <div class="site_card_top">
                                 <div>
                                     <img class="site_card_img" src="${siteList[i].OGImg}">
@@ -165,7 +165,39 @@ export class Site {
         return res;
     }
 
+    static updateViews(siteId){
+        // 카테고리 불러오기
+        let data = axios.patch("http://localhost:3000/site/views", {
+            SiteId : siteId
+        },
+        {
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+            
+        })
+        .then((result) => {
+            console.log(result);            
+        })
+        .catch((error) => {
+            console.error(error);
+        });        
+    }
+
     static cardEvent(){
+        
+        //조회수 측정 효과 추가
+        const cardLinks = document.querySelectorAll(".external_link");
+        cardLinks.forEach((element) => {
+            element.addEventListener("click", (val)=>{
+                val.preventDefault();
+                console.log(element);
+                this.updateViews(element.dataset.siteid)
+                
+            });
+        });
+
+        // 좋아요, 즐겨찾기 이벤트 추가
         const cardAbleClick = document.querySelectorAll(".site_card_bottom");
         for (const one of cardAbleClick){
             one.addEventListener("click", (value)=>{
@@ -174,4 +206,6 @@ export class Site {
             })
         }
     }
+
+    
 }

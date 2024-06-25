@@ -27,8 +27,7 @@ export class CategoryService {
   async findAll() : Promise<Category[]> {
     if (CategoryService.categorys == null){
       CategoryService.categorys = [];
-      CategoryService.categorys = await this.cRepo.find();
-      
+      CategoryService.categorys = await this.cRepo.find();      
     }
     // let data = await this.cRepo.find()
     return CategoryService.categorys;

@@ -569,6 +569,7 @@ console.log("category");
             siteList.push(siteInfo);
             break;
         default:
+            siteMapTextEl.innerHTML = "기타";
             siteInfo = {
                 SiteId : "0ed4da2192f14c5598df83542fbf9a76",
                 Name : "naver",
