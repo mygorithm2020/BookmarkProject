@@ -190,7 +190,7 @@ export class SiteService {
           console.log(error.code);
 
           
-          
+          throw new HttpException(`html data download failed, ${error.code}, ${error.message} `, HttpStatus.BAD_REQUEST);
           throw `html data download failed, ${error.code}, ${error.message} `;
         }),
       ),
@@ -230,7 +230,127 @@ export class SiteService {
 
   async findAll() : Promise<Site[]> {
     console.log("This action returns all site");
-    return await this.cRepo.find();
+    return await this.cRepo.find({
+      where : {
+        IsDeleted : 0,
+        Status : 2,  
+      },
+      take : 20,
+      order : {
+        Views : "DESC"
+      }        
+    });
+  }
+
+  private static basicRecommendSites : {lastDate : Date, sites : Site[]};
+
+  async getRecommendSite() : Promise<Site[]>{
+
+    // lock 처리
+    // 데이터 캐시처리, no 하루가 지날 때 마다 다시 조회하자
+    if (!SiteService.basicRecommendSites ||
+      SiteService.basicRecommendSites.lastDate.getUTCDate() !== new Date().getUTCDate()){
+
+      // 기준 조회수, 좋아요, 싫어요, 등록일 순, 취향....
+      // 걍 각 카테고리 탑 몇개씩 뽑아올 것인가.....
+
+      // orm으로 짜기 너무 복잡해서 일단 쿼리로 짬
+      let queryData = await this.cRepo.query(
+        `(select * from ta_site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 20)
+        UNION
+        (select * from ta_site where isDeleted = 0 and status = 2 order by ta_site.LIKE DESC LIMIT 20)
+        UNION
+        (select * from ta_site where isDeleted = 0 and status = 2 order by dislike ASC LIMIT 20)
+        UNION
+        (select * from ta_site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 20)
+        order by rand()`        
+      );
+
+      console.log(queryData[0]);
+
+      SiteService.basicRecommendSites = {
+        lastDate : new Date(),
+        sites : queryData
+      }  
+      
+      
+      // 쿼리가 이상해...
+      // let data = await Promise.all([
+      //   this.cRepo.find({
+      //     where : {
+      //       IsDeleted : 0,
+      //       Status : 2,  
+      //     },
+      //     take : 20,
+      //     order : {
+      //       Views : "DESC"
+      //     }        
+      //   }),
+      //   this.cRepo.find({
+      //     where : {
+      //       IsDeleted : 0,
+      //       Status : 2,  
+      //     },
+      //     take : 20,
+      //     order : {
+      //       Like : "DESC"
+      //     }        
+      //   }),
+      //   this.cRepo.find({
+      //     where : {
+      //       IsDeleted : 0,
+      //       Status : 2,  
+      //     },
+      //     take : 20,
+      //     order : {
+      //       Dislike : "ASC"
+      //     }        
+      //   }),
+      //   this.cRepo.find({
+      //     where : {
+      //       IsDeleted : 0,
+      //       Status : 2,  
+      //     },
+      //     take : 20,
+      //     order : {
+      //       CreatedDate : "DESC"
+      //     }        
+      //   })
+      // ])
+      
+
+      // SiteService.basicRecommedSites = [];
+      // for (const da of data){
+      //   console.log(da);
+      //   SiteService.basicRecommedSites.concat(da);
+      // }
+    }
+    //  매번 셔플...???? 조금 과한데....
+    this.shuffle(SiteService.basicRecommendSites.sites);
+
+    return SiteService.basicRecommendSites.sites;
+  }
+
+  //  피셔-예이츠 셔플(Fisher-Yates shuffle)
+  shuffle<T>(array : T[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1)); // 무작위 인덱스(0 이상 i 미만)
+  
+      // array[i]와 array[j]를 바꿔치기합니다.
+      // 아래 답안에선 "구조 분해 할당(destructuring assignment)"이라 불리는 문법을 사용하여
+      // 원하는 것을 구현하였는데,
+      // 이 문법에 대한 자세한 내용은 이후 챕터에서 다룰 예정입니다.
+      // 구조 분해 할당을 사용하지 않고 작성한 코드는 아래와 같습니다.
+      // let t = array[i]; array[i] = array[j]; array[j] = t
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  async findRecommedSites() : Promise<Site[]> {
+    console.log("This action findRecommedSites site");
+
+    const res = this.getRecommendSite();
+    return res;
   }
 
   findOne(id: string) : Promise<Site> {

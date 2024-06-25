@@ -10,6 +10,8 @@ nav {
 #category-open {
     max-width: 50px;
     max-height: 40px;
+    
+    
 }
 
 nav > input {
@@ -18,20 +20,33 @@ nav > input {
 
 nav ul {
     font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
 }
 
-nav ul > li {
+#nav_list_box > li {
     display: inline-block;
     margin: 5px;
+    padding: 5px;
     min-width: 80px;
     text-align: center;    
 }
+/* 너비 좁아지면 카테고리 사이드로 빼자 세로로 */
 
 #nav_list_box li a {
     color: black;
+    display: block;
 }
 
 nav a:hover {
     color: blue;
     font-weight: bold;
+}
+
+#category-box-show {
+    display : "block";
+    opacity : 1;
+    transition : "0.5s";
 }

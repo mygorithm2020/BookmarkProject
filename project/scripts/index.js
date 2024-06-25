@@ -1,3 +1,5 @@
+import { Site } from "./site.js";
+
 console.log("open index");
 
 function Drawer(el, open=false){
@@ -28,29 +30,42 @@ Drawer.prototype.close = function() {
     this.el.style.transform = "translate(400px)";
 }
 
-// header용 footer용도 따로 파야겠네...
-const drawer = new Drawer(document.querySelector(".drawer"));
-document.getElementById("enquiry").addEventListener("click", e =>{
-    if (drawer.isOpen){
-        drawer.close();
-    } else {
-        drawer.open();
-    }
-});
 
-document.getElementById("category-open").addEventListener("click", e => {
-    const cate = document.getElementById("category-box-expand");    
-    if (cate.style.display == "none"){
-        cate.style.display = "block";
-        cate.style.opacity = 1;
-        cate.style.transition = "0.5s";
-    } else {
-        cate.style.opacity = 0;
-        cate.style.transition = "0.5s";
-        cate.style.display = "none";        
-    }
-})
 window.onload = function() {
+
+    setTimeout(() => {
+        // header용 footer용도 따로 파야겠네...
+        const drawer = new Drawer(document.querySelector(".drawer"));
+        document.getElementById("enquiry").addEventListener("click", e =>{
+            if (drawer.isOpen){
+                drawer.close();
+            } else {
+                drawer.open();
+            }
+        });
+
+        console.log("ssss");
+
+        
+
+        let mainContent01El = document.getElementById("main_content01");
+    
+        
+
+        // 추천 사이트 조회
+        axios.get("http://localhost:3000/site/recommend")
+        .then((result) => {
+            console.log(result);
+            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
+            Site.cardEvent();
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+        
+    }, 1000);
+
+    
     
 
 };

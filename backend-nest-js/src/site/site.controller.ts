@@ -21,15 +21,18 @@ export class SiteController {
     // if (true){
     //   throw new HttpException("mssssessage", HttpStatus.BAD_REQUEST);
     // }
+
     // 없으면 새로 넣기
-    let res;
+    // let res;
 
     //왜 에러를 못잡는거야!!!!...............
-    try{
-      res = this.siteService.create(createSiteDto);      
-    } catch (err){
-      throw new HttpException("please check the url", HttpStatus.BAD_REQUEST);
-    }
+    // try{
+    //   res = this.siteService.create(createSiteDto);      
+    // } catch (err){
+    //   throw new HttpException("please check the url", HttpStatus.BAD_REQUEST);
+    // }
+
+    let res = this.siteService.create(createSiteDto);
     
     return res;
   }
@@ -45,6 +48,12 @@ export class SiteController {
     return res;
   }
 
+  // 나중에 로그인했으면 로그인 정보 받아서 로직에 관여
+  @Get("/recommend")
+  findRecommended() {
+    return this.siteService.findRecommedSites();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.siteService.findOne(id);
@@ -55,6 +64,8 @@ export class SiteController {
     console.log(url);
     return this.siteService.findOneByUrl(url);
   }
+
+  
 
   // put은 자원에 대한 정보 전체를 전달해줘야하고, 없으면 생성하는 의미를 갖고있음
   // 고로 일부만 수정하는 patch가 좀 더 맞는듯 함

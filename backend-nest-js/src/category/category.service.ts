@@ -11,6 +11,8 @@ export class CategoryService {
 
   constructor(@InjectRepository(Category) private cRepo : Repository<Category>){}
 
+  static categorys : Category[];
+
   async create(category: Category) : Promise<Category> {
     // uuid 생성
     const newId = uuidV4().replaceAll("-", "");
@@ -23,7 +25,13 @@ export class CategoryService {
   }
 
   async findAll() : Promise<Category[]> {
-    return await this.cRepo.find();
+    if (CategoryService.categorys == null){
+      CategoryService.categorys = [];
+      CategoryService.categorys = await this.cRepo.find();
+      
+    }
+    // let data = await this.cRepo.find()
+    return CategoryService.categorys;
   }
 
   findOne(id: string) : Promise<Category> {

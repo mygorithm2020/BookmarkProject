@@ -2,10 +2,16 @@
 select CURRENT_TIMESTAMP;
 select UTC_TIMESTAMP();
 ------------------------------------ 
+SHOW DATABASES;
+SHOW TABLES;
 describe ta_member;
 SHOW FULL COLUMNS FROM ta_category;
 SHOW INDEX FROM ta_member;
+SHOW INDEX FROM ta_site;
 
+CREATE INDEX 인덱스이름
+
+ON 테이블이름 (필드이름1, 필드이름2, ...)
 
 
 
