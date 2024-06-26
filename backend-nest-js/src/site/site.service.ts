@@ -11,6 +11,9 @@ import { HttpService } from '@nestjs/axios';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { JSDOM } from 'jsdom'
 import { parse as Parse } from 'node-html-parser';
+import { Uuid } from 'src/publicComponents/utils';
+import { url } from 'inspector';
+import { ServerCache } from 'src/publicComponents/memoryCache';
 
 @Injectable()
 export class SiteService {
@@ -20,12 +23,9 @@ export class SiteService {
     private readonly httpService: HttpService){}
 
   
-
   getUrlObj(url : string): URL{
 
-    console.log(url);
-
-    if (url === null || url === undefined){
+    if (url == null){
       throw "no url";
     }
 
@@ -33,19 +33,28 @@ export class SiteService {
     if (!url.startsWith("http")){
       url = "https://" + url;
     }
-    console.log(url);
     // url 파싱해서 정리
     let res = new URL(url);
     return res;
   }
 
-  correctionSiteObj(site : Site, urlObj : URL){
+  correctionUrl(urlObj : URL) : string{
 
     // protocol을 넣을지 고민헀는데, 브라우저가 아니면 에러남 넣는게 맞음, 근데 내가 브라우저처럼 자동으로 넣어도 되는거 아님?
     // 빼고가자
     // 아니면 따로 칼럼 파서 넣든가..... 후.....
     // https 가 아니어도 받아줄것인가....................ㅇㅇ 받자.. 받는게 맞음.
-    site.URL = urlObj.host;
+    let res = urlObj.origin;
+
+    return res;
+  }
+
+  // 사이트 객체 데이터 보정
+  generateSite(site : Site, urlObj : URL){
+
+    site.SiteId = Uuid.get32Id();
+
+    site.URL = this.correctionUrl(urlObj);
 
     // 파비콘 없으면 기본 url에 /favicon.ico 로 보정
     console.log(site.FaviconImg);
@@ -61,59 +70,116 @@ export class SiteService {
     }
     
     // 기타 파악되는대로 여기 추가 필요
+    // if (site.OGSiteName){
+    //   site.Name = site.OGSiteName
+    // } else 
+    if (site.OGTitle){
+      site.Name = site.OGTitle
+    } else if (site.Title){
+      site.Name = site.Title
+    }
+
+    if (site.OGImg){
+      site.Img = site.OGImg
+    } else if (site.FaviconImg){
+      site.Img = site.FaviconImg
+    }
+
+    if (site.OGDescription){
+      site.SiteDescription = site.OGDescription
+    } else if (site.Description){
+      site.SiteDescription = site.Description
+    }
 
   }
 
   async create(site: Site) : Promise<Site> {
-    console.log('This action adds a new category');
-    // uuid 생성
-    const newId = uuidV4().replaceAll("-", "");
-    site.SiteId = newId;   
-    
+    console.log('This action adds a new site');
+        
     let urlObj = this.getUrlObj(site.URL);    
     console.log(urlObj);
     
     // url 유효한지 확인
     // 여기가 문제구만.......
-    let extractedSite = await this.setSiteParse(urlObj.origin);
-      console.log(extractedSite);    
-      if (extractedSite !== null){
-        site.Title = extractedSite.Title;
-
-        site.FaviconImg = extractedSite.FaviconImg;
-
-        site.Description = extractedSite.Description;
-        site.Keywords = extractedSite.Keywords;
-        site.OGTitle = extractedSite.OGTitle;
-        site.OGSiteName = extractedSite.OGSiteName;
-        site.OGImg = extractedSite.OGImg;
-        site.OGDescription = extractedSite.OGDescription;
-        site.OGURL = extractedSite.OGURL;    
-
-        this.correctionSiteObj(site, urlObj);      
-      }
-      //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
+    let SiteModel = await this.setSiteParse(urlObj.origin);         
+    if (SiteModel){
+      this.generateSite(SiteModel, urlObj);      
+      console.log(SiteModel);
+    }
+    //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
 
     // 데이터 삽입
+    // 기존에 있는지 확인
+    let previous = await this.findOneByUrl(SiteModel.URL, false);
+    console.log(previous);
+    if (previous){
+      throw new HttpException("the url is already exist", HttpStatus.BAD_REQUEST);
+    }
+
     
-    const newCategory = this.cRepo.create(site);
-    console.log(newCategory);
-    return await this.cRepo.save(newCategory);
+
+    const newSite = this.cRepo.create(SiteModel);
+    console.log(newSite);
+    return await this.cRepo.save(newSite);
     
   }
 
-  async setSiteJSDOM(reqUrl: string): Promise<Site> {
+  async createTest(site: Site) {
+    console.log('This action adds a new site');
+        
+    let urlObj = this.getUrlObj(site.URL);    
+    console.log(urlObj);
     
-    let s = await JSDOM.fromURL(reqUrl); //timeout 설정이 불가능...
-    let sss = s.window.document.querySelectorAll("meta");
-    for (let qdx = 0; qdx < sss.length; qdx++){
-      console.log(`name : ${sss[qdx].getAttribute("name")}`);
-      console.log(`property : ${sss[qdx].getAttribute("property")}`);
-      console.log(`content : ${sss[qdx].getAttribute("content")}`);
-      console.log("------------------------");
+    // url 유효한지 확인
+    // 여기가 문제구만.......
+    let SiteModel = await this.setSiteParse(urlObj.origin);         
+    if (SiteModel){
+      this.generateSite(SiteModel, urlObj);      
+      console.log(SiteModel);
     }
-    console.log("============");
-    return new Site();    
+    //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
+    console.log("===========================");
+
+    let ss = await this.setSiteJSDOM(urlObj.origin);
+    console.log(ss);
+
+    console.log("===========================");
+
+    let ww = await this.setSiteAxios(urlObj.origin);
+    console.log(ww);
+    
+  }
+
+  async setSiteAxios(reqUrl : string) : Promise<Site> {
+    let result : Site;
+    const res = await axios.get(reqUrl);
+    console.log(res.data);
+
+    return result;
+  }
+
+  async setSiteJSDOM(reqUrl: string): Promise<Site> {
+    let res: Site
+    try{
+      
+
+    }catch{
+
+    }
+
+    let s = await JSDOM.fromURL(reqUrl); //timeout 설정이 불가능...
+    // console.log(s.window.document.textContent);
+    console.log(s.window);
+    // let sss = s.window.document.querySelectorAll("meta");
+    // for (let qdx = 0; qdx < sss.length; qdx++){
+    //   console.log(`name : ${sss[qdx].getAttribute("name")}`);
+    //   console.log(`property : ${sss[qdx].getAttribute("property")}`);
+    //   console.log(`content : ${sss[qdx].getAttribute("content")}`);
+    //   console.log("------------------------");
+    // }
+    // console.log("============");
+    
+    return res;    
   }
 
   async setSiteJSDOMByHtml(htmlStr : string): Promise<Site> {
@@ -128,15 +194,32 @@ export class SiteService {
   }
 
   async setSiteParse(reqUrl): Promise<Site> {
-    let res : Site = new Site();
-    console.log("setSite");  
-    const data = await this.getSiteHtml(reqUrl);
-    console.log(data.substring(0, 200));      
-    console.log("============");  
+    let res : Site;
+    console.log("setSite"); 
+    // 정확한 url을 입력해도 안될 수가 있음.... 수작업이 필요함..... 
+    let data : string = "";
+    try {
+      data = await this.getSiteHtml(reqUrl);
+      console.log(data.substring(0, 200));      
+      console.log("============");  
+
+    } catch (err) {
+      
+      // 404만 걸러내자
+      console.log(err);
+      if (err.response && err.response.status && err.response.status === HttpStatus.NOT_FOUND){
+        throw new HttpException("url is wrong, can not find the site", HttpStatus.BAD_REQUEST);
+      }
+    }
 
     try{
       const root = Parse(data);
-      res.Title = root.querySelector("title").textContent;
+      res = new Site();
+      const titleEl = root.querySelector("title");
+      if (titleEl){
+        res.Title = titleEl.textContent;
+      }
+      
 
       let links = root.querySelectorAll("link");
       for (let idx =0; idx < links.length; idx ++){
@@ -146,14 +229,13 @@ export class SiteService {
         }        
       }      
       // <link rel="shortcut icon" href="//img.danawa.com/new/danawa_main/v1/img/danawa_favicon.ico">
-      //  데이터 넣는 과정추가 필요
       let metaEl = root.querySelectorAll("meta")
       for (let idx = 0; idx <metaEl.length; idx++){
-        console.log(metaEl[idx].rawAttrs);
-        // console.log(`name : ${metaEl[idx].getAttribute("name")}`);
-        // console.log(`property : ${metaEl[idx].getAttribute("property")}`);
-        // console.log(`attri : ${JSON.stringify(metaEl[idx].attrs)}`);
-        console.log("------------------------");
+        // console.log(metaEl[idx].rawAttrs);
+        // // console.log(`name : ${metaEl[idx].getAttribute("name")}`);
+        // // console.log(`property : ${metaEl[idx].getAttribute("property")}`);
+        // // console.log(`attri : ${JSON.stringify(metaEl[idx].attrs)}`);
+        // console.log("------------------------");
         if ( metaEl[idx].getAttribute("name") === "Description"){
           res.Description = metaEl[idx].getAttribute("content");
         } else if ( metaEl[idx].getAttribute("name") === "Keywords"){
@@ -174,48 +256,40 @@ export class SiteService {
       
     } catch (err) {
       console.log(err);
-      throw "data extract failed";
+      // throw "data extract failed";
     }
 
     return res;
   }
 
+  // 아직 브라우저가 아니라서 그런지 계속 문제가 생기는 오류가 있음... 다른 방법을 써야할지도...
   async getSiteHtml(reqUrl) : Promise<string> {
     // html body 파일 가져오기
     const data = await lastValueFrom(
       this.httpService.get<string>(reqUrl, {
         maxRedirects : 2,
         timeout : 2000,
+        headers : {
+          Accept : "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+          "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+          
+        },
+        
+
       })
       .pipe(
         map(res => res.data),
-        catchError((error: AxiosError) => {
-          console.log(error.message);
-          console.log(error.code);
+        // catchError((error: AxiosError) => {
+        //   console.log(error);
+        //   console.log(error.message);
+        //   console.log(error.code);
 
           
-          throw new HttpException(`html data download failed, ${error.code}, ${error.message} `, HttpStatus.BAD_REQUEST);
-          throw `html data download failed, ${error.code}, ${error.message} `;
-        }),
+        //   throw new HttpException(`html data download failed, ${error.code}, ${error.message}`, HttpStatus.BAD_REQUEST);
+        //   throw `html data download failed, ${error.code}, ${error.message} `;
+        // }),
       ),
     );
-
-    // const data = await lastValueFrom(
-    //   this.httpService.get<string>(fixedURL.origin, {
-    //     maxRedirects : 0,
-    //     timeout : 3000,
-    //   })
-    //   .pipe(
-    //     map(response => response.status),
-    //     catchError((error: AxiosError) => {
-    //         console.log(error.status);        
-    //         // console.log('An error happened!');
-    //         // throw 'An error happened!';
-    //         return EMPTY;
-    //     }),
-    //   ),
-    // );
-    // console.log("httpService" + data + "\r\n")
 
     // let q = await axios.get(fixedURL.origin, {
     //     timeout : 3000
@@ -262,9 +336,9 @@ export class SiteService {
       let queryData = await this.cRepo.query(
         `(select * from ta_site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 20)
         UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by ta_site.LIKE DESC LIMIT 20)
+        (select * from ta_site where isDeleted = 0 and status = 2 order by Good DESC LIMIT 20)
         UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by dislike ASC LIMIT 20)
+        (select * from ta_site where isDeleted = 0 and status = 2 order by Bad ASC LIMIT 20)
         UNION
         (select * from ta_site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 20)
         order by rand()`        
@@ -353,8 +427,23 @@ export class SiteService {
   async findRecommedSites() : Promise<Site[]> {
     console.log("This action findRecommedSites site");
 
-    const res = this.getRecommendSite();
-    return res;
+    // const res = this.getRecommendSite();
+    let result = ServerCache.getRecommendSites();
+    if (!result){
+      const reLoadSites : Site[] = await this.cRepo.query(
+        `(select * from ta_site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 20)
+        UNION
+        (select * from ta_site where isDeleted = 0 and status = 2 order by Good DESC LIMIT 20)
+        UNION
+        (select * from ta_site where isDeleted = 0 and status = 2 order by Bad ASC LIMIT 20)
+        UNION
+        (select * from ta_site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 20)
+        order by rand()`        
+      );
+      ServerCache.setRecommendSites(reLoadSites);
+      result = ServerCache.getRecommendSites();      
+    }
+    return result;
   }
 
   findOne(id: string) : Promise<Site> {
@@ -367,15 +456,16 @@ export class SiteService {
     
   }
 
-  findOneByUrl(url: string) : Promise<Site> {
-    url = this.getUrlObj(url).host;
-    console.log(`This action returns a #${url} category`);
-    return this.cRepo.findOne({
+  async findOneByUrl(url: string, isDeleted? : boolean) : Promise<Site> {
+    url = this.correctionUrl(this.getUrlObj(url));
+    console.log(`This action returns a by #${url} site`);
+    let res : Site = await this.cRepo.findOne({
       where : {
-        URL :  url
-      }
+        URL : url,
+        IsDeleted : isDeleted ?  1 : 0
+      },
     })
-    
+    return res;    
   }
 
   async update(id: string, updateCategoryDto: Site) : Promise<UpdateResult> {

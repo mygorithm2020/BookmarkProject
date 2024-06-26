@@ -12,9 +12,7 @@ export class Site {
     })
     SiteId : string;
 
-    @Column()
-    SiteProtocol : string;
-
+    
     @ApiProperty({required : true})
     @Column({
         type: "varchar",
@@ -54,7 +52,11 @@ export class Site {
         length : 511,
         nullable : true
     })
-    LogoImg : string;
+    Img : string;
+
+    @ApiProperty()
+    @Column()
+    SiteDescription : string;
 
     @ApiProperty()
     @Column({
@@ -72,6 +74,41 @@ export class Site {
     })
     AppLinkIOS : string;
 
+
+    @Column({
+        type: "bigint",
+        default : 0
+    })
+    Views : number;
+    @Column({
+        type : "bigint",
+        default : 0
+    })
+    Good : number;
+    @Column({
+        type: "bigint",
+        default : 0
+    })
+    Bad : number;
+    @Column({
+        type: "varchar",
+        length : 127,
+        nullable : true
+    })
+    MemberId : string;
+    // @Column({
+    //     type: "varchar",
+    //     length : 127,
+    //     nullable : true
+    // })
+    // Email : string;
+
+    @Column({
+        type : "int",
+        nullable : true,
+        default : 1
+    })
+    Status : number;
 
     @ApiProperty()
     @Column({
@@ -139,42 +176,7 @@ export class Site {
     })
     OGURL : string;
 
-
-
-    @Column({
-        type: "bigint",
-        default : 0
-    })
-    Views : number;
-    @Column({
-        type : "bigint",
-        default : 0
-    })
-    Like : number;
-    @Column({
-        type: "bigint",
-        default : 0
-    })
-    Dislike : number;
-    @Column({
-        type: "varchar",
-        length : 127,
-        nullable : true
-    })
-    Admin : string;
-    @Column({
-        type: "varchar",
-        length : 127,
-        nullable : true
-    })
-    Email : string;
-
-    @Column({
-        type : "int",
-        nullable : true,
-        default : 1
-    })
-    Status : number;
+   
         
     @Column({
         type : "smallint",

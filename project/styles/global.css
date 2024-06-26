@@ -51,4 +51,10 @@ main {
     display: none;
 }
 
-
+/* 데이터가 없는 경우 */
+.no-data-templet {
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+    vertical-align: middle;
+}

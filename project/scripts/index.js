@@ -65,6 +65,14 @@ window.onload = async function() {
             console.error(error);
             
         });
+
+        axios.get("https://www.coupang.com/")
+        .then((res) => {
+            console.log(res);
+        })
+        .catch (err => {
+            console.error(err);
+        })
         
     }, 1000);
 

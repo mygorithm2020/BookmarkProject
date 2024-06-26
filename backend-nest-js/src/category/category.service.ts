@@ -1,17 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
 import {v4 as uuidV4} from 'uuid'
+import { MysqlException } from 'src/publicComponents/ExceptionHandler';
+import { ServerCache } from 'src/publicComponents/memoryCache';
 
 @Injectable()
 export class CategoryService {
 
-  constructor(@InjectRepository(Category) private cRepo : Repository<Category>){}
+  constructor(@InjectRepository(Category) private cRepo : Repository<Category>){
 
-  static categorys : Category[];
+  }
 
   async create(category: Category) : Promise<Category> {
     // uuid 생성
@@ -20,17 +22,33 @@ export class CategoryService {
     category.CategoryId = newId;
     const newCategory = this.cRepo.create(category);
     console.log('This action adds a new category');
-    return await this.cRepo.save(newCategory);
+    try{
+      let res = await this.cRepo.save(newCategory);
+      return res;
+    } catch (err) {
+      console.log(err);
+      MysqlException.throwHttpException(err.code);      
+    }
+    
+    
+    // return await this.cRepo.save(newCategory);
     
   }
 
   async findAll() : Promise<Category[]> {
-    if (CategoryService.categorys == null){
-      CategoryService.categorys = [];
-      CategoryService.categorys = await this.cRepo.find();      
+    let result  = ServerCache.getCategorys();
+    console.log(`result ${result}`);
+    
+    if (!result){
+      console.log("읎다");
+      let newCategorys = await this.cRepo.find();
+      ServerCache.setCategorys(newCategorys);
+      result = ServerCache.getCategorys();
+      console.log(`result22 ${result}`);
     }
+
     // let data = await this.cRepo.find()
-    return CategoryService.categorys;
+    return result;
   }
 
   findOne(id: string) : Promise<Category> {

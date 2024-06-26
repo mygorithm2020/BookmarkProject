@@ -42,6 +42,9 @@ export class Category {
     })
     Status : number;
 
+    @Column()
+    Sequence : number;
+
     @Column({
         type : "smallint",
         nullable : false,

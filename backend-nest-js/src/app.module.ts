@@ -15,6 +15,7 @@ import { Site } from './site/entities/site.entity';
 import { HttpModule } from '@nestjs/axios';
 import { MemberModule } from './member/member.module';
 import { Member } from './member/entities/member.entity';
+import { MysqlException } from './publicComponents/ExceptionHandler';
 
 dotenv.config();
 

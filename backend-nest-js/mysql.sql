@@ -31,3 +31,81 @@ CREATE TABLE TA_Member (
   UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP) 
 
 );
+
+-- 카테고리
+CREATE TABLE TA_Category(
+    CategoryId CHAR(32) NOT NULL PRIMARY KEY,
+    ParentId CHAR(32),
+    Layer INT NOT NULL DEFAULT 1 COMMENT "카테고리간의 계층을 의미 1이 최상위 단계",
+    Name VARCHAR(32) NOT NULL UNIQUE,
+    NameKR VARCHAR(32) UNIQUE,
+    status INT NOT NULL default 1 COMMENT "카테고리 등록상태 1:등록, 2: 사용, 3:보류",
+    Sequence INT NOT NULL DEFAULT 99999999,
+
+    IsDeleted SMALLINT NOT NULL DEFAULT 0,
+    CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+    UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+
+) COMMENT "사이트의 카테고리 구분";
+
+
+-- 사이트
+CREATE TABLE TA_Site(
+    SiteId CHAR(32) NOT NULL PRIMARY KEY,
+
+    -- 보여지는 정보이며, 입력(수정)도 가능함, 아래 순위별로 데이터 채워짐
+
+    URL VARCHAR(255) NOT NULL,
+    Name VARCHAR(32),
+    NameKR VARCHAR(32),
+    IPAddress VARCHAR(32),
+    Img VARCHAR(512),
+    SiteDescription VARCHAR(1024),
+    AppLinkAndroid VARCHAR(255),
+    AppLinkIOS VARCHAR(255),
+
+    -- 추가 정보 --
+    Views BIGINT,
+    Good INT,
+    Bad INT,
+    MemberId VARCHAR(64),
+    -- Email VARCHAR(64), 
+    Status Int COMMENT  "카테고리 등록상태 1:등록, 2: 사용, 3:보류" ,      
+
+    -- 기본 정보 -- 2순위
+    Title VARCHAR(255),
+    FaviconImg VARCHAR(512),
+    Description VARCHAR(1024),
+    Keywords VARCHAR(1024),
+
+    -- og 정보 -- default
+    OGTitle VARCHAR(255),
+    OGSiteName VARCHAR(255),
+    OGImg VARCHAR(512),
+    OGDescription VARCHAR(1024),
+    OGURL VARCHAR(255),
+
+    
+        
+    IsDeleted SMALLINT NOT NULL DEFAULT 0,
+    CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+    UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+
+);
+CREATE INDEX IDX_Site_IsDeletedStatus ON TA_Site (IsDeleted, Status);
+ALTER TABLE TA_Site MODIFY COLUMN URL VARCHAR(255) NOT NULL UNIQUE;
+
+describe ta_site;
+
+-- 다대다
+-- 카테고리 사이트 릴레이션
+CREATE TABLE TA_ReCategorySite(
+  id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'PK',
+  CategoryId CHAR(32) NOT NULL,
+  SiteId CHAR(32) NOT NULL,
+
+  CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+);
+CREATE INDEX IDX_ReCategorySite_CategoryIdSiteId ON TA_ReCategorySite (CategoryId, SiteId);
+
+

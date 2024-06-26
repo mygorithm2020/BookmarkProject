@@ -12,28 +12,28 @@ import { Response, Request } from 'express';
 export class SiteController {
   constructor(private readonly siteService: SiteService) {}
 
-  
+  //  단순히 db에 등록하는과정에 가까움
+  // 결국 다시 누군가 수작업으로 확인 필요
   @Post()
   create(@Body() createSiteDto: Site, @Ip() reqIp: string) {
     console.log(reqIp);   
-    
-    // 기존에 있는지 확인
-
-    // if (true){
-    //   throw new HttpException("mssssessage", HttpStatus.BAD_REQUEST);
-    // }
-
-    // 없으면 새로 넣기
-    // let res;
-
-    //왜 에러를 못잡는거야!!!!...............
-    // try{
-    //   res = this.siteService.create(createSiteDto);      
-    // } catch (err){
-    //   throw new HttpException("please check the url", HttpStatus.BAD_REQUEST);
-    // }
+        
+    // 권한 체크
+    // 관리자면 통과, 로그인 했으면 통과
 
     let res = this.siteService.create(createSiteDto);
+    
+    return res;
+  }
+
+  @Post("/test")
+  createTest(@Body() createSiteDto: Site, @Ip() reqIp: string) {
+    console.log(reqIp);   
+        
+    // 권한 체크
+    // 관리자면 통과, 로그인 했으면 통과
+
+    let res = this.siteService.createTest(createSiteDto);
     
     return res;
   }
@@ -56,16 +56,19 @@ export class SiteController {
     return this.siteService.findRecommedSites();
   }
 
+  // body가 필요해서 post로
+  @Post("/url")
+  findOneByUrl(@Body() site: Site) {
+    console.log(site);
+    return this.siteService.findOneByUrl(site.URL);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.siteService.findOne(id);
   }
 
-  @Get("url/:url")
-  findOneByUrl(@Param('url') url: string) {
-    console.log(url);
-    return this.siteService.findOneByUrl(url);
-  }
+  
 
   @Patch('/views')
   async updateViews(@Req() req: Request, @Body() updateSiteDto: Site) {

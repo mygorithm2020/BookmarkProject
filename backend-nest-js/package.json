@@ -30,6 +30,7 @@
     "@nestjs/typeorm": "^10.0.2",
     "@types/jsdom": "^21.1.7",
     "@types/uuid": "^9.0.8",
+    "async-lock": "^1.4.1",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "jsdom": "^24.1.0",

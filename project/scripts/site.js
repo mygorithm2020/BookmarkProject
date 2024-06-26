@@ -68,103 +68,56 @@ export class Site {
 
     static listToHtmlv2(siteList){
         let res = "";
-        if (siteList == null){
-            res = `<div>해당 카테고리에 등록된 사이트가 없습니다.</div>`;
+        if (!siteList || siteList.length === 0){
+            console.log("sdd");
+            res = `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
+            return res;
 
-        }else{
-            res += `<ul id="site-card-box">`
-            for (let i = 0 ; i < siteList.length; i++){
-                if (siteList[i].OGDescription.length > 40){
-                    siteList[i].OGDescription = siteList[i].OGDescription.slice(0, 40) + "...";
-                }
-                res += `
-                <li class="site-card">                    
-                    <div>
-                        <a class="external_link" href="https://${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
-                            <div class="site_card_top">
-                                <div>
-                                    <img class="site_card_img" src="${siteList[i].OGImg}">
-                                </div>                                
-                                <div>
-                                    ${siteList[i].OGTitle}<br>
-                                </div>
-                            </div>
-                            <ul class="site-detail-box">
-                                <li>클릭 수 ${siteList[i].Views}</li>
-                                <li>좋아요 ${siteList[i].Like}</li>
-                                <li>싫어요 1만</li>                                
-                            </ul>   
-                            <p class="site_card_description">
-                                ${siteList[i].OGDescription}                              
-                            </p>                            
-                        </a>                                                        
-                    </div>                    
-                    <div class="site_card_bottom" 
-                    data-siteId=${siteList[i].SiteId}
-                    data-siteURL=${siteList[i].URL}>
-                        <input type="button" name="좋아요요요??" value="좋아요">
-                        <input type="button" value="내 즐겨찾기 삭제" class="remove-my-bookmark">
-                    </div>
-                </li>`;
-            }
-                            
-            res += `
-            </ul>`
         }
+
+        res += `<ul id="site-card-box">`
+        for (let i = 0 ; i < siteList.length; i++){
+            if (siteList[i].OGDescription.length > 80){
+                siteList[i].OGDescription = siteList[i].OGDescription.slice(0, 80) + "...";
+            }
+            res += `
+            <li class="site-card">                    
+                <div>
+                    <a class="external_link" href="https://${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
+                        <div class="site_card_top">
+                            <div>
+                                <img class="site_card_img" src="${siteList[i].OGImg}">
+                            </div>                                
+                            <div>
+                                ${siteList[i].OGTitle}<br>
+                            </div>
+                        </div>
+                        <ul class="site-detail-box">
+                            <li>클릭 수 ${siteList[i].Views}</li>
+                            <li>좋아요 ${siteList[i].Like}</li>
+                            <li>싫어요 ${siteList[i].Dislike}</li>                                
+                        </ul>   
+                        <p class="site_card_description">
+                            ${siteList[i].OGDescription}                              
+                        </p>                            
+                    </a>                                                        
+                </div>                    
+                <div class="site_card_bottom" 
+                data-siteId=${siteList[i].SiteId}
+                data-siteURL=${siteList[i].URL}>
+                    <input type="button" name="좋아요요요??" value="좋아요">
+                    <input type="button" value="내 즐겨찾기" class="remove-my-bookmark">
+                </div>
+            </li>`;
+        }
+                        
+        res += `
+        </ul>`
 
         return res;
     }
 
-    // 장바구니용
-    static listToHtmlCart(siteList){
-        let res = "";
-        if (siteList == null){
-            res = `<div>해당 카테고리에 등록된 사이트가 없습니다.</div>`;
-
-        }else{
-            res += `<ul id="site-card-box">`
-            for (let i = 0 ; i < siteList.length; i++){
-                if (siteList[i].Description.length > 40){
-                    siteList[i].Description = siteList[i].Description.slice(0, 40) + "...";
-                }
-                res += `
-                <li class="site-card">                    
-                    <div>
-                        <a href="${siteList[i].URL}" target="_blank" rel="external">
-                            <div class="site_card_top">
-                                <div>
-                                    <img class="site_card_img" src="${siteList[i].Image}">
-                                </div>                                
-                                <div>
-                                    ${siteList[i].Name}<br>
-                                </div>
-                            </div>
-                            <ul class="site-detail-box">
-                                <li>클릭 수 ${siteList[i].Views}</li>
-                                <li>좋아요 ${siteList[i].Like}</li>
-                                <li>싫어요 1만</li>                                
-                            </ul>   
-                            <p class="site_card_description">
-                                ${siteList[i].Description}                              
-                            </p>                            
-                        </a>                                                        
-                    </div>                    
-                    <div class="site_card_bottom" 
-                    data-siteId=${siteList[i].SiteId}
-                    data-siteURL=${siteList[i].URL}>
-                        <input type="button" name="좋아요요요??" value="좋아요">
-                        <input type="button" value="내 즐겨찾기 삭제" class="remove-my-bookmark">
-                    </div>
-                </li>`;
-            }
-                            
-            res += `
-            </ul>`
-        }
-
-        return res;
-    }
-
+    
     static updateViews(siteId){
         // 카테고리 불러오기
         let data = axios.patch("http://localhost:3000/site/views", {
@@ -190,7 +143,7 @@ export class Site {
         const cardLinks = document.querySelectorAll(".external_link");
         cardLinks.forEach((element) => {
             element.addEventListener("click", (val)=>{
-                val.preventDefault();
+                // val.preventDefault();
                 console.log(element);
                 this.updateViews(element.dataset.siteid)
                 
