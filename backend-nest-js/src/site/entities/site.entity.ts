@@ -1,6 +1,7 @@
 import { ApiBody, ApiProperty } from "@nestjs/swagger";
 import { Content } from "src/app.entity";
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Category } from "src/category/entities/category.entity";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({name : "TA_Site"})
 export class Site {
@@ -192,4 +193,19 @@ export class Site {
 
     @UpdateDateColumn()
     UpdatedDate : Date;
+
+    @ManyToMany(type => Category) //, (category) => category.CategoryId
+    @JoinTable({
+        name : "ta_recategorysite",
+        joinColumn : {
+            name : "SiteId",
+            referencedColumnName : "SiteId"   //타겟 테이블의 id값
+        },
+        inverseJoinColumn : {
+            name : "CategoryId",
+            referencedColumnName : "CategoryId" 
+        }
+    })
+    Categories: Category[]
+
 }

@@ -66,6 +66,10 @@ export class Site {
         return res;
     }
 
+    // 숫자(뷰, 좋아요, 싫어요)
+    // 1000 넘어가면 표기 변경 구현
+    
+
     static listToHtmlv2(siteList){
         let res = "";
         if (!siteList || siteList.length === 0){
@@ -77,28 +81,28 @@ export class Site {
 
         res += `<ul id="site-card-box">`
         for (let i = 0 ; i < siteList.length; i++){
-            if (siteList[i].OGDescription.length > 80){
-                siteList[i].OGDescription = siteList[i].OGDescription.slice(0, 80) + "...";
+            if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
+                siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
             }
             res += `
             <li class="site-card">                    
                 <div>
-                    <a class="external_link" href="https://${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
+                    <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
                         <div class="site_card_top">
                             <div>
-                                <img class="site_card_img" src="${siteList[i].OGImg}">
+                                <img class="site_card_img" src="${siteList[i].Img ? siteList[i].Img : '../images/noImage.jpg'}" alt="no images">
                             </div>                                
                             <div>
-                                ${siteList[i].OGTitle}<br>
+                                ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}<br>
                             </div>
                         </div>
                         <ul class="site-detail-box">
                             <li>클릭 수 ${siteList[i].Views}</li>
-                            <li>좋아요 ${siteList[i].Like}</li>
-                            <li>싫어요 ${siteList[i].Dislike}</li>                                
+                            <li>좋아요 ${siteList[i].Good}</li>
+                            <li>싫어요 ${siteList[i].Bad}</li>                                
                         </ul>   
                         <p class="site_card_description">
-                            ${siteList[i].OGDescription}                              
+                            ${siteList[i].SiteDescription}                              
                         </p>                            
                     </a>                                                        
                 </div>                    

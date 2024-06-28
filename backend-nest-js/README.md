@@ -5,7 +5,7 @@
 
 ## 개요
 - 기간 : 2024. 06. 06 ~  2024.
-- 기술 스택 : JavaScript, NodeJS, NestJS, MySQL
+- 기술 스택 : JavaScript, NodeJS, NestJS, Typescript, MySQL
 - 목표 : v1 버전(정적웹사이트)에 백엔드 서버 및 DB 추가
 - 프로젝트 실행 방법: 
 - 링크 : 
@@ -42,6 +42,11 @@
     uuid
     typeORM
     app
+    Decorator
+    CORS
+    env
+    Swagger
+
 
 
 ### 환경세팅

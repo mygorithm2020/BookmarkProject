@@ -11,15 +11,17 @@ import { HttpService } from '@nestjs/axios';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { JSDOM } from 'jsdom'
 import { parse as Parse } from 'node-html-parser';
-import { Uuid } from 'src/publicComponents/utils';
+import { CustomUtils } from 'src/publicComponents/utils';
 import { url } from 'inspector';
 import { ServerCache } from 'src/publicComponents/memoryCache';
+import { CategorySite } from './entities/categorySite.entity';
 
 @Injectable()
 export class SiteService {
 
   constructor(
-    @InjectRepository(Site) private cRepo : Repository<Site>,
+    @InjectRepository(Site) private sRepo : Repository<Site>,
+    @InjectRepository(CategorySite) private csRepo : Repository<CategorySite>,
     private readonly httpService: HttpService){}
 
   
@@ -49,49 +51,10 @@ export class SiteService {
     return res;
   }
 
-  // 사이트 객체 데이터 보정
-  generateSite(site : Site, urlObj : URL){
 
-    site.SiteId = Uuid.get32Id();
 
-    site.URL = this.correctionUrl(urlObj);
-
-    // 파비콘 없으면 기본 url에 /favicon.ico 로 보정
-    console.log(site.FaviconImg);
-    if (site.FaviconImg === undefined){
-      site.FaviconImg = urlObj.origin + "/favicon.ico";
-
-    } else if (site.FaviconImg.startsWith("//")){
-      
-    } else if (site.FaviconImg.startsWith("/")){ //  이미지 url 링크 보정
-      site.FaviconImg = urlObj.origin + site.FaviconImg;
-    } else {
-      // 모르겠네 또 어떤 케이스가...
-    }
-    
-    // 기타 파악되는대로 여기 추가 필요
-    // if (site.OGSiteName){
-    //   site.Name = site.OGSiteName
-    // } else 
-    if (site.OGTitle){
-      site.Name = site.OGTitle
-    } else if (site.Title){
-      site.Name = site.Title
-    }
-
-    if (site.OGImg){
-      site.Img = site.OGImg
-    } else if (site.FaviconImg){
-      site.Img = site.FaviconImg
-    }
-
-    if (site.OGDescription){
-      site.SiteDescription = site.OGDescription
-    } else if (site.Description){
-      site.SiteDescription = site.Description
-    }
-
-  }
+  readonly WEBPAGECNT = 21;
+  
 
   async create(site: Site) : Promise<Site> {
     console.log('This action adds a new site');
@@ -118,10 +81,22 @@ export class SiteService {
 
     
 
-    const newSite = this.cRepo.create(SiteModel);
+    const newSite = this.sRepo.create(SiteModel);
     console.log(newSite);
-    return await this.cRepo.save(newSite);
+    return await this.sRepo.save(newSite);
     
+  }
+
+  createCategorySite(siteId : string, categories : string[]){
+    "insert into TA_ReCategorySite values (categories, siteId, ...)";
+    let cnt = 0;
+    for (const categoryId of categories){
+      const one = new CategorySite();
+      one.CategoryId = categoryId;
+      one.SiteId = siteId
+      // 유니크라서 중복 떠도 걍 진행이 되니까 냅두자
+      this.csRepo.save(one);
+    }
   }
 
   async createTest(site: Site) {
@@ -160,13 +135,6 @@ export class SiteService {
 
   async setSiteJSDOM(reqUrl: string): Promise<Site> {
     let res: Site
-    try{
-      
-
-    }catch{
-
-    }
-
     let s = await JSDOM.fromURL(reqUrl); //timeout 설정이 불가능...
     // console.log(s.window.document.textContent);
     console.log(s.window);
@@ -177,7 +145,6 @@ export class SiteService {
     //   console.log(`content : ${sss[qdx].getAttribute("content")}`);
     //   console.log("------------------------");
     // }
-    // console.log("============");
     
     return res;    
   }
@@ -306,18 +273,241 @@ export class SiteService {
 
   }
 
-  async findAll() : Promise<Site[]> {
+  async findAll(page? : number) : Promise<Site[]> {
     console.log("This action returns all site");
-    return await this.cRepo.find({
+    if(!page){
+      page = 1;
+    }
+    return await this.sRepo.find({
       where : {
         IsDeleted : 0,
         Status : 2,  
-      },
-      take : 20,
+      },      
       order : {
         Views : "DESC"
-      }        
+      },
+      skip : this.WEBPAGECNT * (page - 1),
+      take : this.WEBPAGECNT *  page,       
     });
+  }
+
+  async findOnlyByCategory(categoryId : string, page? : number) : Promise<Site[]> {
+    console.log(`This action returns site in ${categoryId} category`);
+    console.log(`categoryId : ${categoryId}, page : ${page}`);
+    page = page? page : 1;
+    if (!categoryId || categoryId.length !== 32 || page < 0){
+      throw new HttpException("query error, please check the value", HttpStatus.BAD_REQUEST);
+    }
+
+    
+    `SELECT *
+    FROM ta_site AS S
+    JOIN TA_ReCategorySite AS R
+    ON S.SiteId = R.SiteId WHERE R.CategoryId = ""`
+
+    //  여기에서 카테고리 조인 뺴고, inner 조인으로 만들기 => queryBuilder 사용
+    // 근데 쿼리보면 left join인데 왜 값은 inner join 처럼 나오지,,,,,,,?????
+    let temp = await this.sRepo.find({
+      relations : {
+        Categories : true
+      },
+      where : {
+        IsDeleted : 0,
+        Status : 2,
+        Categories : {
+          CategoryId : categoryId
+        }
+      },
+      skip : this.WEBPAGECNT * (page - 1),
+      take : this.WEBPAGECNT *  page,
+    });
+
+    // await this.sRepo.createQueryBuilder("s").join
+
+
+    // let res = await this.csRepo.find({
+    //   relations : {
+    //     sites : true      
+    //   },
+    //   // relationLoadStrategy : "join",      
+    //   where : {
+    //     CategoryId : "62fe83ca0943461e9e28491ee6260965"
+    //   }
+    // })
+    // console.log(res);
+    
+    return temp;
+  }
+
+  
+
+  async findRecommedSites() : Promise<Site[]> {
+    console.log("This action findRecommedSites site");
+
+    // const res = this.getRecommendSite();
+    let result = ServerCache.getRecommendSites();
+    if (!result){
+      const reLoadSites : Site[] = await this.sRepo.query(
+        `(select * from ta_site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 20)
+        UNION
+        (select * from ta_site where isDeleted = 0 and status = 2 order by Good DESC LIMIT 20)
+        UNION
+        (select * from ta_site where isDeleted = 0 and status = 2 order by Bad ASC LIMIT 20)
+        UNION
+        (select * from ta_site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 20)
+        order by rand()`        
+      );
+      ServerCache.setRecommendSites(reLoadSites);
+      result = ServerCache.getRecommendSites();      
+    }
+    //  매번 셔플...???? 조금 과한데..
+    CustomUtils.shuffle(result);
+    return result;
+  }
+
+  findOne(id: string) : Promise<Site> {
+    console.log(`This action returns a #${id} category`);
+    return this.sRepo.findOne({
+      where : {
+        SiteId :  id
+      }
+    })
+    
+  }
+
+  async findOneByUrl(url: string, isDeleted? : boolean) : Promise<Site> {
+    url = this.correctionUrl(this.getUrlObj(url));
+    console.log(`This action returns a by #${url} site`);
+    let res : Site = await this.sRepo.findOne({
+      where : {
+        URL : url,
+        IsDeleted : isDeleted ?  1 : 0
+      },
+    })
+    return res;    
+  }
+
+  async update(id: string, updateCategoryDto: Site) : Promise<UpdateResult> {
+    console.log(`This action updates a #${id} category`);    
+    // console.log(await this.cRepo.update(id, updateCategoryDto));
+    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
+    return await this.sRepo.update(id, updateCategoryDto);
+  }
+
+  async updateViews(id: string) : Promise<UpdateResult> {
+    console.log(`This action updateViews a #${id} site`);    
+    // console.log(await this.cRepo.update(id, updateCategoryDto));
+    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
+    return await this.sRepo.update(id, {
+      Views : () => "Views + 1",
+    })
+    .catch( (res)=> {
+      throw new HttpException(res, HttpStatus.BAD_REQUEST);
+    });
+    // await this.commentRepository.update(comment.id, {
+    //   likeCount: () => 'like_count + 1',
+    // });
+  }
+
+  async remove(id: string) {
+    console.log(`This action removes a #${id} category`);
+    await this.sRepo.update(id, {
+      IsDeleted : 1
+    })
+  }
+
+  static restrictedViews : {lastUpdate : Date, keyValues : Set<string>};
+
+  // 조회수 조작을 막기 위해 같은 정보로 동일하게 오면 제한, 대신 메모리로 관리하므로 시간마다 값 초기화
+  static checkRestrictedViews(str) : boolean {
+    let res = false;
+    if (!SiteService.restrictedViews){
+      SiteService.restrictedViews = {
+        lastUpdate : new Date(),
+        keyValues : new Set<string>()
+      }  
+    } else if (SiteService.restrictedViews.lastUpdate.getUTCHours !== new Date().getUTCHours){
+      SiteService.restrictedViews.lastUpdate = new Date();
+      SiteService.restrictedViews.keyValues.clear();
+    }
+
+    
+
+    if (SiteService.restrictedViews.keyValues.has(str)){
+      res = true;
+
+      // //Create a Set
+      // let diceEntries = new Set<number>();
+
+      // //Add values
+      // diceEntries.add(1);
+      // diceEntries.add(2);
+      // diceEntries.add(3);
+      // diceEntries.add(4).add(5).add(6);   //Chaining of add() method is allowed
+      
+      // //Check value is present or not
+      // diceEntries.has(1);                 //true
+      // diceEntries.has(10);                //false
+      
+      // //Size of Set 
+      // diceEntries.size;                   //6
+      
+      // //Delete a value from set
+      // diceEntries.delete(6);              // true
+      
+      // //Clear whole Set
+      // diceEntries.clear();                //Clear all entries
+    } else{
+      SiteService.restrictedViews.keyValues.add(str);
+    }
+
+    console.log(SiteService.restrictedViews);
+
+    return res;      
+  }
+
+  // 사이트 객체 데이터 보정
+  generateSite(site : Site, urlObj : URL){
+
+    site.SiteId = CustomUtils.get32UuId();
+
+    site.URL = this.correctionUrl(urlObj);
+
+    // 파비콘 없으면 기본 url에 /favicon.ico 로 보정
+    console.log(site.FaviconImg);
+    if (site.FaviconImg === undefined){
+      site.FaviconImg = urlObj.origin + "/favicon.ico";
+
+    } else if (site.FaviconImg.startsWith("//")){
+      
+    } else if (site.FaviconImg.startsWith("/")){ //  이미지 url 링크 보정
+      site.FaviconImg = urlObj.origin + site.FaviconImg;
+    } else {
+      // 모르겠네 또 어떤 케이스가...
+    }
+    
+    // 기타 파악되는대로 여기 추가 필요
+    // if (site.OGSiteName){
+    //   site.Name = site.OGSiteName
+    // } else 
+    if (site.OGTitle){
+      site.Name = site.OGTitle
+    } else if (site.Title){
+      site.Name = site.Title
+    }
+
+    if (site.OGImg){
+      site.Img = site.OGImg
+    } else if (site.FaviconImg){
+      site.Img = site.FaviconImg
+    }
+
+    if (site.OGDescription){
+      site.SiteDescription = site.OGDescription
+    } else if (site.Description){
+      site.SiteDescription = site.Description
+    }
+
   }
 
   private static basicRecommendSites : {lastDate : Date, sites : Site[]};
@@ -333,7 +523,7 @@ export class SiteService {
       // 걍 각 카테고리 탑 몇개씩 뽑아올 것인가.....
 
       // orm으로 짜기 너무 복잡해서 일단 쿼리로 짬
-      let queryData = await this.cRepo.query(
+      let queryData = await this.sRepo.query(
         `(select * from ta_site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 20)
         UNION
         (select * from ta_site where isDeleted = 0 and status = 2 order by Good DESC LIMIT 20)
@@ -403,148 +593,10 @@ export class SiteService {
       //   SiteService.basicRecommedSites.concat(da);
       // }
     }
-    //  매번 셔플...???? 조금 과한데....
-    this.shuffle(SiteService.basicRecommendSites.sites);
+    //  매번 셔플...???? 조금 과한데.... => 프론트로 옮기자
+    CustomUtils.shuffle(SiteService.basicRecommendSites.sites);
 
     return SiteService.basicRecommendSites.sites;
-  }
-
-  //  피셔-예이츠 셔플(Fisher-Yates shuffle)
-  shuffle<T>(array : T[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1)); // 무작위 인덱스(0 이상 i 미만)
-  
-      // array[i]와 array[j]를 바꿔치기합니다.
-      // 아래 답안에선 "구조 분해 할당(destructuring assignment)"이라 불리는 문법을 사용하여
-      // 원하는 것을 구현하였는데,
-      // 이 문법에 대한 자세한 내용은 이후 챕터에서 다룰 예정입니다.
-      // 구조 분해 할당을 사용하지 않고 작성한 코드는 아래와 같습니다.
-      // let t = array[i]; array[i] = array[j]; array[j] = t
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-
-  async findRecommedSites() : Promise<Site[]> {
-    console.log("This action findRecommedSites site");
-
-    // const res = this.getRecommendSite();
-    let result = ServerCache.getRecommendSites();
-    if (!result){
-      const reLoadSites : Site[] = await this.cRepo.query(
-        `(select * from ta_site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 20)
-        UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by Good DESC LIMIT 20)
-        UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by Bad ASC LIMIT 20)
-        UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 20)
-        order by rand()`        
-      );
-      ServerCache.setRecommendSites(reLoadSites);
-      result = ServerCache.getRecommendSites();      
-    }
-    return result;
-  }
-
-  findOne(id: string) : Promise<Site> {
-    console.log(`This action returns a #${id} category`);
-    return this.cRepo.findOne({
-      where : {
-        SiteId :  id
-      }
-    })
-    
-  }
-
-  async findOneByUrl(url: string, isDeleted? : boolean) : Promise<Site> {
-    url = this.correctionUrl(this.getUrlObj(url));
-    console.log(`This action returns a by #${url} site`);
-    let res : Site = await this.cRepo.findOne({
-      where : {
-        URL : url,
-        IsDeleted : isDeleted ?  1 : 0
-      },
-    })
-    return res;    
-  }
-
-  async update(id: string, updateCategoryDto: Site) : Promise<UpdateResult> {
-    console.log(`This action updates a #${id} category`);    
-    // console.log(await this.cRepo.update(id, updateCategoryDto));
-    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
-    return await this.cRepo.update(id, updateCategoryDto);
-  }
-
-  async updateViews(id: string) : Promise<UpdateResult> {
-    console.log(`This action updateViews a #${id} site`);    
-    // console.log(await this.cRepo.update(id, updateCategoryDto));
-    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
-    return await this.cRepo.update(id, {
-      Views : () => "Views + 1",
-    })
-    .catch( (res)=> {
-      throw new HttpException(res, HttpStatus.BAD_REQUEST);
-    });
-    // await this.commentRepository.update(comment.id, {
-    //   likeCount: () => 'like_count + 1',
-    // });
-  }
-
-  async remove(id: string) {
-    console.log(`This action removes a #${id} category`);
-    await this.cRepo.update(id, {
-      IsDeleted : 1
-    })
-  }
-
-  static restrictedViews : {lastUpdate : Date, keyValues : Set<string>};
-
-  // 조회수 조작을 막기 위해 같은 정보로 동일하게 오면 제한, 대신 메모리로 관리하므로 시간마다 값 초기화
-  static checkRestrictedViews(str) : boolean {
-    let res = false;
-    if (!SiteService.restrictedViews){
-      SiteService.restrictedViews = {
-        lastUpdate : new Date(),
-        keyValues : new Set<string>()
-      }  
-    } else if (SiteService.restrictedViews.lastUpdate.getUTCHours !== new Date().getUTCHours){
-      SiteService.restrictedViews.lastUpdate = new Date();
-      SiteService.restrictedViews.keyValues.clear();
-    }
-
-    
-
-    if (SiteService.restrictedViews.keyValues.has(str)){
-      res = true;
-
-      // //Create a Set
-      // let diceEntries = new Set<number>();
-
-      // //Add values
-      // diceEntries.add(1);
-      // diceEntries.add(2);
-      // diceEntries.add(3);
-      // diceEntries.add(4).add(5).add(6);   //Chaining of add() method is allowed
-      
-      // //Check value is present or not
-      // diceEntries.has(1);                 //true
-      // diceEntries.has(10);                //false
-      
-      // //Size of Set 
-      // diceEntries.size;                   //6
-      
-      // //Delete a value from set
-      // diceEntries.delete(6);              // true
-      
-      // //Clear whole Set
-      // diceEntries.clear();                //Clear all entries
-    } else{
-      SiteService.restrictedViews.keyValues.add(str);
-    }
-
-    console.log(SiteService.restrictedViews);
-
-    return res;      
   }
 
 }

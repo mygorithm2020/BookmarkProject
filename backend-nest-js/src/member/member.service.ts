@@ -4,7 +4,7 @@ import { UpdateMemberDto } from './dto/update-member.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from './entities/member.entity';
 import { Repository } from 'typeorm';
-import { Uuid } from 'src/publicComponents/utils';
+import { CustomUtils } from 'src/publicComponents/utils';
 
 @Injectable()
 export class MemberService {
@@ -36,7 +36,7 @@ export class MemberService {
     
     console.log('This action adds a new member');
     // uuid 생성
-    const newId = Uuid.get32Id();
+    const newId = CustomUtils.get32UuId();
     memObj.MemberId = newId;
     this.correctionMemObj(memObj);
 

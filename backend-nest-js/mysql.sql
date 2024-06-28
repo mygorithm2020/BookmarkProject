@@ -8,6 +8,7 @@ describe ta_member;
 SHOW FULL COLUMNS FROM ta_category;
 SHOW INDEX FROM ta_member;
 SHOW INDEX FROM ta_site;
+select * from information_schema.table_constraints WHERE TABLE_NAME = 'TA_ReCategorySite';
 
 CREATE INDEX 인덱스이름
 
@@ -24,7 +25,7 @@ CREATE TABLE TA_Member (
   NickName VARCHAR(32), 
   Birth CHAR(8),
   Gender CHAR(1) COMMENT "남자 : M, 여자 : F",
-  Authorization INT DEFAULT 1 COMMENT "일반, 개인 : 1, 회사계정 : 2, ..",
+  Authorization INT DEFAULT 1 COMMENT "1 : 일반, 개인, 2: 회사계정, 3: 관리자.... ..",
 
   IsDeleted SMALLINT NOT NULL DEFAULT 0,
   CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
@@ -65,12 +66,12 @@ CREATE TABLE TA_Site(
     AppLinkIOS VARCHAR(255),
 
     -- 추가 정보 --
-    Views BIGINT,
-    Good INT,
-    Bad INT,
+    Views BIGINT default 0,
+    Good INT  default 0,
+    Bad INT  default 0,
     MemberId VARCHAR(64),
     -- Email VARCHAR(64), 
-    Status Int COMMENT  "카테고리 등록상태 1:등록, 2: 사용, 3:보류" ,      
+    Status Int COMMENT  "카테고리 등록상태 1:등록, 2: 사용, 3:보류, 4: 숨기기(문제)" ,      
 
     -- 기본 정보 -- 2순위
     Title VARCHAR(255),
@@ -93,19 +94,22 @@ CREATE TABLE TA_Site(
 
 );
 CREATE INDEX IDX_Site_IsDeletedStatus ON TA_Site (IsDeleted, Status);
-ALTER TABLE TA_Site MODIFY COLUMN URL VARCHAR(255) NOT NULL UNIQUE;
+ALTER TABLE TA_Site MODIFY COLUMN Bad INT  default 0;
 
 describe ta_site;
 
 -- 다대다
 -- 카테고리 사이트 릴레이션
 CREATE TABLE TA_ReCategorySite(
-  id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'PK',
+  Id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'PK',
   CategoryId CHAR(32) NOT NULL,
   SiteId CHAR(32) NOT NULL,
 
-  CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+  CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+  
+  UNIQUE KEY UK_ReCategorySite (CategoryId, SiteId)
 );
 CREATE INDEX IDX_ReCategorySite_CategoryIdSiteId ON TA_ReCategorySite (CategoryId, SiteId);
+CREATE INDEX IDX_ReCategorySite_CategoryId ON TA_ReCategorySite (CategoryId);
 
 

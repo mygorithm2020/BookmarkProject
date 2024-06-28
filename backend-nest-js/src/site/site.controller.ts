@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, Ip, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, Ip, Req, Query } from '@nestjs/common';
 import { SiteService } from './site.service';
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
@@ -38,6 +38,31 @@ export class SiteController {
     return res;
   }
 
+  @Post("/category-site")
+  createCategorySite(@Body() site: Site, @Ip() reqIp: string) {
+    console.log(reqIp);   
+        
+    // 권한 체크
+    // 관리자면 통과, 로그인 했으면 통과
+    let categoryIds = [];
+    for (const categoryId of site.Categories){
+      categoryIds.push(categoryId);
+    }
+
+    let res = this.siteService.createCategorySite(site.SiteId, categoryIds);
+    
+    return res;
+  }
+
+  // body가 필요해서 post로
+  @Post("/url")
+  findOneByUrl(@Body() site: Site) {
+    console.log(site);
+    return this.siteService.findOneByUrl(site.URL);
+  }
+
+  // 실제 다 부르는건 말이 안되니까..... 페이징 느낌처럼 개수를 나누는 처리 필요
+  // 숫자 1당 20개씩하고 없으면 리턴 없고...
   @Get()
   async findAll() : Promise<ApiResult<Site[]>> {
     let q = await this.siteService.findAll();
@@ -56,16 +81,19 @@ export class SiteController {
     return this.siteService.findRecommedSites();
   }
 
-  // body가 필요해서 post로
-  @Post("/url")
-  findOneByUrl(@Body() site: Site) {
-    console.log(site);
-    return this.siteService.findOneByUrl(site.URL);
+  // 숫자 1당 20개씩하고 없으면 리턴 없고...
+  @Get("/category")
+  findSitesByCategory(@Query("id") categoryId : string, @Query("page") page: number){
+    console.log(`categoryId : ${categoryId}`);
+    let result = this.siteService.findOnlyByCategory(categoryId, page);
+    return result;
   }
 
+  
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.siteService.findOne(id);
+  findOne(@Param('id') siteId: string) {
+    return this.siteService.findOne(siteId);
   }
 
   
@@ -101,9 +129,7 @@ export class SiteController {
     return 
   }
 
-  
-
-  @Delete(':id')
+  // @Delete(':id')
   remove(@Param('id') id: string) {
     return this.siteService.remove(id);
   }
