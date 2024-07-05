@@ -167,7 +167,7 @@ export class SiteService {
     let data : string = "";
     try {
       data = await this.getSiteHtml(reqUrl);
-      console.log(data.substring(0, 200));      
+      console.log(data.substring(0, 100));      
       console.log("============");  
 
     } catch (err) {
@@ -235,7 +235,7 @@ export class SiteService {
     const data = await lastValueFrom(
       this.httpService.get<string>(reqUrl, {
         maxRedirects : 2,
-        timeout : 2000,
+        timeout : 2500,
         headers : {
           Accept : "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
           "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
@@ -308,6 +308,11 @@ export class SiteService {
     //  여기에서 카테고리 조인 뺴고, inner 조인으로 만들기 => queryBuilder 사용
     // 근데 쿼리보면 left join인데 왜 값은 inner join 처럼 나오지,,,,,,,?????
     let temp = await this.sRepo.find({
+      select : {
+        Categories : {
+          CategoryId : true
+        }
+      },
       relations : {
         Categories : true
       },
@@ -361,7 +366,7 @@ export class SiteService {
       result = ServerCache.getRecommendSites();      
     }
     //  매번 셔플...???? 조금 과한데..
-    CustomUtils.shuffle(result);
+    // CustomUtils.shuffle(result);
     return result;
   }
 

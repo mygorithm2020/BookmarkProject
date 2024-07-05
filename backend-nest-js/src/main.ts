@@ -6,6 +6,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   
+  //server timeout 설정
+  const server = app.getHttpServer();
+
+  // server.setTimeout(10);
+
+  // swagger 설정
   const config = new DocumentBuilder()
     .setTitle('Cats example')
     .setDescription('The cats API description')
@@ -15,6 +21,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swaggerApi', app, document);
 
+  // cors 설정
   app.enableCors({
     // origin : ["http://127.0.0.1:5500"]
     origin : [/127.0.0.1:/, /localhost:/]

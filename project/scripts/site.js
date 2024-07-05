@@ -14,6 +14,14 @@ export class Site {
         this.UpdatedDt = siteInfo.UpdatedDt;
     }
 
+    static shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1)); // 무작위 인덱스(0 이상 i 미만)
+            
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
 
     // site 리스트를 html ul태그로 생성해주는 기능
     static listToHtml(siteList){
@@ -24,7 +32,7 @@ export class Site {
         }else{
             res += `<ul id="site-card-box">`
             for (let i = 0 ; i < siteList.length; i++){
-                if (siteList[i].Description.length > 40){
+                if (siteList[i].Description && siteList[i].Description.length > 40){
                     siteList[i].Description = siteList[i].Description.slice(0, 40) + "...";
                 }
                 res += `
@@ -68,7 +76,7 @@ export class Site {
 
     // 숫자(뷰, 좋아요, 싫어요)
     // 1000 넘어가면 표기 변경 구현
-    
+
 
     static listToHtmlv2(siteList){
         let res = "";

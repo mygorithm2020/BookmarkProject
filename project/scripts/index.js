@@ -58,6 +58,7 @@ window.onload = async function() {
         axios.get("http://localhost:3000/site/recommend")
         .then((result) => {
             console.log(result);
+            Site.shuffle(result.data);
             mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
             Site.cardEvent();
         })
@@ -65,6 +66,7 @@ window.onload = async function() {
             console.error(error);
             
         });
+
         
     }, 1000);
 
