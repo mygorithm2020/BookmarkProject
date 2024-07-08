@@ -1,17 +1,11 @@
+
 export class Category{
 
     CategoryId;
-    
     ParentId;
-
     Layer;
-
-    
     Name;
-
-    
     NameKR ;
-
     Status;
     Sequence;
     IsDeleted;
@@ -19,7 +13,9 @@ export class Category{
     UpdatedDate;
     Sites;
 
-    categories = [];
+    static staticTest = "staticValue";
+
+    static categories = [];
 
     getCategory(){
         // 카테고리 불러오기
@@ -43,13 +39,11 @@ export class Category{
         return data;
     }
 
-    async setNavigationBox(){
-        this.categories = await this.getCategory();
-
+    async setNavigationBox(categories){
         let q = document.getElementById("nav_list_box");
         
         // 세팅
-        for (const d of this.categories){                
+        for (const d of categories){                
             q.insertAdjacentHTML("beforeend", `<li><a href="./category.html?key=${d.Name}">${d.NameKR}</a></li>`);
         }
 

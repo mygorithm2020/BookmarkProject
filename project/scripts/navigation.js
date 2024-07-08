@@ -1,5 +1,12 @@
-
 console.log("navi");
+
+import { Category } from "./categoryObj.js";
+
+
+let cqdsd = new Category();
+Category.categories = await cqdsd.getCategory();
+cqdsd.setNavigationBox(Category.categories);
+
 
 // console.log(navigator);
 // console.log(window);
