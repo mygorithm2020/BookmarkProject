@@ -19,5 +19,5 @@ export class CustomUtils{
   static get32UuId(): string{
     const newId = uuidV4().replaceAll("-", "");
     return newId;
-}
+  } 
 }

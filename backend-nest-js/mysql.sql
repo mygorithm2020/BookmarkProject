@@ -8,7 +8,7 @@ describe ta_member;
 SHOW FULL COLUMNS FROM ta_category;
 SHOW INDEX FROM ta_member;
 SHOW INDEX FROM ta_site;
-select * from information_schema.table_constraints WHERE TABLE_NAME = 'TA_ReCategorySite';
+select * from information_schema.table_constraints WHERE TABLE_NAME = 'TA_site';
 
 CREATE INDEX 인덱스이름
 
@@ -90,7 +90,8 @@ CREATE TABLE TA_Site(
         
     IsDeleted SMALLINT NOT NULL DEFAULT 0,
     CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
-    UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+    UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+    
 
 );
 CREATE INDEX IDX_Site_IsDeletedStatus ON TA_Site (IsDeleted, Status);

@@ -8,13 +8,14 @@ import {v4 as uuidV4} from 'uuid'
 import { URL } from 'url';
 import { EMPTY, catchError, firstValueFrom, lastValueFrom, map } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
-import axios, { AxiosError, HttpStatusCode } from 'axios';
+import axios, { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import { JSDOM } from 'jsdom'
 import { parse as Parse } from 'node-html-parser';
 import { CustomUtils } from 'src/publicComponents/utils';
 import { url } from 'inspector';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 import { CategorySite } from './entities/categorySite.entity';
+import * as iconv from "iconv-lite";
 
 @Injectable()
 export class SiteService {
@@ -64,24 +65,31 @@ export class SiteService {
     
     // url 유효한지 확인
     // 여기가 문제구만.......
-    let SiteModel = await this.setSiteParse(urlObj.origin);         
-    if (SiteModel){
-      this.generateSite(SiteModel, urlObj);      
-      console.log(SiteModel);
+    let siteModel = await this.setSiteParse(urlObj.origin);
+    if (!siteModel){
+      // 설계상 여기에 오기전에 에러가 발생함... 그래도 일단 만들어 놓음
+      throw new HttpException({
+        errCode : 21,
+        error : "server Error, can not make site model"
+
+      }, HttpStatus.BAD_REQUEST);
+
     }
+    this.generateSite(siteModel, urlObj);      
+    console.log(siteModel);
     //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
 
     // 데이터 삽입
     // 기존에 있는지 확인
-    let previous = await this.findOneByUrl(SiteModel.URL, false);
-    console.log(previous);
+    let previous = await this.findOneByUrl(siteModel.URL, false);
     if (previous){
-      throw new HttpException("the url is already exist", HttpStatus.BAD_REQUEST);
-    }
+      throw new HttpException({
+        errCode : 22,
+        error : "the url is already exist"
+      }, HttpStatus.BAD_REQUEST);
+    }    
 
-    
-
-    const newSite = this.sRepo.create(SiteModel);
+    const newSite = this.sRepo.create(siteModel);
     console.log(newSite);
     return await this.sRepo.save(newSite);
     
@@ -161,76 +169,105 @@ export class SiteService {
   }
 
   async setSiteParse(reqUrl): Promise<Site> {
-    let res : Site;
+    let res : Site = new Site();;
     console.log("setSite"); 
     // 정확한 url을 입력해도 안될 수가 있음.... 수작업이 필요함..... 
-    let data : string = "";
+    let response : AxiosResponse;
     try {
-      data = await this.getSiteHtml(reqUrl);
-      console.log(data.substring(0, 100));      
+      response = await this.getSiteHtml(reqUrl);
+      // console.log(response.data.substring(0, 100));      
       console.log("============");  
 
     } catch (err) {
+      //  문제 있는 사이트는 숨기기....
+      res.Status = 5;
       
       // 404만 걸러내자
       console.log(err);
-      if (err.response && err.response.status && err.response.status === HttpStatus.NOT_FOUND){
-        throw new HttpException("url is wrong, can not find the site", HttpStatus.BAD_REQUEST);
+      if((err.code === "ENOTFOUND") || (err.response && err.response.status && err.response.status === HttpStatus.NOT_FOUND)) {
+        throw new HttpException({
+          errCode : 31,
+          error : "url is wrong, can not find the site"
+
+        }, HttpStatus.BAD_REQUEST);
+      }
+
+      // 타임아웃시 나중에 다시 시도 체크
+      if((err.code === "ECONNABORTED")) {
+        throw new HttpException({
+          errCode : 32,
+          error : "URL verification takes too long, please try again later"
+
+        }, HttpStatus.BAD_REQUEST);
       }
     }
 
-    try{
-      const root = Parse(data);
-      res = new Site();
-      const titleEl = root.querySelector("title");
-      if (titleEl){
-        res.Title = titleEl.textContent;
-      }
-      
+    if (response){
+      try{
 
-      let links = root.querySelectorAll("link");
-      for (let idx =0; idx < links.length; idx ++){
-        if ( links[idx].getAttribute("rel") === "shortcut icon" || links[idx].getAttribute("rel") === "icon" ){
-          res.FaviconImg = links[idx].getAttribute("href");
-          break;          
-        }        
-      }      
-      // <link rel="shortcut icon" href="//img.danawa.com/new/danawa_main/v1/img/danawa_favicon.ico">
-      let metaEl = root.querySelectorAll("meta")
-      for (let idx = 0; idx <metaEl.length; idx++){
-        // console.log(metaEl[idx].rawAttrs);
-        // // console.log(`name : ${metaEl[idx].getAttribute("name")}`);
-        // // console.log(`property : ${metaEl[idx].getAttribute("property")}`);
-        // // console.log(`attri : ${JSON.stringify(metaEl[idx].attrs)}`);
-        // console.log("------------------------");
-        if ( metaEl[idx].getAttribute("name") === "Description"){
-          res.Description = metaEl[idx].getAttribute("content");
-        } else if ( metaEl[idx].getAttribute("name") === "Keywords"){
-          res.Keywords = metaEl[idx].getAttribute("content");
-        } else if ( metaEl[idx].getAttribute("property") === "og:title"){
-          res.OGTitle = metaEl[idx].getAttribute("content");
-        } else if ( metaEl[idx].getAttribute("property") === "og:site_name"){
-          res.OGSiteName = metaEl[idx].getAttribute("content");
-        } else if ( metaEl[idx].getAttribute("property") === "og:image"){
-          res.OGImg = metaEl[idx].getAttribute("content");
-        } else if ( metaEl[idx].getAttribute("property") === "og:description"){
-          res.OGDescription = metaEl[idx].getAttribute("content");
-        } else if ( metaEl[idx].getAttribute("property") === "og:url"){
-          res.OGURL = metaEl[idx].getAttribute("content");
-        } 
+        // 한글 인코딩 방식 확인 처리, 대부분 utf8이지만 가끔 euckr이 있음
+        let contentType = response.headers['content-type']
+        console.log(contentType);
+        let charset = contentType && contentType.toLowerCase().includes('charset=')
+          ? contentType.toLowerCase().split('charset=')[1]
+          : 'UTF-8';
+        console.log(charset);
+        let data = iconv.decode(response.data, charset);
 
+        // 파싱
+        const root = Parse(data);
+        
+        const titleEl = root.querySelector("title");
+        if (titleEl){
+          res.Title = titleEl.textContent;
+        }
+        
+  
+        let links = root.querySelectorAll("link");
+        for (let idx =0; idx < links.length; idx ++){
+          if ( links[idx].getAttribute("rel") === "shortcut icon" || links[idx].getAttribute("rel") === "icon" ){
+            res.FaviconImg = links[idx].getAttribute("href");
+            break;          
+          }        
+        }      
+        // <link rel="shortcut icon" href="//img.danawa.com/new/danawa_main/v1/img/danawa_favicon.ico">
+        let metaEl = root.querySelectorAll("meta")
+        for (let idx = 0; idx <metaEl.length; idx++){
+          // console.log(metaEl[idx].rawAttrs);
+          // // console.log(`name : ${metaEl[idx].getAttribute("name")}`);
+          // // console.log(`property : ${metaEl[idx].getAttribute("property")}`);
+          // // console.log(`attri : ${JSON.stringify(metaEl[idx].attrs)}`);
+          // console.log("------------------------");
+          if ( metaEl[idx].getAttribute("name") === "Description"){
+            res.Description = metaEl[idx].getAttribute("content");
+          } else if ( metaEl[idx].getAttribute("name") === "Keywords"){
+            res.Keywords = metaEl[idx].getAttribute("content");
+          } else if ( metaEl[idx].getAttribute("property") === "og:title"){
+            res.OGTitle = metaEl[idx].getAttribute("content");
+          } else if ( metaEl[idx].getAttribute("property") === "og:site_name"){
+            res.OGSiteName = metaEl[idx].getAttribute("content");
+          } else if ( metaEl[idx].getAttribute("property") === "og:image"){
+            res.OGImg = metaEl[idx].getAttribute("content");
+          } else if ( metaEl[idx].getAttribute("property") === "og:description"){
+            res.OGDescription = metaEl[idx].getAttribute("content");
+          } else if ( metaEl[idx].getAttribute("property") === "og:url"){
+            res.OGURL = metaEl[idx].getAttribute("content");
+          } 
+  
+        }
+        
+      } catch (err) {
+        console.log(err);
+        // throw "data extract failed";
       }
-      
-    } catch (err) {
-      console.log(err);
-      // throw "data extract failed";
+
     }
 
     return res;
   }
 
   // 아직 브라우저가 아니라서 그런지 계속 문제가 생기는 오류가 있음... 다른 방법을 써야할지도...
-  async getSiteHtml(reqUrl) : Promise<string> {
+  async getSiteHtml(reqUrl : string) : Promise<AxiosResponse> {
     // html body 파일 가져오기
     const data = await lastValueFrom(
       this.httpService.get<string>(reqUrl, {
@@ -241,11 +278,10 @@ export class SiteService {
           "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
           
         },
-        
-
+        responseType : 'arraybuffer'
       })
       .pipe(
-        map(res => res.data),
+        map(res => res),
         // catchError((error: AxiosError) => {
         //   console.log(error);
         //   console.log(error.message);
@@ -479,7 +515,6 @@ export class SiteService {
     site.URL = this.correctionUrl(urlObj);
 
     // 파비콘 없으면 기본 url에 /favicon.ico 로 보정
-    console.log(site.FaviconImg);
     if (site.FaviconImg === undefined){
       site.FaviconImg = urlObj.origin + "/favicon.ico";
 
