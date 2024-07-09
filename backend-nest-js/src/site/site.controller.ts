@@ -84,9 +84,14 @@ export class SiteController {
 
   // 숫자 1당 20개씩하고 없으면 리턴 없고...
   @Get("/category")
-  findSitesByCategory(@Query("id") categoryId : string, @Query("page") page: number){
+  findSitesByCategory(
+    @Query("id") categoryId : string, 
+    @Query("page") page: number, 
+    @Query("page") sort: string, 
+    @Query("page") sortdir: number){
     console.log(`categoryId : ${categoryId}`);
-    let result = this.siteService.findOnlyByCategory(categoryId, page);
+    let sortdirBool : boolean = sortdir == 0 ? false : true;
+    let result = this.siteService.findOnlyByCategory(categoryId, page, sort, sortdirBool);
     return result;
   }
 

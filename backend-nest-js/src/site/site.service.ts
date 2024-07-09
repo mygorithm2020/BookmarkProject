@@ -3,7 +3,7 @@ import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Site } from './entities/site.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { FindOptionsOrder, Repository, UpdateResult } from 'typeorm';
 import {v4 as uuidV4} from 'uuid'
 import { URL } from 'url';
 import { EMPTY, catchError, firstValueFrom, lastValueFrom, map } from 'rxjs';
@@ -174,7 +174,7 @@ export class SiteService {
     // 정확한 url을 입력해도 안될 수가 있음.... 수작업이 필요함..... 
     let response : AxiosResponse;
     try {
-      response = await this.getSiteHtml(reqUrl);
+      response = await this.getSiteResponse(reqUrl);
       // console.log(response.data.substring(0, 100));      
       console.log("============");  
 
@@ -267,7 +267,7 @@ export class SiteService {
   }
 
   // 아직 브라우저가 아니라서 그런지 계속 문제가 생기는 오류가 있음... 다른 방법을 써야할지도...
-  async getSiteHtml(reqUrl : string) : Promise<AxiosResponse> {
+  async getSiteResponse(reqUrl : string) : Promise<AxiosResponse> {
     // html body 파일 가져오기
     const data = await lastValueFrom(
       this.httpService.get<string>(reqUrl, {
@@ -327,7 +327,7 @@ export class SiteService {
     });
   }
 
-  async findOnlyByCategory(categoryId : string, page? : number) : Promise<Site[]> {
+  async findOnlyByCategory(categoryId : string, page? : number, orderBy? : string, orderDesc? : boolean) : Promise<Site[]> {
     console.log(`This action returns site in ${categoryId} category`);
     console.log(`categoryId : ${categoryId}, page : ${page}`);
     page = page? page : 1;
@@ -340,6 +340,36 @@ export class SiteService {
     FROM ta_site AS S
     JOIN TA_ReCategorySite AS R
     ON S.SiteId = R.SiteId WHERE R.CategoryId = ""`
+
+    // 정렬 옵션
+    let orderOption : FindOptionsOrder<Site> = {}
+    orderDesc = orderDesc? orderDesc : true;
+    switch(orderBy){
+      case "views":
+        orderOption = {
+          Views : orderDesc? "DESC" : "ASC"
+        }
+        break;
+      case "recommend":
+        orderOption = {
+          Views : orderDesc? "DESC" : "ASC"
+        }
+        break;
+      case "bad":
+        orderOption = {
+          Views : orderDesc? "DESC" : "ASC"
+        }
+        break;
+      case "createDate":
+        orderOption = {
+          Views : orderDesc? "DESC" : "ASC"
+        }
+        break;
+      default:
+        orderOption = {
+          Views : orderDesc? "DESC" : "ASC"
+        }
+    }
 
     //  여기에서 카테고리 조인 뺴고, inner 조인으로 만들기 => queryBuilder 사용
     // 근데 쿼리보면 left join인데 왜 값은 inner join 처럼 나오지,,,,,,,?????
@@ -359,6 +389,7 @@ export class SiteService {
           CategoryId : categoryId
         }
       },
+      order : orderOption,
       skip : this.WEBPAGECNT * (page - 1),
       take : this.WEBPAGECNT *  page,
     });
@@ -508,7 +539,7 @@ export class SiteService {
   }
 
   // 사이트 객체 데이터 보정
-  generateSite(site : Site, urlObj : URL){
+  async generateSite(site : Site, urlObj : URL){
 
     site.SiteId = CustomUtils.get32UuId();
 
@@ -516,8 +547,15 @@ export class SiteService {
 
     // 파비콘 없으면 기본 url에 /favicon.ico 로 보정
     if (site.FaviconImg === undefined){
-      site.FaviconImg = urlObj.origin + "/favicon.ico";
+      // 이거 존재하는지 확인하고 하자.....
+      try{
+        await this.getSiteResponse(urlObj.origin + "/favicon.ico");
+        site.FaviconImg = urlObj.origin + "/favicon.ico";
 
+      } catch (err) {
+        
+      }
+      
     } else if (site.FaviconImg.startsWith("//")){
       
     } else if (site.FaviconImg.startsWith("/")){ //  이미지 url 링크 보정
@@ -534,6 +572,11 @@ export class SiteService {
       site.Name = site.OGTitle
     } else if (site.Title){
       site.Name = site.Title
+    }
+
+    //  이미지 url 링크 보정
+    if (site.OGImg && !site.OGImg.startsWith("//") && site.OGImg.startsWith("/")){ 
+      site.OGImg = urlObj.origin + site.OGImg;
     }
 
     if (site.OGImg){

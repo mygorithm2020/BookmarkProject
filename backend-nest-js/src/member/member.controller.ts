@@ -15,6 +15,11 @@ export class MemberController {
     return this.memberService.create(createMemberDto);
   }
 
+  @Post("/login")
+  login(@Body() createMemberDto: Member) {
+    return this.memberService.loginWithEmailPw(createMemberDto.MemEmail, createMemberDto.password);
+  }
+
   @Get()
   findAll() {
     let res = this.memberService.findAll();
