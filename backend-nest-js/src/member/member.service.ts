@@ -1,55 +1,95 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from './entities/member.entity';
 import { Repository } from 'typeorm';
-import { CustomUtils } from 'src/publicComponents/utils';
+import { CustomEncrypt, CustomUtils } from 'src/publicComponents/utils';
+import * as bcrypt from 'bcrypt';
+import { ServerCache } from 'src/publicComponents/memoryCache';
 
 @Injectable()
 export class MemberService {
 
-  constructor(@InjectRepository(Member)
-  private mRepo: Repository<Member>) { }
-
-  encryptPassword(passwordStr : string) : string{
-
-    // 해시 암호 SHA256으로 구현 필요 결과 64자
-    let res = "90579d3f6e254858ac9e01c50a069a5f9b38f902589b40e2b8ced84ffc15fec7";
-
-    return res;
-  }
+  constructor(
+    @InjectRepository(Member) private mRepo: Repository<Member>,
+    private readonly customUtils : CustomUtils
+  ) { }
 
   correctionMemObj(memObj : Member){
     // 비밀번호 암호화
-    memObj.password = this.encryptPassword(memObj.password);
+    memObj.password = CustomEncrypt.getInstance().encryptHash(memObj.password);
 
-    if (memObj.NickName === null){
+    if (memObj.NickName == null){
       memObj.NickName = memObj.MemEmail.slice(0, memObj.MemEmail.indexOf("@"));      
     }
 
+    // 인증되었는지 확인 필요
     memObj.Authorization = 1;
-    
+  }
+
+  async makeSessionId(memberId : string) : Promise<string> {
+    // 값 여러개를 더해서 암호화하기
+    let res = memberId +"|"+ new Date().toUTCString();
+    console.log(res);
+    console.log(Buffer.from(res, "utf-8").toString("base64"));
+    return res;
+  }
+
+  decryptSessionId(memberId : string) : string {
+    // 값 여러개를 더해서 암호화하기
+    let res = memberId + new Date().toUTCString();
+    return res;
   }
 
   async create(memObj: Member) : Promise<Member> {    
+    CustomEncrypt.getInstance().test();
     
     console.log('This action adds a new member');
+    // 기존에 있으면 리턴
+
+    const member = await this.findOneByEmail(memObj.MemEmail);
+    if (member || member.MemberId){
+      throw new HttpException({
+        errCode : 21,
+        error : "same email already exist"
+      }, HttpStatus.BAD_REQUEST);
+    }
+   
+    
     // uuid 생성
-    const newId = CustomUtils.get32UuId();
+    const newId = this.customUtils.get32UuId();
     memObj.MemberId = newId;
     this.correctionMemObj(memObj);
 
     console.log(memObj);
     const newMem = this.mRepo.create(memObj);
-    console.log(newMem);    
+    console.log(newMem);  
+    let res = await this.mRepo.save(newMem);
     return await this.mRepo.save(newMem);
     
   }
 
   // 나중에 oauth 인증도 추가 구글이랑 네이버 정도...? 카카오까지?
 
+  emailCheck(email : string) : boolean{
+    let res = true;
+    if (!email.includes("@")){
+      res = false;
+    }
+    return res
+  }
+
+  passwordCheck(pw : string) : boolean{
+    let res = true;
+    if (pw.length < 6){
+      res = false;
+    }
+    return res
+  }
+
   async loginWithEmailPw(email : string, pw : string) : Promise<string> { 
+    console.log('This action loginWithEmailPw');
 
     if (!email || !pw){
       throw new HttpException({
@@ -57,22 +97,29 @@ export class MemberService {
         error : "email and pw are required"
       }, HttpStatus.BAD_REQUEST);
     }  
-    
-    console.log('This action loginWithEmailPw');
+    if (!this.emailCheck(email)){
+      throw new HttpException({
+        errCode : 22,
+        error : "input right email address"
+      }, HttpStatus.BAD_REQUEST);
+    }
 
-    // 비밀번호 암호화
-    pw = this.encryptPassword(pw);
+    if (!this.passwordCheck(pw)){
+      throw new HttpException({
+        errCode : 23,
+        error : "input right password, password must be at least 6 character"
+      }, HttpStatus.BAD_REQUEST);
+    }
+    
+    
     // 이메일과 비밀번호에 해당하는게 있는지 체크
-    const member = await this.findOneByEmailPw(email, pw);
-    if (!member || !member.MemberId){
+    const member = await this.findOneByEmail(email);
+    if (!member || !member.MemberId || !bcrypt.compareSync(pw, member.password)){
       throw new HttpException({
         errCode : 22,
         error : "There is no member corresponding email and pw"
       }, HttpStatus.BAD_REQUEST);
-    }
-
-    // 인증 상태 체크
-    if (member.Authentication == 0){
+    } else if (member.Authentication == 0){ // 인증 상태 체크
       throw new HttpException({
         errCode : 23,
         error : "need to auth"
@@ -86,7 +133,9 @@ export class MemberService {
     }
 
     // 세션에 등록
-    let sessionId : string = "";
+    let sessionId : string = await this.makeSessionId(member.MemberId);
+    ServerCache.setSession(sessionId);
+    sessionId = await CustomEncrypt.getInstance().encryptAes256(sessionId);
 
     // 세션 키 리턴
     return sessionId;
@@ -108,6 +157,18 @@ export class MemberService {
     })    
   }
 
+  async findOneByEmail(email: string) : Promise<Member> {
+    console.log(`This action findOneByEmailPw`);
+    let res : Member = await this.mRepo.findOne({
+      where : {
+        MemEmail : email,
+        IsDeleted : 0
+      },
+    })
+    return res;    
+  }
+
+  // 암호화 할때마다 비밀번호가 바뀌여서 비교를 서버에서 할 수 밖에 없음....
   async findOneByEmailPw(email: string, pw : string) : Promise<Member> {
     console.log(`This action findOneByEmailPw`);
     let res : Member = await this.mRepo.findOne({

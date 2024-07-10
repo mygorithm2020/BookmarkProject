@@ -1,8 +1,11 @@
 import {v4 as uuidV4} from 'uuid'
+import * as bcrypt from 'bcrypt';
+import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
+import { promisify } from 'util';
 
 export class CustomUtils{
     //  피셔-예이츠 셔플(Fisher-Yates shuffle)
-  static shuffle<T>(array : T[]) {
+  shuffle<T>(array : T[]) {
     for (let i = array.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1)); // 무작위 인덱스(0 이상 i 미만)
   
@@ -16,8 +19,85 @@ export class CustomUtils{
     }
   }
 
-  static get32UuId(): string{
+  get32UuId(): string{
     const newId = uuidV4().replaceAll("-", "");
     return newId;
   } 
+
+  
+}
+
+export class CustomEncrypt {
+  private static instance : CustomEncrypt;
+  private constructor(){
+
+  }
+
+  static getInstance(): CustomEncrypt{
+    if (!this.instance){
+      this.instance = new CustomEncrypt();
+    }
+    return this.instance;
+
+  }
+
+  test(){
+    console.log("customEncyrptq");
+  }
+
+  // 해시 암호화
+  encryptHash(originStr : string, salt : string | number = 11) : string{
+    // 해시 암호 SHA256으로 구현 필요 결과 64자
+    // 256이 gpu 연산에 취약해지고 있어서 bcrypt라는 모듈 사용
+    // salt 값이 증가할수록 속도가 급격히 느려짐
+    let res = bcrypt.hashSync(originStr, salt);
+
+    return res;
+  } 
+
+  // 해쉬 암호화 값 비교  
+
+  private static AESIV : string = "Wtjz2y05x53ahONSbDa7AA==";
+  private static AESPASSWORD : string = 'customKey is mine';
+  private static AESKEY : string = "m/zE7KOYFCV6oxFBvC2IiBC/C7WdQ/cjdMLuABFVdPM=";
+
+  // 양방향 암호화
+  async encryptAes256(origin : string) : Promise<string>{
+    const password = 'customKey is mine';
+
+    // The key length is dependent on the algorithm.
+    // In this case for aes256, it is 32 bytes.
+    const cipher = createCipheriv('aes-256-ctr', Buffer.from(CustomEncrypt.AESKEY, "base64"), Buffer.from(CustomEncrypt.AESIV, "base64"));
+
+    const encryptedText = Buffer.concat([
+      cipher.update(origin),
+      cipher.final(),
+    ]);
+    return encryptedText.toString("base64");
+  }
+
+  async decryptAes256(encryptedText : string) : Promise<string>{
+    let encryptedBuf = Buffer.from(encryptedText, "base64");
+    const decipher = createDecipheriv('aes-256-ctr', Buffer.from(CustomEncrypt.AESKEY, "base64"), Buffer.from(CustomEncrypt.AESIV, "base64"));
+    const decryptedText = Buffer.concat([
+      decipher.update(encryptedBuf),
+      decipher.final(),
+    ])
+    return decryptedText.toString("utf-8");
+  }
+
+  // AES266 암호화 벡터 생성
+  getBase64NewIV() : string{
+    const iv = randomBytes(16);
+    return iv.toString("base64");
+  }
+
+  //AES 256 암호화 키 생성
+  async getBase64NewKey(password : string) : Promise<string>{
+    // const password = 'customKey is mine';
+    const key = (await promisify(scrypt)(password, 'salt', 32)) as Buffer;
+    return key.toString("base64");
+  }
+
+  
 }

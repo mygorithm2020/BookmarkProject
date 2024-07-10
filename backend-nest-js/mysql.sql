@@ -13,7 +13,7 @@ select * from information_schema.table_constraints WHERE TABLE_NAME = 'TA_site';
 CREATE INDEX 인덱스이름 ON 테이블이름 (필드이름1, 필드이름2, ...);
 
 show table status LIKE 'ta_site';
-ANALYZE TABLE TA_Site;
+ANALYZE TABLE ta_me;
 
 
 -- 인증 기록
@@ -35,7 +35,7 @@ CREATE INDEX IDX_Authentication_PhoneNo ON TA_Authentication (PhoneNo);
 CREATE TABLE TA_Member (
   MemberId CHAR(32) NOT NULL PRIMARY KEY,
   password CHAR(64) NOT NULL,
-  MemEmail VARCHAR(255) NOT NULL UNIQUE,
+  MemEmail VARCHAR(255) NOT NULL,
   NickName VARCHAR(32), 
   Birth CHAR(8),
   Gender CHAR(1) COMMENT "남자 : M, 여자 : F",
@@ -48,6 +48,7 @@ CREATE TABLE TA_Member (
   UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP) 
 
 );
+CREATE INDEX IDX_Member_MemEmail ON TA_Member (MemEmail);
 
 -- 카테고리
 CREATE TABLE TA_Category(

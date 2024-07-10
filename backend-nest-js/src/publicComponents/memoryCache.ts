@@ -7,6 +7,7 @@ export class ServerCache {
     // private static readonly _categoryLock = new Lock();
     private static cachedCategorys : {lastDate : Date, categorys : Category[]};
     private static recommendSites : {lastDate : Date, sites : Site[]};
+    private static sesstionList : Map<string, Date>;
 
     static setCategorys(categorys : Category[]) {
         this.cachedCategorys = {
@@ -48,6 +49,37 @@ export class ServerCache {
 
 
         return this.recommendSites.sites;   
+    }
+    
+    static setSession(sessionId : string){
+        if (!this.sesstionList){
+            this.sesstionList = new Map();
+        }
+        this.sesstionList.set(sessionId, new Date());
+    }
+
+    static getSessionId(sessionId : string) : string{
+        let res = sessionId;
+
+        if (!this.sesstionList || !this.sesstionList.has(sessionId)){
+            res = "";
+            return res;
+            
+        }
+
+        const date = this.sesstionList.get(sessionId);
+        const now = new Date();
+        
+        // 세션 유지시간........하루...???
+        let dif = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+        if (dif > 1) {
+            this.sesstionList.delete(sessionId);
+            res = "";
+            return res;
+        }
+
+        return res;
+
     }
 
 }

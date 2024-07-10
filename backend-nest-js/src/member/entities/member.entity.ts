@@ -22,7 +22,7 @@ export class Member {
     Gender  : string;
 
     @Column()
-    Authentication : number; // "0 이면 미승인 1이면 승인 2이면 차단된 계정"
+    Authentication : number; // "0 이면 최초단계 1이면 승인 2이면 차단된 계정"
 
     @Column()
     AuthenticationCode : string;

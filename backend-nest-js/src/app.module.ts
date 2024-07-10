@@ -16,6 +16,7 @@ import { HttpModule } from '@nestjs/axios';
 import { MemberModule } from './member/member.module';
 import { Member } from './member/entities/member.entity';
 import { MysqlException } from './publicComponents/ExceptionHandler';
+import { CustomUtils } from './publicComponents/utils';
 
 dotenv.config();
 
@@ -38,8 +39,8 @@ console.log(process.env.DB_HOST);
     synchronize : false,
     logging : true,
     timezone : "z" // mysql에 들어있는 시간에서 자동으로 -9시간을 해오는거 해결
-  }),  TestModule, BooksModule, CategoryModule, SiteModule, MemberModule],
+  }),  TestModule, BooksModule, CategoryModule, SiteModule, MemberModule, ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,],
 })
 export class AppModule {}

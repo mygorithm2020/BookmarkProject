@@ -23,7 +23,9 @@ export class SiteService {
   constructor(
     @InjectRepository(Site) private sRepo : Repository<Site>,
     @InjectRepository(CategorySite) private csRepo : Repository<CategorySite>,
-    private readonly httpService: HttpService){}
+    private readonly httpService: HttpService,
+    private readonly customUtils : CustomUtils
+  ){}
 
   
   getUrlObj(url : string): URL{
@@ -541,7 +543,7 @@ export class SiteService {
   // 사이트 객체 데이터 보정
   async generateSite(site : Site, urlObj : URL){
 
-    site.SiteId = CustomUtils.get32UuId();
+    site.SiteId = this.customUtils.get32UuId();
 
     site.URL = this.correctionUrl(urlObj);
 
@@ -677,7 +679,7 @@ export class SiteService {
       // }
     }
     //  매번 셔플...???? 조금 과한데.... => 프론트로 옮기자
-    CustomUtils.shuffle(SiteService.basicRecommendSites.sites);
+    // this.customUtils.shuffle(SiteService.basicRecommendSites.sites);
 
     return SiteService.basicRecommendSites.sites;
   }
