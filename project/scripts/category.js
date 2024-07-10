@@ -63,7 +63,12 @@ console.log("category");
     
 
     
-    const pageKey = window.location.search.substring(5);
+    // const pageKey = window.location.search.substring(5);
+
+    let curUrl = new URL(document.location.toString());
+    console.log(curUrl.pathname);
+    let pageKey = curUrl.searchParams.get("key");
+    console.log(pageKey);
     
     const asd = document.querySelector("title");
     asd.textContent += ` - ${pageKey}`;
