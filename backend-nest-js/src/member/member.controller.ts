@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
@@ -10,14 +10,16 @@ import { ApiTags } from '@nestjs/swagger';
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
-  @Post()
-  create(@Body() createMemberDto: Member) {
-    return this.memberService.create(createMemberDto);
+  @Post("signup")
+  async create(@Body() createMemberDto: CreateMemberDto) {
+    let res = await this.memberService.create(createMemberDto);
+    return {MemEmail : res.MemEmail}
   }
 
   @Post("/login")
   login(@Body() createMemberDto: Member) {
-    return this.memberService.loginWithEmailPw(createMemberDto.MemEmail, createMemberDto.password);
+    let sessiondId = this.memberService.loginWithEmailPw(createMemberDto.MemEmail, createMemberDto.password);
+    return {SessiondId : sessiondId};
   }
 
   @Get()
@@ -27,6 +29,14 @@ export class MemberController {
       console.log(r);
     })
     return res;
+  }
+
+  @Get("/email")
+  findOnebyEmail(
+    @Query("email") email : string){
+    console.log(`email : ${email}`);
+    let result = this.memberService.findOneByEmail(email);
+    return result;
   }
 
   @Get(':id')

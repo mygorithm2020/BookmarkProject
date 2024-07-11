@@ -13,19 +13,19 @@ select * from information_schema.table_constraints WHERE TABLE_NAME = 'TA_site';
 CREATE INDEX 인덱스이름 ON 테이블이름 (필드이름1, 필드이름2, ...);
 
 show table status LIKE 'ta_site';
-ANALYZE TABLE ta_me;
+ANALYZE TABLE ta_site;
 
 
 -- 인증 기록
 CREATE TABLE TA_Authentication (
-  AuthId CHAR(32) NOT NULL PRIMARY KEY,
+  AuthId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   Email VARCHAR(255),
+  PhoneCode VARCHAR(8),
   PhoneNo VARCHAR(16),
-  AuthCode VARCHAR(16) NOT NULL,
-  IsAuth INT DEFAULT 0,
+  AuthCode VARCHAR(16) NOT NULL COMMENT "인증 코드",
+  IsAuth INT DEFAULT 0 COMMENT "0 : 미인증, 1: 인증완료",
   CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
   UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP) 
-
 );
 CREATE INDEX IDX_Authentication_Email ON TA_Authentication (Email);
 CREATE INDEX IDX_Authentication_PhoneNo ON TA_Authentication (PhoneNo);
@@ -34,14 +34,13 @@ CREATE INDEX IDX_Authentication_PhoneNo ON TA_Authentication (PhoneNo);
 -- 회원
 CREATE TABLE TA_Member (
   MemberId CHAR(32) NOT NULL PRIMARY KEY,
-  password CHAR(64) NOT NULL,
+  password VARCHAR(64) NOT NULL,
   MemEmail VARCHAR(255) NOT NULL,
   NickName VARCHAR(32), 
   Birth CHAR(8),
   Gender CHAR(1) COMMENT "남자 : M, 여자 : F",
   Authentication INT DEFAULT 0 COMMENT "0 이면 미승인 1이면 승인 2이면 차단된 계정",  
   Authorization INT DEFAULT 1 COMMENT "1 : 일반, 개인, 2: 회사계정, 3: 관리자.... ..",
-  AuthenticationCode VARCHAR(16) COMMENT "인증 코드",
 
   IsDeleted SMALLINT NOT NULL DEFAULT 0,
   CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
@@ -49,6 +48,7 @@ CREATE TABLE TA_Member (
 
 );
 CREATE INDEX IDX_Member_MemEmail ON TA_Member (MemEmail);
+ALTER TABLE TA_Member MODIFY COLUMN password VARCHAR(64) NOT NULL;
 
 -- 카테고리
 CREATE TABLE TA_Category(

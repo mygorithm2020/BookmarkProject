@@ -173,6 +173,31 @@ export class Site {
     }
 
     // 개수 많아지면 페이지 추가
+    static async getAllSites(page){
+
+        // 추천 사이트 조회
+        let data = await axios.get("http://localhost:3000/site")
+        .then((result) => {
+            console.log(result);
+            Site.shuffle(result.data);
+            return result.data;
+            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
+            Site.cardEvent();
+        })
+        .catch((error) => {
+            console.error(error);
+            if (error.code === "ERR_NETWORK"){
+                // 현재 이용 불가능한 무언가 띄우기...
+                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
+    
+            }
+            return null;            
+        });
+        return data;
+    }
+
+    // 개수 많아지면 페이지 추가
     static async getRecommendedSite(page){
 
         // 추천 사이트 조회

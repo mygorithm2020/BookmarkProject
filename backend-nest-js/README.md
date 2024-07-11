@@ -46,6 +46,8 @@
     CORS
     env
     Swagger
+    Bcrypt
+    crypto
 
 #### 오류 해결
     - NestJS : HttpModule로 response의 html 파일 인코딩 방식이 euc-kr이면 문자가 깨지는 현상,  utf-8이면 정상
@@ -57,10 +59,9 @@
 
 ### 환경세팅
 - npm v10.2.3
-- nest
+- nestJS
 - mysql 8.0.37
-- @nestjs/cli 10.0.0
-
+- 
 
 ### 추가 참고 내용(위 내용 외에 추가로 참고할만한 내용)
 

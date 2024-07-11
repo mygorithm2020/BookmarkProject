@@ -24,8 +24,11 @@ export class MemberService {
       memObj.NickName = memObj.MemEmail.slice(0, memObj.MemEmail.indexOf("@"));      
     }
 
+    memObj.Authorization = 0;
     // 인증되었는지 확인 필요
-    memObj.Authorization = 1;
+    if (true){
+      memObj.Authorization = 1;
+    }
   }
 
   async makeSessionId(memberId : string) : Promise<string> {
@@ -42,9 +45,7 @@ export class MemberService {
     return res;
   }
 
-  async create(memObj: Member) : Promise<Member> {    
-    CustomEncrypt.getInstance().test();
-    
+  async create(memObj: CreateMemberDto) : Promise<Member> {        
     console.log('This action adds a new member');
     // 기존에 있으면 리턴
 
@@ -64,9 +65,9 @@ export class MemberService {
 
     console.log(memObj);
     const newMem = this.mRepo.create(memObj);
-    console.log(newMem);  
+    console.log(newMem);
     let res = await this.mRepo.save(newMem);
-    return await this.mRepo.save(newMem);
+    return res;
     
   }
 
@@ -139,6 +140,13 @@ export class MemberService {
 
     // 세션 키 리턴
     return sessionId;
+    
+  }
+
+  sendAuthEmail(email : string){
+    // 이메일 보내고 => 이건 안기다려도 될듯
+    // 디비에 인증번호랑 등록
+    // 결과 리턴
     
   }
 

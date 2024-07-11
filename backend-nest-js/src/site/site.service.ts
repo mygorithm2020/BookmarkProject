@@ -77,7 +77,8 @@ export class SiteService {
       }, HttpStatus.BAD_REQUEST);
 
     }
-    this.generateSite(siteModel, urlObj);      
+    console.log(siteModel);
+    await this.generateSite(siteModel, urlObj);      
     console.log(siteModel);
     //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
 
@@ -185,7 +186,7 @@ export class SiteService {
       res.Status = 5;
       
       // 404만 걸러내자
-      console.log(err);
+      console.log("getSiteResponseErr : " + err);
       if((err.code === "ENOTFOUND") || (err.response && err.response.status && err.response.status === HttpStatus.NOT_FOUND)) {
         throw new HttpException({
           errCode : 31,
@@ -215,9 +216,12 @@ export class SiteService {
           : 'UTF-8';
         console.log(charset);
         let data = iconv.decode(response.data, charset);
+        const root = Parse(data);
 
         // 파싱
-        const root = Parse(data);
+        // console.log("----dd");
+        // console.log(response.data);
+        // const root = Parse(response.data);
         
         const titleEl = root.querySelector("title");
         if (titleEl){
@@ -272,7 +276,8 @@ export class SiteService {
   async getSiteResponse(reqUrl : string) : Promise<AxiosResponse> {
     // html body 파일 가져오기
     const data = await lastValueFrom(
-      this.httpService.get<string>(reqUrl, {
+      // this.httpService.get<string>(reqUrl, {
+      this.httpService.get(reqUrl, {
         maxRedirects : 2,
         timeout : 2500,
         headers : {
@@ -318,14 +323,13 @@ export class SiteService {
     }
     return await this.sRepo.find({
       where : {
-        IsDeleted : 0,
-        Status : 2,  
+        IsDeleted : 0
       },      
       order : {
-        Views : "DESC"
+        CreatedDate : "DESC"
       },
-      skip : this.WEBPAGECNT * (page - 1),
-      take : this.WEBPAGECNT *  page,       
+      // skip : this.WEBPAGECNT * (page - 1),
+      // take : this.WEBPAGECNT *  page,       
     });
   }
 
@@ -417,6 +421,8 @@ export class SiteService {
 
   async findRecommedSites() : Promise<Site[]> {
     console.log("This action findRecommedSites site");
+
+    // 로그인하면 마지막 조회한 카테고리 여기에 추가해서 넣자
 
     // const res = this.getRecommendSite();
     let result = ServerCache.getRecommendSites();
@@ -547,23 +553,26 @@ export class SiteService {
 
     site.URL = this.correctionUrl(urlObj);
 
-    // 파비콘 없으면 기본 url에 /favicon.ico 로 보정
-    if (site.FaviconImg === undefined){
-      // 이거 존재하는지 확인하고 하자.....
+    if (site.FaviconImg){
+      //  이미지 url 링크 보정
+      if (site.FaviconImg.startsWith("//")){
+
+      } else if (site.FaviconImg.startsWith("/")){
+        site.FaviconImg = urlObj.origin + site.FaviconImg;
+      } else {
+        // 모르겠네 또 어떤 케이스가...
+      }
+
+    } else if (site.Status != 5) {
+      // 이거 존재하는지 확인
       try{
         await this.getSiteResponse(urlObj.origin + "/favicon.ico");
+        // 파비콘 없으면 기본 url에 /favicon.ico 로 보정
         site.FaviconImg = urlObj.origin + "/favicon.ico";
 
       } catch (err) {
-        
+        console.log(err);        
       }
-      
-    } else if (site.FaviconImg.startsWith("//")){
-      
-    } else if (site.FaviconImg.startsWith("/")){ //  이미지 url 링크 보정
-      site.FaviconImg = urlObj.origin + site.FaviconImg;
-    } else {
-      // 모르겠네 또 어떤 케이스가...
     }
     
     // 기타 파악되는대로 여기 추가 필요

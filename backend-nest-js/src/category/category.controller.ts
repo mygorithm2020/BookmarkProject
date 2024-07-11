@@ -14,8 +14,8 @@ export class CategoryController {
   @ApiBody({
     schema: {
       properties: {
-        userId: { type: "string" },
-        password: { type: "string" }
+        UserId: { type: "string", },
+        Password: { type: "string" }
       }
     }
   })

@@ -65,14 +65,14 @@ export class SiteController {
   // 실제 다 부르는건 말이 안되니까..... 페이징 느낌처럼 개수를 나누는 처리 필요
   // 숫자 1당 20개씩하고 없으면 리턴 없고...
   @Get()
-  async findAll() : Promise<ApiResult<Site[]>> {
+  async findAll() {
     let q = await this.siteService.findAll();
     let res = new ApiResult<Site[]>();
     if (q.length > 0){
       res.Code = 200;
       res.Body = q;
     }
-    return res;
+    return q;
   }
 
   // 나중에 로그인했으면 로그인 정보 받아서 로직에 관여

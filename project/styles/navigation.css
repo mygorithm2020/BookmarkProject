@@ -23,14 +23,14 @@ nav ul {
     display: flex;
     justify-content: space-between;
     width: 90%;
-    margin: 0 auto;
+    padding: 4px;
 }
 
 #nav_list_box > li {
     display: inline-block;
     margin: 5px;
     padding: 5px;
-    min-width: 80px;
+    min-width: 30px;
     text-align: center;    
 }
 /* 너비 좁아지면 카테고리 사이드로 빼자 세로로 */
