@@ -21,9 +21,8 @@ nav > input {
 nav ul {
     font-size: 18px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     width: 90%;
-    padding: 4px;
 }
 
 #nav_list_box > li {

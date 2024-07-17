@@ -16,6 +16,7 @@ import { url } from 'inspector';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 import { CategorySite } from './entities/categorySite.entity';
 import * as iconv from "iconv-lite";
+import { Category } from 'src/category/entities/category.entity';
 
 @Injectable()
 export class SiteService {
@@ -23,6 +24,7 @@ export class SiteService {
   constructor(
     @InjectRepository(Site) private sRepo : Repository<Site>,
     @InjectRepository(CategorySite) private csRepo : Repository<CategorySite>,
+    @InjectRepository(Category) private cRepo : Repository<Category>,
     private readonly httpService: HttpService,
     private readonly customUtils : CustomUtils
   ){}
@@ -67,6 +69,7 @@ export class SiteService {
     
     // url 유효한지 확인
     // 여기가 문제구만.......
+    // 이외의 사이트 문제는 그냥 따로 프로그램 돌려서 정보 수집하자
     let siteModel = await this.setSiteParse(urlObj.origin);
     if (!siteModel){
       // 설계상 여기에 오기전에 에러가 발생함... 그래도 일단 만들어 놓음
@@ -98,16 +101,28 @@ export class SiteService {
     
   }
 
-  createCategorySite(siteId : string, categories : string[]){
+  async createCategorySite(siteId : string, categories : string[]) : Promise<number>{
     "insert into TA_ReCategorySite values (categories, siteId, ...)";
     let cnt = 0;
+    // 기존 등록된거 삭제하고 새로 등록
+    await this.csRepo.delete({
+      SiteId : siteId
+    });    
+
+    // 부모 카테고리까지 자동 등록 기능 필요..........
     for (const categoryId of categories){
       const one = new CategorySite();
       one.CategoryId = categoryId;
       one.SiteId = siteId
       // 유니크라서 중복 떠도 걍 진행이 되니까 냅두자
-      this.csRepo.save(one);
+      try{
+        await this.csRepo.save(one);
+      } catch {
+
+      }
+      
     }
+    return cnt;
   }
 
   async createTest(site: Site) {
@@ -138,8 +153,10 @@ export class SiteService {
 
   async setSiteAxios(reqUrl : string) : Promise<Site> {
     let result : Site;
-    const res = await axios.get(reqUrl);
-    console.log(res.data);
+    const res = await axios.get(reqUrl, {
+      timeout : 2000
+    });
+    console.log(res);
 
     return result;
   }
@@ -206,6 +223,7 @@ export class SiteService {
     }
 
     if (response){
+      res.Status = 6;
       try{
 
         // 한글 인코딩 방식 확인 처리, 대부분 utf8이지만 가끔 euckr이 있음
@@ -216,12 +234,22 @@ export class SiteService {
           : 'UTF-8';
         console.log(charset);
         let data = iconv.decode(response.data, charset);
-        const root = Parse(data);
+        let root = Parse(data);
 
+        // 헤더에 인코딩 방식이 없고, html파일에만 있는 경우도 있음....
+        // <meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+        let metas = root.querySelectorAll("meta");
+        for (let idx = 0; idx <metas.length; idx++){
+          if (metas[idx].getAttribute("http-equiv") && metas[idx].getAttribute("http-equiv").toLowerCase() === "content-type"){
+            if (metas[idx].getAttribute("content").toLowerCase().includes("euc-kr")){
+              root = Parse(iconv.decode(response.data, "euc-kr"))
+            }
+            break;
+          }           
+        }
         // 파싱
-        // console.log("----dd");
-        // console.log(response.data);
         // const root = Parse(response.data);
+        console.log(root);
         
         const titleEl = root.querySelector("title");
         if (titleEl){
@@ -302,7 +330,7 @@ export class SiteService {
     );
 
     // let q = await axios.get(fixedURL.origin, {
-    //     timeout : 3000
+//     timeout : 3000
     // })
     // .then((response) => response.status)
     // .catch((err) => {
@@ -324,6 +352,38 @@ export class SiteService {
     return await this.sRepo.find({
       where : {
         IsDeleted : 0
+      },     
+      relations : {
+        Categories : true
+      },
+      order : {
+        CreatedDate : "DESC"
+      },
+      // skip : this.WEBPAGECNT * (page - 1),
+      // take : this.WEBPAGECNT *  page,       
+    });
+  }
+
+  async findAllPublic(page? : number) : Promise<Site[]> {
+    console.log("This action returns all site");
+    if(!page){
+      page = 1;
+    }
+    return await this.sRepo.find({
+      select : {
+        SiteId : true,
+        URL : true,
+        Name : true,
+        NameKR : true,
+        SiteDescription : true,
+        Views : true,
+        Good : true,
+        Bad : true,
+        CreatedDate : true
+      },
+      where : {
+        IsDeleted : 0,
+        Status : 2
       },      
       order : {
         CreatedDate : "DESC"
@@ -400,19 +460,12 @@ export class SiteService {
       take : this.WEBPAGECNT *  page,
     });
 
-    // await this.sRepo.createQueryBuilder("s").join
 
-
-    // let res = await this.csRepo.find({
-    //   relations : {
-    //     sites : true      
-    //   },
-    //   // relationLoadStrategy : "join",      
-    //   where : {
-    //     CategoryId : "62fe83ca0943461e9e28491ee6260965"
-    //   }
-    // })
-    // console.log(res);
+    // 쿼리빌더 예시
+    // await this.sRepo.createQueryBuilder("s")
+    // .leftJoinAndSelect('s.Categories', 'c')
+    // .where('s.IsDeleted = 0 and s.Status = 2 and c.CategoryId = :id', {id : categoryId})
+    // .getMany();
     
     return temp;
   }
@@ -449,9 +502,47 @@ export class SiteService {
     console.log(`This action returns a #${id} category`);
     return this.sRepo.findOne({
       where : {
+        IsDeleted : 0,
         SiteId :  id
       }
     })
+    
+  }
+
+  findOneByAdmin(id: string) : Promise<Site> {
+    console.log("findOneByAdmin");
+    console.log(id);
+
+    // let temp = await this.sRepo.find({
+    //   select : {
+    //     Categories : {
+    //       CategoryId : true
+    //     }
+    //   },
+    //   relations : {
+    //     Categories : true
+    //   },
+    //   where : {
+    //     IsDeleted : 0,
+    //     Status : 2,
+    //     Categories : {
+    //       CategoryId : categoryId
+    //     }
+    //   },
+    //   order : orderOption,
+    //   skip : this.WEBPAGECNT * (page - 1),
+    //   take : this.WEBPAGECNT *  page,
+    // });
+
+    return this.sRepo.findOne({
+      where : {
+        IsDeleted : 0,
+        SiteId :  id
+      },
+      relations : {
+        Categories : true
+      }
+    });
     
   }
 
@@ -465,6 +556,32 @@ export class SiteService {
       },
     })
     return res;    
+  }
+
+  async updateByAdmin(updateSite: Site) : Promise<UpdateResult> {
+    console.log(`This action updates a #${updateSite.SiteId} category`);    
+    console.log(updateSite);
+    // console.log(await this.cRepo.update(id, updateCategoryDto));
+    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
+    // return await this.sRepo.update({
+    //   SiteId : updateSite.SiteId,
+    // }, {
+    //   ...updateSite,
+    //   Categories : null
+    // });
+    return await this.sRepo.update({
+      SiteId : updateSite.SiteId,
+    }, {
+      Name : updateSite.Name,
+      NameKR : updateSite.NameKR,
+      IPAddress : updateSite.IPAddress,
+      Img : updateSite.Img,
+      SiteDescription : updateSite.SiteDescription,
+      AppLinkAndroid : updateSite.AppLinkAndroid,
+      AppLinkIOS : updateSite.AppLinkIOS,
+      Status : updateSite.Status,
+      // IsDeleted : updateCategoryDto.IsDeleted
+    });
   }
 
   async update(id: string, updateCategoryDto: Site) : Promise<UpdateResult> {
@@ -552,6 +669,10 @@ export class SiteService {
     site.SiteId = this.customUtils.get32UuId();
 
     site.URL = this.correctionUrl(urlObj);
+    
+    if(!site.Status){
+      site.Status = 1;
+    }
 
     if (site.FaviconImg){
       //  이미지 url 링크 보정

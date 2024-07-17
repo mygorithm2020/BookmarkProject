@@ -1,0 +1,30 @@
+#category-box{
+    border: 2px solid black;
+    display: flex;
+    flex-direction: row;
+}
+
+#category-box li{
+    margin: 10px;
+}
+
+nav .selected {
+    font-weight: bold;
+    background-color: white;
+}
+
+#category_list {
+    width: 100%;
+}
+
+#category_list tr {
+    height: 40px;
+}
+
+.category-layer1 {
+    background-color: beige;
+}
+
+.category-layer2 {
+    background-color: darkgray;
+}

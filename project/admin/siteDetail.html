@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="수많은 웹사이트를 간단하게 공유하고 추천받는 사이트">
+    <title>BookMarker</title>
+    <!--  -->
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+
+    <!-- al 태그(모바일 접속시 자동 앱으로 연결) 테스트해보려고 넣어봄 소리바다에서 일단 가져옴-->
+    <meta property="al:ios:url" content="soribada30://">
+    <meta property="al:ios:app_store_id" content="346528006">
+    <meta property="al:ios:app_name" content="soribada">
+    <meta property="al:android:package" content="com.soribada.android">
+    <meta property="al:android:url" content="soribada30://">
+    <meta property="al:android:app_name" content="soribada">
+
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- html 연결용(react로 나중에 처리 가능) -->
+    <script
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+    crossorigin="anonymous">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#header").load("header.html")
+            $("#footer").load("footer.html")
+            // $("nav").load("../pages/navigation.html")
+            /* id 지정을 통해서도 가능합니다. 
+            $("#header").load("header.html #navbar")
+            */       
+        });
+        console.log("html파일 연결");
+    </script> 
+
+    <!-- axios 사용 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- 내부 css 파일 연결 -->
+    <!-- <link rel="stylesheet" href="../css/dev.css"> -->
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/navigation.css">
+    <link rel="stylesheet" href="../styles/adminSiteDetail.css">
+    
+    
+</head>
+<body>
+    <header id="header">
+
+    </header>
+    <nav class="layer1">
+      <ul id="nav_list_box">
+        <li><a href="?key=category">카테고리</a></li>
+        <li><a href="?key=site">사이트</a></li>
+        <li><a href="?key=member">회원</a></li>
+      </ul>        
+    </nav>        
+    <main class="layer1">
+        <section id="main_content01">
+            <h2 class="site-map-text">사이트 세부 내용</h2>
+            
+            <!-- <form>
+                <table>
+                    <tr>
+                      <th>항목</th>
+                      <th>내용</th>                
+                    </tr>
+                    <tr>
+                      <td>이름</td>
+                      <td><input type="text" value="네이버"></td>
+                    </tr>
+                    <tr>
+                      <td>이미지</td>
+                      <td><img src=""></td>
+                    </tr>
+                    <tr>
+                      <td>상태</td>
+                      <td>
+                        <select name="status" >
+                            <option value="uploading" selected>등록 중</option>
+                            <option value="showing">전시 중</option>
+                            <option value="showing">보류</option>
+                            <option value="showing">숨기기</option>
+                            <option value="showing" selected disabled>자동 확인 중 에러</option>
+                            <option value="showing" disabled>자동 확인 완료</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>등록날짜</td>
+                      <td>2024.07.15 12:12:12</td>
+                    </tr>
+                    <tr>
+                        <td>카테고리</td>
+                        <td>
+                            <div>
+                                <input
+                                  type="checkbox"
+                                  name="subscribe"
+                                  value="newsletter" />
+                                <label for="subscribeNews">여행</label>
+                                <input
+                                  type="checkbox"
+                                  name="subscribe"
+                                  value="newsletter" checked />
+                                <label for="subscribeNews">스포츠</label>
+                            </div>
+                              
+                        </td>
+                      </tr>
+                </table>
+
+                <input type="submit" value="사이트 수정">
+                
+            </form>             -->
+            
+        </section>
+    </main>
+    <footer id="footer"></footer>
+    <!-- js 파일들 추가 -->
+    <script src="../scripts/adminGlobal.js"></script>
+    <script src="../scripts/adminSiteDetail.js" type="module"></script>
+</body>
+</html>

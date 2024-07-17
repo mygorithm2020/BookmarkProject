@@ -1,6 +1,16 @@
 
 export class Site {
 
+    static siteStatus = {
+        1 : "기본 등록",
+        2 : "표출 중",
+        3 : "심사 대기",
+        4 : "숨기기(차단)",
+        5 : "자동 등록 중 실패",
+        6 : "자동 등록 성공",
+        7 : "",
+    }
+
     constructor(siteInfo){
         this.SiteId = siteInfo.SiteId;
         this.Name = siteInfo.Name;
@@ -129,6 +139,53 @@ export class Site {
         return res;
     }
 
+    static listToHtmlForAdmin(siteList){
+        let res = "";
+        if (!siteList || siteList.length === 0){
+            console.log("sdd");
+            res = `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
+            return res;
+
+        }
+
+        res += `<ul id="site-card-box">`
+        for (let i = 0 ; i < siteList.length; i++){
+            if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
+                siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
+            }
+            res += `
+            <li class="site-card">
+                <a class="external_link" href="siteDetail.html?key=${siteList[i].SiteId}"  rel="external" data-siteId=${siteList[i].SiteId}>
+                    <ul class="site-card-list">
+                        <li>
+                            <img class="site_card_img" src="${siteList[i].Img ? siteList[i].Img : '../images/noImage.jpg'}" alt="no images">    
+                        </li>
+                        <li>
+                            ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
+                        </li>
+                        <li>
+                            ${siteList[i].URL}
+                        </li>
+                        <li>
+                            ${this.siteStatus[siteList[i].Status]}                            
+                        </li>
+                        <li>
+                            ${siteList[i].Categories && siteList[i].Categories.length > 0? "카테고리 등록" : "카테고리 미등록"}
+                        </li>
+                        <li>
+                            ${siteList[i].SiteDescription}                            
+                        </li>                        
+                    </ul>                                             
+                </a>
+            </li>`;
+        }
+                        
+        res += `
+        </ul>`
+
+        return res;
+    }
+
     
     static updateViews(siteId){
         // 카테고리 불러오기
@@ -172,14 +229,39 @@ export class Site {
         }
     }
 
+    
+
+    // 개수 많아지면 페이지 추가
+    static async getAllSitesAdmin(page){
+
+        // 모든 사이트 조회
+        let data = await axios.get("http://localhost:3000/site/admin/all")
+        .then((result) => {
+            console.log(result);
+            return result.data;
+            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
+            Site.cardEvent();
+        })
+        .catch((error) => {
+            console.error(error);
+            if (error.code === "ERR_NETWORK"){
+                // 현재 이용 불가능한 무언가 띄우기...
+                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
+    
+            }
+            return null;            
+        });
+        return data;
+    }
+
     // 개수 많아지면 페이지 추가
     static async getAllSites(page){
 
-        // 추천 사이트 조회
+        // 모든 사이트 조회
         let data = await axios.get("http://localhost:3000/site")
         .then((result) => {
             console.log(result);
-            Site.shuffle(result.data);
             return result.data;
             mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
             Site.cardEvent();
@@ -243,7 +325,27 @@ export class Site {
         
         return data;
     }
+
+    static async getSiteById(siteId){
+        console.log(`categoryId : ${siteId}`);
+        let data = await axios.get(`http://localhost:3000/site/admin?id=${siteId}`)
+        .then((result) => {
+            console.log(result); 
+            return result.data;   
+        })
+        .catch((error) => {
+            console.error(error);
+            if (error.code === "ERR_NETWORK"){
+                // 현재 이용 불가능한 무언가 띄우기...
+                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
     
+            }
+            return null;
+        });
+        
+        return data;
+    }
 
     
 }

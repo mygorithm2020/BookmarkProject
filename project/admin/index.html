@@ -31,7 +31,7 @@
         $(document).ready(function(){
             $("#header").load("header.html")
             $("#footer").load("footer.html")
-            $("nav").load("navigation.html")
+            // $("nav").load("../pages/navigation.html")
             /* id 지정을 통해서도 가능합니다. 
             $("#header").load("header.html #navbar")
             */       
@@ -47,17 +47,22 @@
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/navigation.css">
-    <link rel="stylesheet" href="../styles/siteCard.css">
-    
-    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/adminSiteCard.css">
+    <link rel="stylesheet" href="../styles/adminIndex.css">
     
     
 </head>
 <body>
     <header id="header">
+        
 
     </header>
     <nav class="layer1">
+        <ul id="nav_list_box">
+            <li><a href="?key=category">카테고리</a></li>
+            <li><a href="?key=site">사이트</a></li>
+            <li><a href="?key=member">회원</a></li>
+        </ul>
         
     </nav>        
     <main class="layer1">
@@ -67,7 +72,7 @@
             <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">    
         </section>
         <section id="main_content01">
-            <h2 class="site-map-text">추천 사이트</h2>
+            <h2 class="site-map-text">등록 사이트 목록</h2>
             <!-- <ul id="site-card-box">
                 <li class="site-card">                    
                     <div>
@@ -102,37 +107,12 @@
                     </div>
                 </li>     
             </ul> -->
+            
         </section>
     </main>
-    <aside>
-        <div class="drawer" style="display: none;">
-            <h2>문의 사항</h2>
-            <form>
-                <ul>
-                    <li>
-                        <label>제목</label>
-                        <input type="text" placeholder="제목">
-                    </li>
-                    <li>
-                        <label>내용</label>
-                        <input type="text" placeholder="예시 : 새로운 카테고리를 추가해주세요!">
-                    </li>
-                    <li>
-                        <label>이메일</label>
-                        <input type="email" placeholder="example00@naver.com">
-                    </li>
-                </ul>
-                <button>남기기</button>
-            </form>
-            
-            <ul>
-                <li>항목 1</li>
-                <li>항목 2</li>
-            </ul>
-        </div>
-    </aside>
     <footer id="footer"></footer>
     <!-- js 파일들 추가 -->
+    <script src="../scripts/adminGlobal.js"></script>
     <script src="../scripts/adminIndex.js" type="module"></script>
 </body>
 </html>

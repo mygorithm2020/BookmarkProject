@@ -36,12 +36,38 @@ export class CategoryService {
   }
 
   async findAll() : Promise<Category[]> {
+    
+    let categories = await this.cRepo.find({
+      where : {
+        IsDeleted : 0,
+      },
+      order : {
+        CreatedDate : "DESC"
+      }
+    });
+    return categories;
+  }
+
+  async findAllPublic() : Promise<Category[]> {
     let result  = ServerCache.getCategorys();
     console.log(`result ${result}`);
     
-    if (!result){
+    if (!result || result.length === 0){
       console.log("읎다");
-      let newCategorys = await this.cRepo.find();
+      let newCategorys = await this.cRepo.find({
+        select : {
+          CategoryId : true,          
+          Name : true,
+          NameKR : true,
+          Status : true,
+          Layer : true,
+          Sequence : true,
+        },
+        where : {
+          IsDeleted : 0,
+          Status : 2
+        }
+      });
       ServerCache.setCategorys(newCategorys);
       result = ServerCache.getCategorys();
       console.log(`result22 ${result}`);

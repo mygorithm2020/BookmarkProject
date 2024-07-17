@@ -27,6 +27,17 @@ export class CategoryController {
   @Get()
   findAll(@Req() req: Request) {
     console.log(req.headers);
+    console.log(req.headers["referer"]);
+    console.log(req.headers['user-agent']);
+    console.log(req.ip);
+    console.log(req.cookies);
+    // res.cookie("test", "test");
+    return this.categoryService.findAllPublic();
+  }
+
+  @Get("/admin")
+  findAllAdmin(@Req() req: Request) {
+    console.log(req.headers);
     console.log(req.headers['user-agent']);
     console.log(req.ip);
     console.log(req.cookies);
