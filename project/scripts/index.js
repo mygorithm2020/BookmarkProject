@@ -14,6 +14,10 @@ mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(sites));
 // 카드 이벤트 효과 추가
 Site.cardEvent();
 
+let spinner = document.querySelector(".loading-spinner");
+console.log(spinner);
+// spinner.classList.toggle("hidden");
+
 window.onload = async function() {
     setTimeout(() => {
         console.log("ssss");

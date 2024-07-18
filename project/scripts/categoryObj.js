@@ -54,6 +54,7 @@ export class Category{
                 // 현재 이용 불가능한 무언가 띄우기...
                 // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
                 document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
+                // document.querySelector("main").insertAdjacentHTML("beforeend","<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>");
 
             }
             return null;
@@ -89,7 +90,7 @@ export class Category{
 
     }
 
-    // 카테고리 리스트를 보기 좋게 리스트 변경
+    // 카테고리 리스트를 보기 좋게 그룹화하기 리스트 변경
     transFormCategories(categories){
         let res = [];
         for (const cateIdx of categories){

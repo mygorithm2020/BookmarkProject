@@ -398,7 +398,11 @@ export class SiteService {
     console.log(`categoryId : ${categoryId}, page : ${page}`);
     page = page? page : 1;
     if (!categoryId || categoryId.length !== 32 || page < 0){
-      throw new HttpException("query error, please check the value", HttpStatus.BAD_REQUEST);
+      throw new HttpException({
+        errCode : 21,
+        error : "query error, please check the value"
+
+      }, HttpStatus.BAD_REQUEST);
     }
 
     
@@ -569,6 +573,13 @@ export class SiteService {
     //   ...updateSite,
     //   Categories : null
     // });
+    if (updateSite.Status && updateSite.Status > 4){
+      throw new HttpException({
+        errCode : 21,
+        error : "Status value is between 1 ~ 4"
+
+      }, HttpStatus.BAD_REQUEST);
+    }
     return await this.sRepo.update({
       SiteId : updateSite.SiteId,
     }, {
@@ -599,7 +610,11 @@ export class SiteService {
       Views : () => "Views + 1",
     })
     .catch( (res)=> {
-      throw new HttpException(res, HttpStatus.BAD_REQUEST);
+      throw new HttpException({
+        errCode : 21,
+        error : res
+
+      }, HttpStatus.BAD_REQUEST);
     });
     // await this.commentRepository.update(comment.id, {
     //   likeCount: () => 'like_count + 1',

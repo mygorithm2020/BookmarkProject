@@ -58,3 +58,27 @@ main {
     text-align: center;
     vertical-align: middle;
 }
+
+
+/* 스피너 디자인 */
+.loading-spinner {
+    position: absolute;
+    left: 50%;
+    bottom: 40%;
+    width: 60px;
+    height: 60px;
+    border: 8px solid #3498db;
+    border-top: 8px solid transparent;
+    border-radius: 50%;
+    animation: rotate 2s linear infinite;
+
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

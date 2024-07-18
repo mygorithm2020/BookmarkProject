@@ -64,19 +64,6 @@ async function setSitePage(){
     //  HTML에 추가
     mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));            
     // 카드 이벤트 효과 추가
-    Site.cardEvent();
-
-    window.onload = async function() {
-        setTimeout(() => {
-            console.log("ssss");
-            
-        }, 1000);
-
-        
-        
-
-    };
-
 }
 
 function setMemberPage(){

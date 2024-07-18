@@ -26,11 +26,60 @@ Category.categories = await cqdsd.getCategoryAdmin();
 mainContent01El.insertAdjacentHTML("beforeend", siteDetailtoHtmlAdmin(site, Category.categories));
 
 // 수정하기 버튼 클릭 이벤트 추가
+let siteEdit = document.getElementById("site-edit-form");
+siteEdit.addEventListener("submit", async (target) => {
+  alert("정말 수정하시겠습니까?");
+  target.preventDefault();
+
+  //  여기서 값 추출하는 과정 추가 하고
+  console.log(siteEdit);
+  // console.log(siteEdit.name.value);
+  // console.log(siteEdit.namekr.value);
+  // console.log(siteEdit.name.value);
+  // console.log(siteEdit.name.value);
+  // console.log(siteEdit.name.value);
+  let nameValue = siteEdit.querySelector("input[name='nameKR']");
+  console.log(nameValue);
+  console.log(nameValue.value);
+  console.log(siteEdit.querySelector("input[name='name']").value);
+  console.log(siteEdit.querySelector("input[name='nameKR']").value);
+  console.log(siteEdit.querySelector("input[name='img']").value);
+  console.log(siteEdit.querySelector("textarea[name='siteDescription']").value);
+  console.log(siteEdit.querySelector("select[name='status']").value);
+  for(const one of siteEdit.querySelectorAll("input[name='category']")){
+    console.log(one);
+    if (one.checked){
+      console.log(one.value + "checked");
+      const category = new Category();
+      category.CategoryId = one.value;
+      site.Categories.push(category);
+    }
+  }
+  
+  // console.log(siteEdit.querySelector("input[name='nameKR']").value);
+
+  site.Name = siteEdit.querySelector("input[name='name']").value;
+  site.NameKR = siteEdit.querySelector("input[name='nameKR']").value;
+  site.Img = siteEdit.querySelector("input[name='img']").value;
+  site.SiteDescription = siteEdit.querySelector("textarea[name='siteDescription']").value;
+  site.Name = siteEdit.querySelector("input[name='name']").value;
+  if (siteEdit.querySelector("select[name='status']").value > 4){
+    site.Status = undefined;
+  }
+  
+  console.log(site);
+  const res = await Site.updateSiteAdmin(site);
+  if (res >0){
+    alert("수정이 완료되었습니다.");
+    location.reload();
+  }
+
+});
 
 
 function siteDetailtoHtmlAdmin(site, categories){
     let res = '';
-    res += `<form>
+    res += `<form id="site-edit-form">              
                 <table>
                     <tr>
                       <th>항목</th>
@@ -38,23 +87,27 @@ function siteDetailtoHtmlAdmin(site, categories){
                     </tr>
                     <tr>
                       <td>URL</td>
-                      <td>${site.URL}</td>
+                      <td><a href="${site.URL}" target="_blank" rel="external">${site.URL}</a></td>
                     </tr>
                     <tr>
                       <td>이름</td>
-                      <td><input style="width:500px;" type="text" value="${site.Name? site.Name : ""}"></td>
+                      <td><input name="name" type="text" value="${site.Name? site.Name : ""}"></td>
                     </tr>
                     <tr>
                       <td>한국이름</td>
-                      <td><input type="text" value="${site.NameKR? site.NameKR : ""}"></td>
+                      <td><input name="nameKR" type="text" value="${site.NameKR? site.NameKR : ''}"></td>
+                    </tr>
+                    <tr>
+                      <td>이미지 링크</td>
+                      <td><input name="img" type="text" value="${site.Img? site.Img : ""}"></td>
                     </tr>
                     <tr>
                       <td>이미지</td>
-                      <td><img src="${site.Img}"></td>
+                      <td>${site.Img? "<img src='" + site.Img + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}</td>
                     </tr>
                     <tr>
                       <td>설명</td>
-                      <td><textarea>${site.SiteDescription? site.SiteDescription : ""}</textarea></td>
+                      <td><textarea name="siteDescription">${site.SiteDescription? site.SiteDescription : ""}</textarea></td>
                     </tr>
                     <tr>
                       <td>방문 수</td>
@@ -71,13 +124,13 @@ function siteDetailtoHtmlAdmin(site, categories){
                     <tr>
                       <td>상태</td>
                       <td>
-                        <select name="status" >
-                            <option value="uploading" ${site.Status == 1 ? "selected" : ""} disabled>등록</option>
-                            <option value="showing" ${site.Status == 2 ? "selected" : ""} >표시</option>
-                            <option value="postpone" ${site.Status == 3 ? "selected" : ""} >보류</option>
-                            <option value="hiding" ${site.Status == 4 ? "selected" : ""} >숨기기</option>
-                            <option value="uploadingError" ${site.Status == 5 ? "selected" : ""} disabled>자동 등록 중 에러</option>
-                            <option value="uploadingComplete" ${site.Status == 6 ? "selected" : ""} disabled>자동 등록 완료</option>
+                        <select name="status">
+                            <option value="1" ${site.Status == 1 ? "selected" : ""} disabled>등록</option>
+                            <option value="2" ${site.Status == 2 ? "selected" : ""} >표시</option>
+                            <option value="3" ${site.Status == 3 ? "selected" : ""} >보류</option>
+                            <option value="4" ${site.Status == 4 ? "selected" : ""} >숨기기</option>
+                            <option value="5" ${site.Status == 5 ? "selected" : ""} disabled>자동 등록 중 에러</option>
+                            <option value="6" ${site.Status == 6 ? "selected" : ""} disabled>자동 등록 완료</option>
                         </select>
                       </td>
                     </tr>

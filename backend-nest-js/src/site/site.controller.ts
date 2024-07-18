@@ -142,21 +142,22 @@ export class SiteController {
         
     // 권한 체크
     // 관리자면 통과, 로그인 했으면 통과
-    let categoryIds = [];
     
-    for (const category of site.Categories){
-      categoryIds.push(category.CategoryId);
-    }
-    console.log(categoryIds);
 
     
-    let linkCategories :string[] = [];
+    let linkCategories = new Set<string>();
     if (site.Categories && site.Categories.length > 0){
+      let categoryIds = [];
+    
+      for (const category of site.Categories){
+        categoryIds.push(category.CategoryId);
+      }
+      console.log(categoryIds);
       // 카테고리마다 부모 카테고리 계속해서 찾고 다 연결해서 등록      
       let allCtegories = await this.categoryService.findAll();    
       while (categoryIds.length > 0){
         const oneCategoryId = categoryIds.pop();
-        linkCategories.push(oneCategoryId);
+        linkCategories.add(oneCategoryId);
         for (const category of allCtegories){
           if (category.CategoryId === oneCategoryId && category.ParentId){
             categoryIds.push(category.ParentId);
@@ -165,7 +166,8 @@ export class SiteController {
         }
       }
     }
-    await this.siteService.createCategorySite(site.SiteId, linkCategories);
+    
+    await this.siteService.createCategorySite(site.SiteId, Array.from(linkCategories.values()));
     
     return res;
   }
