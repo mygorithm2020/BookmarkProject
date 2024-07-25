@@ -66,11 +66,23 @@ export class SiteService {
         
     let urlObj = this.getUrlObj(site.URL);    
     console.log(urlObj);
+
+    // origin 값으로 저장
+    const targetUrl = urlObj.origin;
+
+    // 기존에 있는지 확인
+    let previous = await this.findOneByUrl(this.correctionUrl(urlObj), false);
+    if (previous){
+      throw new HttpException({
+        errCode : 22,
+        error : "the url is already exist"
+      }, HttpStatus.BAD_REQUEST);
+    } 
     
     // url 유효한지 확인
     // 여기가 문제구만.......
     // 이외의 사이트 문제는 그냥 따로 프로그램 돌려서 정보 수집하자
-    let siteModel = await this.setSiteParse(urlObj.origin);
+    let siteModel = await this.setSiteParse(this.correctionUrl(urlObj));
     if (!siteModel){
       // 설계상 여기에 오기전에 에러가 발생함... 그래도 일단 만들어 놓음
       throw new HttpException({
@@ -86,14 +98,7 @@ export class SiteService {
     //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
 
     // 데이터 삽입
-    // 기존에 있는지 확인
-    let previous = await this.findOneByUrl(siteModel.URL, false);
-    if (previous){
-      throw new HttpException({
-        errCode : 22,
-        error : "the url is already exist"
-      }, HttpStatus.BAD_REQUEST);
-    }    
+     
 
     const newSite = this.sRepo.create(siteModel);
     console.log(newSite);
@@ -240,12 +245,15 @@ export class SiteService {
         // <meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
         let metas = root.querySelectorAll("meta");
         for (let idx = 0; idx <metas.length; idx++){
-          if (metas[idx].getAttribute("http-equiv") && metas[idx].getAttribute("http-equiv").toLowerCase() === "content-type"){
-            if (metas[idx].getAttribute("content").toLowerCase().includes("euc-kr")){
-              root = Parse(iconv.decode(response.data, "euc-kr"))
-            }
+          if (metas[idx].getAttribute("http-equiv") &&
+          metas[idx].getAttribute("http-equiv").toLowerCase() === "content-type" &&
+          metas[idx].getAttribute("content").toLowerCase().includes("euc-kr")){
+            root = Parse(iconv.decode(response.data, "euc-kr"))
             break;
-          }           
+          } else if (metas[idx].getAttribute("charset") && metas[idx].getAttribute("charset").toLowerCase() === "euc-kr"){
+            root = Parse(iconv.decode(response.data, "euc-kr"))
+            break;
+          }
         }
         // 파싱
         // const root = Parse(response.data);
@@ -291,6 +299,7 @@ export class SiteService {
         }
         
       } catch (err) {
+        res.Status = 5;
         console.log(err);
         // throw "data extract failed";
       }
@@ -716,9 +725,9 @@ export class SiteService {
     //   site.Name = site.OGSiteName
     // } else 
     if (site.OGTitle){
-      site.Name = site.OGTitle
+      site.Name = site.OGTitle.trim();
     } else if (site.Title){
-      site.Name = site.Title
+      site.Name = site.Title.trim();
     }
 
     //  이미지 url 링크 보정
@@ -727,9 +736,9 @@ export class SiteService {
     }
 
     if (site.OGImg){
-      site.Img = site.OGImg
+      site.Img = site.OGImg;
     } else if (site.FaviconImg){
-      site.Img = site.FaviconImg
+      site.Img = site.FaviconImg;
     }
 
     if (site.OGDescription){

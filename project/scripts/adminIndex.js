@@ -16,6 +16,7 @@ for (const navLiEl of navList){
     }
 }
 let mainContent01El = document.getElementById("main_content01");
+let addBox = document.getElementById("add-box");
 
 switch(pageKey){
     case "category":
@@ -54,6 +55,35 @@ async function setCategoryPage(){
 }
 
 async function setSitePage(){
+
+    addBox.insertAdjacentHTML("beforeend",`
+        <input type="url" placeholder="www.bookmark.com" required>
+        <button id="add-site">신규 사이트 등록</button>
+        `);
+    let addSiteBtn = document.getElementById("add-site");
+    addSiteBtn.addEventListener("click", async () => {
+        let siteUrl = addBox.querySelector("input");
+        if (!siteUrl.value){
+            alert("url을 입력해주세요");
+        }
+        const site = new Site();
+        site.URL = siteUrl.value;
+        let res = await Site.addSiteAdmin(site);
+        console.log(res);
+        if (res.SiteId){
+            alert("사이트가 새로 등록되었습니다.");
+        }else if (res.errCode){
+            if (res.errCode === 22){
+                alert("이미 등록된 사이트 입니다.");
+            }else{
+                alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요!");
+            }
+
+        }
+    });
+    
+
+
     // 카테고리 표시
     let cqdsd = new Category();
     Category.categories = await cqdsd.getCategoryAdmin();

@@ -6,6 +6,7 @@ import { Category } from "./categoryObj.js";
 let cqdsd = new Category();
 Category.categories = await cqdsd.getCategory();
 cqdsd.setNavigationBox(Category.categories);
+cqdsd.setExpandNavigationBox(Category.categories);
 
 
 // console.log(navigator);
@@ -48,7 +49,7 @@ cqdsd.setNavigationBox(Category.categories);
 //     document.getElementById("category-open").addEventListener("click", e => {
 //         console.log("category-open click");
 //         const cate = document.getElementById("category-box-expand");
-//         cate.classList.toggle("hidden");
+//         cate.classList.toggle("cover");
 //         // if (cate.style.display == "none"){
 //         //     cate.style.display = "block";
 //         //     cate.style.opacity = 1;

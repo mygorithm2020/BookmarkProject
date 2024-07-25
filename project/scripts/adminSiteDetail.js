@@ -4,13 +4,13 @@ import { Category } from "./categoryObj.js";
 
 let curUrl = new URL(document.location.toString());
 console.log(curUrl.pathname);
-let pageKey = curUrl.searchParams.get("key");
-console.log(pageKey);
+let siteId = curUrl.searchParams.get("site");
+console.log(siteId);
 
 let mainContent01El = document.getElementById("main_content01");
 
 // 사이트 조회
-const site = await Site.getSiteById(pageKey);
+const site = await Site.getSiteById(siteId);
 
 if (!site){
   alert("존재하지 않는 사이트 입니다.");
@@ -21,6 +21,7 @@ if (!site){
 // 카테고리 조회
 let cqdsd = new Category();
 Category.categories = await cqdsd.getCategoryAdmin();
+Category.categories = cqdsd.transFormCategories(Category.categories);
 
 // 내용 표시
 mainContent01El.insertAdjacentHTML("beforeend", siteDetailtoHtmlAdmin(site, Category.categories));
@@ -46,6 +47,7 @@ siteEdit.addEventListener("submit", async (target) => {
   console.log(siteEdit.querySelector("input[name='img']").value);
   console.log(siteEdit.querySelector("textarea[name='siteDescription']").value);
   console.log(siteEdit.querySelector("select[name='status']").value);
+  site.categories = [];
   for(const one of siteEdit.querySelectorAll("input[name='category']")){
     console.log(one);
     if (one.checked){
@@ -65,13 +67,23 @@ siteEdit.addEventListener("submit", async (target) => {
   site.Name = siteEdit.querySelector("input[name='name']").value;
   if (siteEdit.querySelector("select[name='status']").value > 4){
     site.Status = undefined;
+  }else if (siteEdit.querySelector("select[name='status']").value <= 4){
+    site.Status = siteEdit.querySelector("select[name='status']").value;
   }
   
   console.log(site);
   const res = await Site.updateSiteAdmin(site);
   if (res >0){
     alert("수정이 완료되었습니다.");
-    location.reload();
+    mainContent01El.querySelector("form").remove();
+    // 수정된 데이터로 변경
+
+    // 내용 표시
+    mainContent01El.insertAdjacentHTML("beforeend", siteDetailtoHtmlAdmin(site, Category.categories));
+    // location.reload();
+  }else{
+    alert("수정이 실패했습니다. 잠시 후 다시 시도해주세요!");
+
   }
 
 });
@@ -96,15 +108,29 @@ function siteDetailtoHtmlAdmin(site, categories){
                     <tr>
                       <td>한국이름</td>
                       <td><input name="nameKR" type="text" value="${site.NameKR? site.NameKR : ''}"></td>
-                    </tr>
-                    <tr>
-                      <td>이미지 링크</td>
-                      <td><input name="img" type="text" value="${site.Img? site.Img : ""}"></td>
-                    </tr>
+                    </tr>                    
                     <tr>
                       <td>이미지</td>
-                      <td>${site.Img? "<img src='" + site.Img + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}</td>
+                      <td>
+                        <input name="img" type="text" value="${site.Img? site.Img : ""}">
+                        ${site.Img? "<img src='" + site.Img + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}
+                      </td>
                     </tr>
+                    <tr>
+                      <td>파비콘 이미지</td>
+                      <td>
+                        <a href="${site.FaviconImg}" target="_blank" rel="external">${site.FaviconImg}</a>
+                        ${site.FaviconImg? "<img src='" + site.FaviconImg + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}
+                      </td>
+                    </tr>
+                    <tr>
+                    <tr>
+                      <td>외부 공유 이미지</td>
+                      <td>
+                        <a href="${site.OGImg}" target="_blank" rel="external">${site.OGImg}</a>
+                        ${site.OGImg? "<img src='" + site.OGImg + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}
+                      </td>
+                    </tr>                    
                     <tr>
                       <td>설명</td>
                       <td><textarea name="siteDescription">${site.SiteDescription? site.SiteDescription : ""}</textarea></td>

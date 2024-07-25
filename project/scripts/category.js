@@ -62,9 +62,11 @@ console.log("category");
             }            
 
             // getSiteByCategory(targetCategoryId, 1);
-            let ss = document.getElementById("main_content01");
+            let mainContent01El = document.getElementById("main_content01");
             let sList = await Site.getSiteByCategory(targetCategoryId, 1);
-            ss.insertAdjacentHTML("beforeend", Site.listToHtmlv2(sList));
+            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(sList));
+            // 카드 이벤트 효과 추가
+            Site.cardEvent();
 
             clearInterval(reqCategory);
         };  

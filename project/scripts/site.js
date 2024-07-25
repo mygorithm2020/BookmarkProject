@@ -5,7 +5,7 @@ export class Site {
 
     static siteStatus = {
         1 : "기본 등록",
-        2 : "표출 중",
+        2 : "표시 중",
         3 : "심사 대기",
         4 : "숨기기(차단)",
         5 : "자동 등록 중 실패",
@@ -102,12 +102,12 @@ export class Site {
 
         res += `<ul id="site-card-box">`
         for (let i = 0 ; i < siteList.length; i++){
-            if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
-                siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
-            }
+            // if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
+            //     siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
+            // }
             res += `
             <li class="site-card">                    
-                <div>
+                <div class="site_card_top_mid">
                     <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
                         <div class="site_card_top">
                             <div>
@@ -123,7 +123,7 @@ export class Site {
                             <li>싫어요 ${siteList[i].Bad}</li>                                
                         </ul>   
                         <p class="site_card_description">
-                            ${siteList[i].SiteDescription}                              
+                            ${siteList[i].SiteDescription? siteList[i].SiteDescription : ""}                              
                         </p>                            
                     </a>                                                        
                 </div>                    
@@ -158,7 +158,7 @@ export class Site {
             }
             res += `
             <li class="site-card">
-                <a class="external_link" href="siteDetail.html?key=${siteList[i].SiteId}"  rel="external" data-siteId=${siteList[i].SiteId}>
+                <a class="external_link" href="siteDetail.html?site=${siteList[i].SiteId}"  rel="external" data-siteId=${siteList[i].SiteId}>
                     <ul class="site-card-list">
                         <li>
                             <img class="site_card_img" src="${siteList[i].Img ? siteList[i].Img : '../images/noImage.jpg'}" alt="no images">    
@@ -349,6 +349,26 @@ export class Site {
             return null;
         });
         
+        return data;
+    }
+
+    //사이트 등록
+    static async addSiteAdmin(site){
+        console.log(site);
+        let data = await axios.post(`${this.API_HOST}/site`, site)
+        .then((result) => {
+            console.log(result); 
+            return result.data;   
+        })
+        .catch((error) => {
+            console.error(error);            
+            if (error.code === "ERR_NETWORK"){
+                // 현재 이용 불가능한 무언가 띄우기...
+                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+                alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+            }
+            return error.response.data;
+        });
         return data;
     }
 

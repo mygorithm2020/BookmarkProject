@@ -16,7 +16,7 @@ Site.cardEvent();
 
 let spinner = document.querySelector(".loading-spinner");
 console.log(spinner);
-// spinner.classList.toggle("hidden");
+spinner.classList.toggle("cover");
 
 window.onload = async function() {
     setTimeout(() => {

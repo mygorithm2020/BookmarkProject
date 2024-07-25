@@ -68,15 +68,25 @@ export class Category{
         let q = document.getElementById("nav_list_box");
         
         // 세팅
-        for (const d of categories){                
-            q.insertAdjacentHTML("beforeend", `<li><a href="./category.html?key=${d.Name}">${d.NameKR}</a></li>`);
+        for (const d of categories){    
+            if (d.Layer === 1){
+                q.insertAdjacentHTML("beforeend", `<li><a href="./category.html?key=${d.Name}">${d.NameKR}</a></li>`);
+            }            
         }
+
+       
+
+    }
+
+    //카테고리 확장 버튼 클릭시 목록 리스트 구현
+    async setExpandNavigationBox(categories){
 
         // 카테고리 바 확장
         document.getElementById("category-open").addEventListener("click", e => {
             console.log("category-open click");
-            const cate = document.getElementById("category-box-expand");
+            const cate = document.getElementById("category-box-expand");            
             cate.classList.toggle("hidden");
+            // cate.classList.toggle("cover");
             // if (cate.style.display == "none"){
             //     cate.style.display = "block";
             //     cate.style.opacity = 1;

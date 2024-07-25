@@ -3,12 +3,17 @@
 #site-card-box {
     display: grid;
     grid-template-columns: 33.3% 33.3% 33.3%;
+    /* display: flex;    
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: stretch; */
     padding: 0;
 }
 
 #site-card-box>li {
     /* border: 2px solid #f1f3f6; */
     /* 배경 색 나중에 바꾸자 */
+    
     background-color: #f1f3f6; 
     margin: 4px;
 }
@@ -17,23 +22,22 @@
     box-shadow: 0px 0px 20px 1px gray;
 }
 
+.site_card_top_mid{
+    height: 80%;
+    overflow: hidden;
+}
+
 .site_card_top {
     display: flex;
     flex-direction: row;
     gap: 10px;
-    height: 70px;
+    height: 80px;
     justify-content: flex-start;
     
 }
 
-/* .site_card_top>img{
-    max-width: 35%;
-    
-    
-} */
-
 .site_card_top>div:nth-child(1){
-    width: 25%;
+    /* width: 25%; */
     padding: 5px;
     display: flex;
     align-items: center;
@@ -43,7 +47,6 @@
 
 .site_card_img {
     height: 90%;
-    max-width: 90%;
 }
 
 .site_card_top>div:nth-child(2){
@@ -67,7 +70,7 @@
 
 .site_card_description{
     margin: 5px;
-    border-bottom: 1px solid black;
+    /* border-bottom: 1px solid black; */
     
 }
 

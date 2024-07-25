@@ -46,9 +46,18 @@ main {
     color: #03cf5d;
 }
 
+/* 영역자체를 삭제*/
+.cover {
+    display: none;
+}
+
 /* 안보이게 숨기기 */
 .hidden {
-    display: none;
+    /* visibility: hidden; */
+    opacity: 0;
+    width: 0;
+    height: 0;
+    /* transition: all 1s ease-out; */
 }
 
 /* 데이터가 없는 경우 */

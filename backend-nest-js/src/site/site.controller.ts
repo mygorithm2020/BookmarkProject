@@ -7,6 +7,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApiResult } from 'src/publicComponents/apiResult';
 import { Response, Request } from 'express';
 import { CategoryService } from 'src/category/category.service';
+import { ServerCache } from 'src/publicComponents/memoryCache';
 
 @ApiTags("site")
 @Controller('site')
@@ -179,9 +180,10 @@ export class SiteController {
     console.log(req.headers);
     console.log(req.ip);   
     console.log(req.body);  
+    // 같은 분 내에 동일한 유저와 ip 사이트로 요청이 오면 조회수 증가 없음
     const newStr : string = new Date().getUTCMinutes() + req.headers["user-agent"] + req.ip + updateSiteDto.SiteId;
     console.log(newStr);
-    if (SiteService.checkRestrictedViews(newStr)){
+    if (ServerCache.checkRestrictedViews(newStr)){
        return 
     }
 

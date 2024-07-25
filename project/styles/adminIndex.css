@@ -1,3 +1,20 @@
+
+#add-box{
+    margin: 10px;
+    min-height: 30px;
+}
+
+#add-box > input{
+    min-width: 30%;
+    margin-right: 10px;
+    padding: 10px;
+    font-size: 1.1rem;
+}
+
+#add-box > button{
+    padding: 10px;
+}
+
 #category-box{
     border: 2px solid black;
     display: flex;
