@@ -112,14 +112,14 @@ function siteDetailtoHtmlAdmin(site, categories){
                     <tr>
                       <td>이미지</td>
                       <td>
-                        <input name="img" type="text" value="${site.Img? site.Img : ""}">
+                        <input name="img" type="text" value="${site.Img? site.Img : ""}"></br>
                         ${site.Img? "<img src='" + site.Img + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}
                       </td>
                     </tr>
                     <tr>
                       <td>파비콘 이미지</td>
                       <td>
-                        <a href="${site.FaviconImg}" target="_blank" rel="external">${site.FaviconImg}</a>
+                        <p>${site.FaviconImg}</p>
                         ${site.FaviconImg? "<img src='" + site.FaviconImg + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}
                       </td>
                     </tr>
@@ -127,7 +127,7 @@ function siteDetailtoHtmlAdmin(site, categories){
                     <tr>
                       <td>외부 공유 이미지</td>
                       <td>
-                        <a href="${site.OGImg}" target="_blank" rel="external">${site.OGImg}</a>
+                        <p>${site.OGImg}</p>                        
                         ${site.OGImg? "<img src='" + site.OGImg + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}
                       </td>
                     </tr>                    

@@ -22,7 +22,8 @@
 }
 .site-card-list > li:first-child {
     padding: 6px;
-    flex: 1;
+    flex: 1;    
+    text-align: center;
 }
 
 .site-card-list > li {
@@ -30,6 +31,7 @@
     padding: 6px;
     flex: 3;
     overflow: hidden;
+    align-content: center;
 }
 
 .site_card_img {

@@ -157,7 +157,7 @@ CREATE TABLE TA_Site(
     Bad INT  default 0,
     MemberId VARCHAR(64),
     -- Email VARCHAR(64), 
-    Status Int COMMENT  "카테고리 등록상태 1:일반등록(확인 x), 2: 사용, 3:보류, 4: 숨기기(문제), 5:자동 확인 중 사이트 에러, 6:자동 확인 중 성공" ,      
+    Status Int COMMENT  "카테고리 등록상태 1:일반등록(확인 x), 2: 사용, 3:보류, 4: 숨기기(문제), 5:자동 확인 중 사이트 에러, 6:자동 확인 중 성공 7: 자동 검토 중 보류" ,      
 
     -- 기본 정보 -- 2순위
     Title VARCHAR(255),

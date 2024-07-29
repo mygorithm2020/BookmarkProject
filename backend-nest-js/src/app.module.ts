@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TestModule } from './test/test.module';
@@ -18,6 +18,10 @@ import { Member } from './member/entities/member.entity';
 import { MysqlException } from './publicComponents/ExceptionHandler';
 import { CustomUtils } from './publicComponents/utils';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { LoggerMiddleware } from './middleware/logger.middleware';
+import { CategoryController } from './category/category.controller';
+import { MemberController } from './member/member.controller';
+import { SiteController } from './site/site.controller';
 
 dotenv.config();
 
@@ -44,4 +48,13 @@ console.log(process.env.DB_HOST);
   controllers: [AppController],
   providers: [AppService,],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+    .apply(LoggerMiddleware)
+    .exclude(
+      {path : "/", method : RequestMethod.POST}
+    )
+    .forRoutes(CategoryController, MemberController, SiteController);
+  }
+}

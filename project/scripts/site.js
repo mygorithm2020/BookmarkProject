@@ -144,44 +144,45 @@ export class Site {
 
     static listToHtmlForAdmin(siteList){
         let res = "";
-        if (!siteList || siteList.length === 0){
-            console.log("sdd");
-            res = `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
-            return res;
-
-        }
 
         res += `<ul id="site-card-box">`
-        for (let i = 0 ; i < siteList.length; i++){
-            if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
-                siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
+        if (!siteList || siteList.length === 0){
+            console.log("sdd");
+            res += `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
+
+        } else {
+            for (let i = 0 ; i < siteList.length; i++){
+                if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
+                    siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
+                }
+                res += `
+                <li class="site-card">
+                    <a class="external_link" href="siteDetail.html?site=${siteList[i].SiteId}"  rel="external" data-siteId=${siteList[i].SiteId}>
+                        <ul class="site-card-list">
+                            <li>
+                                <img class="site_card_img" src="${siteList[i].Img ? siteList[i].Img : '../images/noImage.jpg'}" alt="no images">    
+                            </li>
+                            <li>
+                                ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
+                            </li>
+                            <li>
+                                ${siteList[i].URL}
+                            </li>
+                            <li>
+                                ${this.siteStatus[siteList[i].Status]}                            
+                            </li>
+                            <li>
+                                ${siteList[i].Categories && siteList[i].Categories.length > 0? "카테고리 등록" : "카테고리 미등록"}
+                            </li>
+                            <li>
+                                ${siteList[i].SiteDescription}                            
+                            </li>                        
+                        </ul>                                             
+                    </a>
+                </li>`;
             }
-            res += `
-            <li class="site-card">
-                <a class="external_link" href="siteDetail.html?site=${siteList[i].SiteId}"  rel="external" data-siteId=${siteList[i].SiteId}>
-                    <ul class="site-card-list">
-                        <li>
-                            <img class="site_card_img" src="${siteList[i].Img ? siteList[i].Img : '../images/noImage.jpg'}" alt="no images">    
-                        </li>
-                        <li>
-                            ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
-                        </li>
-                        <li>
-                            ${siteList[i].URL}
-                        </li>
-                        <li>
-                            ${this.siteStatus[siteList[i].Status]}                            
-                        </li>
-                        <li>
-                            ${siteList[i].Categories && siteList[i].Categories.length > 0? "카테고리 등록" : "카테고리 미등록"}
-                        </li>
-                        <li>
-                            ${siteList[i].SiteDescription}                            
-                        </li>                        
-                    </ul>                                             
-                </a>
-            </li>`;
         }
+        
                         
         res += `
         </ul>`

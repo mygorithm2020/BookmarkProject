@@ -59,7 +59,7 @@ console.log("category");
                     siteMapTextEl.innerHTML = category.NameKR;   
                     break;
                 }        
-            }            
+            }                        
 
             // getSiteByCategory(targetCategoryId, 1);
             let mainContent01El = document.getElementById("main_content01");
@@ -67,7 +67,10 @@ console.log("category");
             mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(sList));
             // 카드 이벤트 효과 추가
             Site.cardEvent();
-
+            
+            let spinner = document.querySelector(".loading-spinner");
+            console.log(spinner);
+            spinner.classList.toggle("cover");
             clearInterval(reqCategory);
         };  
         

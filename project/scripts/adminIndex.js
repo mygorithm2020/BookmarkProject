@@ -72,6 +72,7 @@ async function setSitePage(){
         console.log(res);
         if (res.SiteId){
             alert("사이트가 새로 등록되었습니다.");
+            location.reload();
         }else if (res.errCode){
             if (res.errCode === 22){
                 alert("이미 등록된 사이트 입니다.");
@@ -81,7 +82,6 @@ async function setSitePage(){
 
         }
     });
-    
 
 
     // 카테고리 표시
@@ -94,6 +94,29 @@ async function setSitePage(){
     //  HTML에 추가
     mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));            
     // 카드 이벤트 효과 추가
+
+    // 검색 기능 추가
+    let searchEl = document.querySelector("#search-box > input");
+    searchEl.addEventListener("input", ()=> {
+        console.log(searchEl.value);
+        let filterdSites = [];
+        if (!searchEl.value){
+            filterdSites = sites;
+        } else{
+            for(const oneSite of sites){
+                if ((oneSite.URL && oneSite.URL.includes(searchEl.value)) || 
+                (oneSite.Name &&  oneSite.Name.includes(searchEl.value)) || 
+                (oneSite.NameKR && oneSite.NameKR.includes(searchEl.value))){
+                    filterdSites.push(oneSite);
+                }
+            }
+        }
+        let siteList = mainContent01El.querySelector("#site-card-box");
+        if (siteList){
+            siteList.remove();
+        }        
+        mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(filterdSites));
+    });
 }
 
 function setMemberPage(){

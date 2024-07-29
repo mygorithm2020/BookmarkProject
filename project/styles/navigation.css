@@ -1,6 +1,7 @@
 nav {
     max-width: 1280px;
     margin: 0 auto;
+    background-color: lightblue;
     /* display: flex;
     padding: 10px;
     align-items: center;
@@ -10,6 +11,10 @@ nav {
 
 nav a:hover {
     color: blue;
+    font-weight: bold;
+}
+
+nav .selected {
     font-weight: bold;
 }
 
@@ -26,6 +31,7 @@ nav a:hover {
 }
 
 #nav_list_box {
+    
     font-size: 1.2rem;
     display: flex;
     justify-content: space-around;
@@ -53,6 +59,9 @@ nav a:hover {
 }
 
 #category-box-expand{
+    position: absolute;
+    max-width: 1280px;
+    width: 100%;
     margin: 0;
     background-color: lightblue;
     /* transition: all 1s ease-out; */

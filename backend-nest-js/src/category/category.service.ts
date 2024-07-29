@@ -22,12 +22,14 @@ export class CategoryService {
     category.CategoryId = newId;
     const newCategory = this.cRepo.create(category);
     console.log('This action adds a new category');
+    // let res = await this.cRepo.save(newCategory);
+    // return res;
     try{
       let res = await this.cRepo.save(newCategory);
       return res;
     } catch (err) {
       console.log(err);
-      MysqlException.throwHttpException(err.code);      
+      MysqlException.throwHttpException(err.code, 21);      
     }
     
     
@@ -90,8 +92,8 @@ export class CategoryService {
   async update(id: string, updateCategoryDto: Category) {
     console.log(`This action updates a #${id} category`);
     // 반환값이 뭐지...??
-    console.log(await this.cRepo.update(id, updateCategoryDto))
-    // return await this.cRepo.update(id, updateCategoryDto);
+    // console.log(await this.cRepo.update(id, updateCategoryDto))
+    return await this.cRepo.update(id, updateCategoryDto);
   }
 
   async remove(id: string) {

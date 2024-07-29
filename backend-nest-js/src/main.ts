@@ -1,6 +1,9 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { LoggerMiddleware, midLogger } from './middleware/logger.middleware';
+import { AllExceptionsFilter, CustomExceptionFilter, HttpExceptionFilter } from './middleware/http-exception.filter';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +29,15 @@ async function bootstrap() {
     // origin : ["http://127.0.0.1:5500"]
     origin : [/127.0.0.1:/, /localhost:/]
   });
+
+  //global middleware or config 설정 여기서는 function으로만 가능
+  // app.use(midLogger);
+
+  // global filter
+  // app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new CustomExceptionFilter());
+  // const { httpAdapter } = app.get(HttpAdapterHost);
+  // app.useGlobalFilters(new AllExceptionsFilter(new HttpAdapterHost()));
 
   await app.listen(3000);
 }

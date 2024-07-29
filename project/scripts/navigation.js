@@ -2,11 +2,26 @@ console.log("navi");
 
 import { Category } from "./categoryObj.js";
 
+(async function (){
+    let cqdsd = new Category();
+    Category.categories = await cqdsd.getCategory();
+    cqdsd.setNavigationBox(Category.categories);
+    cqdsd.setExpandNavigationBox(Category.categories);
 
-let cqdsd = new Category();
-Category.categories = await cqdsd.getCategory();
-cqdsd.setNavigationBox(Category.categories);
-cqdsd.setExpandNavigationBox(Category.categories);
+    let curUrl = new URL(document.location.toString());
+    console.log(curUrl.pathname);
+    let pageKey = curUrl.searchParams.get("key");
+    let navList = document.querySelectorAll("#nav_list_box li");
+    for (const navLiEl of navList){
+        if (navLiEl.innerHTML.includes(pageKey)){
+            navLiEl.classList.add("selected");
+            break;
+        }
+    }
+
+})();
+
+
 
 
 // console.log(navigator);
