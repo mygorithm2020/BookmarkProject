@@ -46,7 +46,7 @@ console.log(process.env.DB_HOST);
     timezone : "z" // mysql에 들어있는 시간에서 자동으로 -9시간을 해오는거 해결
   }),  TestModule, BooksModule, CategoryModule, SiteModule, MemberModule, AuthenticationModule, ],
   controllers: [AppController],
-  providers: [AppService,],
+  providers: [AppService, CustomUtils],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

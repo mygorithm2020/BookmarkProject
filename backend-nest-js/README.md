@@ -48,6 +48,9 @@
     Swagger
     Bcrypt
     crypto
+    Middleware
+    Filter
+    
 
 #### 오류 및 문제 해결
     NestJS : HttpModule로 response의 html 파일 인코딩 방식이 euc-kr이면 문자가 깨지는 현상,  utf-8이면 정상

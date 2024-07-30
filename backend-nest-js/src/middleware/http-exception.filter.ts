@@ -1,6 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, InternalServerErrorException } from "@nestjs/common";
 import { BaseExceptionFilter, HttpAdapterHost } from "@nestjs/core";
 import { Request, Response } from 'express';
+import { CustomUtils } from "src/publicComponents/utils";
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -24,40 +25,46 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
-  catch(exception: Error, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const req = ctx.getRequest<Request>();
-    const res = ctx.getResponse<Response>();
-
-    // console.log(exception);
-    // 로그는 실제 에러를 작성
-    const log = {
-      timeStamp: new Date(),
-      url: req.url,
-      exception,
-    };
-
-    try{
-        console.log(log);
-        // 파일에 기록하는 부분 추가
-
-    } catch {
+    constructor(private readonly cUtil : CustomUtils){
 
     }
-    
+    catch(exception: Error, host: ArgumentsHost) {
+        const ctx = host.switchToHttp();
+        const req = ctx.getRequest<Request>();
+        const res = ctx.getResponse<Response>();
 
-    // 프론트에는 미리 설정 못했다는 의미로 서버에러 리턴
-    if (!(exception instanceof HttpException)) {        
-        exception = new HttpException({
-            errCode : 1,
-            error : "Internal Server Error"
-        }, HttpStatus.INTERNAL_SERVER_ERROR);
+        // console.log(exception);
+        // 로그는 실제 에러를 작성
+        const log = {
+        timeStamp: this.cUtil.getUTCDate(),
+        url: req.url,
+        exception,
+        };
+
+        try{
+            console.log(log);
+            // 파일에 기록하는 부분 추가
+
+        } catch {
+
+        }
+        
+
+        // 프론트에는 미리 설정 못했다는 의미로 서버에러 리턴
+        if (!(exception instanceof HttpException)) {
+          console.log("이건?");
+
+                  
+          exception = new HttpException({
+              errCode : 1,
+              error : "Internal Server Error"
+          }, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        const response = (exception as HttpException).getResponse();
+        res.status((exception as HttpException).getStatus()).json(response);
+        
     }
-
-    const response = (exception as HttpException).getResponse();
-    res.status((exception as HttpException).getStatus()).json(response);
-    
-  }
 }
 
 @Catch()

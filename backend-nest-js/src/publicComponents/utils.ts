@@ -4,6 +4,7 @@ import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
 
 export class CustomUtils{
+
     //  피셔-예이츠 셔플(Fisher-Yates shuffle)
   shuffle<T>(array : T[]) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -24,7 +25,25 @@ export class CustomUtils{
     return newId;
   } 
 
+
+  // utc 타임스탬프 리턴
+  getUTCDate(): Date{
+    var date = new Date();
+    var now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
+                    date.getUTCDate(), date.getUTCHours(),
+                    date.getUTCMinutes(), date.getUTCSeconds());
+    let res = new Date(now_utc);
+    return res;
+  }
   
+}
+
+export class FileAdapter{
+  // 파일읽기
+
+  // 파일쓰기
+
+  // 등등
 }
 
 export class CustomEncrypt {

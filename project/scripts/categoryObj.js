@@ -12,10 +12,73 @@ export class Category{
     CreatedDate;
     UpdatedDate;
     Sites;
+    
+    childCategories = [];
 
     static staticTest = "staticValue";
 
     static categories = [];
+
+    API_HOST = "http://localhost:3000";
+
+    instance = axios.create({
+        baseURL: 'http://localhost:3000',
+        // ...other configs,
+        timeout: 3000,
+    });
+    
+    
+
+    async addCategoryAdmin(category, errCallback){
+        // 카테고리 불러오기
+        let data = await axios.post(`${this.API_HOST}/category/admin`, category)
+        .then((result) => {
+            console.log(result); 
+            return result.data;   
+        })
+        .catch((error) => {
+            console.error(error);            
+            if (errCallback){
+                errCallback(error);
+            }else{
+                if (error.code === "ERR_NETWORK"){
+                    // 현재 이용 불가능한 무언가 띄우기...
+                    alert("현재 서버 점검 중으로 이용할 수 없습니다."); 
+                }else if (error.response.data.errCode){
+                    const code = error.response.data.errCode;
+                    if (code === 21){
+                        alert("이미 등록된 카테고리 이름입니다.");
+                    }else{
+                        alert("등록에 실패했습니다. 관리자에게 문의하세요");
+                    }
+
+                }else{
+                    alert("도중에 문제가 발생했습니다. 잠시 후 다시 이용해주세요");
+                }
+            }
+            
+            return error.response.data;
+        });
+        return data;
+    }
+
+    async updateCategoryAdmin(category){
+        // 카테고리 불러오기
+        let data = await axios.patch(`${this.API_HOST}/category/admin`, category)
+        .then((result) => {
+            console.log(result); 
+            return result.data;   
+        })
+        .catch((error) => {
+            console.error(error);            
+            if (error.code === "ERR_NETWORK"){
+                // 현재 이용 불가능한 무언가 띄우기...
+                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")                
+            }
+            return error.response.data;
+        });
+        return data;
+    }
 
     // AJAX
     getCategoryAdmin(){
@@ -40,9 +103,31 @@ export class Category{
         return data;
     }
 
+    getCategoryOneAdmin(categoryId){
+        // 카테고리 불러오기
+        let data = axios.get(`${this.API_HOST}/category/admin/${categoryId}`)
+        .then((result) => {
+            console.log(result);
+            return result.data;
+            
+        })
+        .catch((error) => {
+            console.error(error);
+            if (error.code === "ERR_NETWORK"){
+                // 현재 이용 불가능한 무언가 띄우기...
+                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
+
+            }
+            return null;
+        });
+        
+        return data;
+    }
+
     getCategory(){
         // 카테고리 불러오기
-        let data = axios.get("http://localhost:3000/category")
+        let data = this.instance.get("/category")
         .then((result) => {
             console.log(result);
             return result.data;
@@ -67,15 +152,15 @@ export class Category{
     async setNavigationBox(categories){
         let q = document.getElementById("nav_list_box");
         
+        if (!categories){
+            return;
+        }
         // 세팅
         for (const d of categories){    
             if (d.Layer === 1){
                 q.insertAdjacentHTML("beforeend", `<li><a href="./category.html?key=${d.Name}">${d.NameKR}</a></li>`);
             }            
         }
-
-       
-
     }
 
     //카테고리 확장 버튼 클릭시 목록 리스트 구현
@@ -101,10 +186,43 @@ export class Category{
     }
 
     // 카테고리 리스트를 보기 좋게 그룹화하기 리스트 변경
-    transFormCategories(categories){
+    transFormCategoriesLayerStructure(categories){
         let res = [];
+        
         for (const cateIdx of categories){
-            if (cateIdx.Layer === 1){
+            if (cateIdx.ParentId == null){
+                res.push(cateIdx);
+                cateIdx.childCategories = [];
+                for (const cateJdx of categories){
+                    if (cateJdx.ParentId === cateIdx.CategoryId){
+                        cateIdx.childCategories.push(cateJdx);                        
+                    }                
+                }
+            }   
+        }
+        // for (const cateIdx of categories){
+            
+        //     if (cateIdx.Layer === 1){
+        //         res.push(cateIdx);
+                
+        //         for (const cateJdx of categories){
+        //             if (cateJdx.Layer === 2 && cateJdx.ParentId === cateIdx.CategoryId){
+        //                 res.push(cateJdx);
+        //             }                
+        //         }
+        //     }            
+        // }
+
+        return res;
+    }
+
+    // 카테고리 리스트를 보기 좋게 그룹화하기 리스트 변경
+    transFormCategories(categories){
+        let res = [];        
+        
+        for (const cateIdx of categories){
+            
+            if (!cateIdx.ParentId){
                 res.push(cateIdx);
                 
                 for (const cateJdx of categories){
@@ -137,15 +255,16 @@ export class Category{
                   <th>생성 일시</th>
                 </tr>`
         for (let i = 0 ; i < categories.length; i++){
-            res += `
+            res += `            
             <tr class="category_card category-layer${categories[i].Layer}">
-                <td>${i+1}</td>
+                <td><a href="categoryDetail.html?key=${categories[i].CategoryId}">${i+1}</a></td>
                 <td>${categories[i].Layer}</td>
                 <td>${categories[i].Name}</td>
                 <td>${categories[i].NameKR}</td>                
                 <td>${categories[i].Status}</td>
                 <td>${categories[i].CreatedDate}</td>                
-            </tr>`;
+            </tr>
+            `;
         }                        
         res += `</table>`
 

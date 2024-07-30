@@ -191,7 +191,8 @@ export class Site {
     })
     CreatedDate : Date;
 
-    @UpdateDateColumn()
+    // @UpdateDateColumn()
+    @Column()
     UpdatedDate : Date;
 
     @ManyToMany(type => Category) //, (category) => category.CategoryId

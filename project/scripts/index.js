@@ -28,3 +28,18 @@ window.onload = async function() {
     
 
 };
+
+
+// let instance = axios.create({
+//     baseURL: 'https://some-domain.com/api/',
+//     // ...other configs,
+//     timeout: 1000,
+// });
+
+// instance.get("/")
+// .then( (res) => {
+//     console.log(res);
+// }) 
+// .catch((err) => {
+//     console.log(err);
+// })

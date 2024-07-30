@@ -29,16 +29,49 @@ switch(pageKey){
         setMemberPage();
         break;
     default:
+        location.href = "?key=category";
         // mainContent01El.insertAdjacentHTML("beforeend", "관리자 페이지에 오신걸 환영합니다.");
 }
 
 
 async function setCategoryPage(){
     console.log("category");
+
+    addBox.insertAdjacentHTML("beforeend",`
+        <input type="text" placeholder="travel" name="name" required>
+        <input type="text" placeholder="여행" name="nameKR" required>
+        <button id="add-category">메인(최상위) 카테고리 추가</button>        
+        `);
+        
+    let addSiteBtn = document.getElementById("add-category");
+    addSiteBtn.addEventListener("click", async (target) => {
+        target.preventDefault();
+        alert("sss");
+        const category = new Category();
+        category.Name = addBox.querySelector("input[name='name']").value;
+        category.NameKR = addBox.querySelector("input[name='nameKR']").value;
+        console.log(category);
+        if (!category.Name){
+            alert("이름을 입력해주세요");
+            return;
+        }
+        let res = await category.addCategoryAdmin(category);
+        // console.log(res);
+        // if (res.CategoryId){
+        //     location.reload();
+        // }else if (res.errCode){
+        //     if (res.errCode === 21){
+        //         alert("이미 등록된 카테고리 입니다.");
+        //     }else{
+        //         alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요!");
+        //     }
+        // }
+    });
+
+
     let cqdsd = new Category();
-    Category.categories = (await cqdsd.getCategoryAdmin());
+    Category.categories = await cqdsd.getCategoryAdmin();
     Category.categories.sort(function(a, b){
-        console.log(a.Status, b.Status);
         if (a.Status < b.Status){
             return 1;
         }
@@ -51,6 +84,7 @@ async function setCategoryPage(){
         }
     });
     console.log(Category.categories);
+    console.log(cqdsd.transFormCategories(Category.categories));
     mainContent01El.insertAdjacentHTML("beforeend", cqdsd.listToHtmlForAdmin(cqdsd.transFormCategories(Category.categories)));
 }
 
@@ -61,7 +95,8 @@ async function setSitePage(){
         <button id="add-site">신규 사이트 등록</button>
         `);
     let addSiteBtn = document.getElementById("add-site");
-    addSiteBtn.addEventListener("click", async () => {
+    addSiteBtn.addEventListener("click", async (target) => {
+        target.preventDefault();
         let siteUrl = addBox.querySelector("input");
         if (!siteUrl.value){
             alert("url을 입력해주세요");
@@ -79,9 +114,15 @@ async function setSitePage(){
             }else{
                 alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요!");
             }
-
         }
     });
+
+    mainContent01El.insertAdjacentHTML("beforeend", 
+        `<div id="search-box">
+            <label>이름 또는 URL 검색</label>
+            <input type="text" placeholder="bookmark" required>                               
+        </div>`
+    );
 
 
     // 카테고리 표시

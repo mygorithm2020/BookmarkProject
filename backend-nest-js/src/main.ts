@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { LoggerMiddleware, midLogger } from './middleware/logger.middleware';
 import { AllExceptionsFilter, CustomExceptionFilter, HttpExceptionFilter } from './middleware/http-exception.filter';
+import { CustomUtils } from './publicComponents/utils';
 
 
 async function bootstrap() {
@@ -35,7 +36,7 @@ async function bootstrap() {
 
   // global filter
   // app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalFilters(new CustomExceptionFilter());
+  app.useGlobalFilters(new CustomExceptionFilter(new CustomUtils()));
   // const { httpAdapter } = app.get(HttpAdapterHost);
   // app.useGlobalFilters(new AllExceptionsFilter(new HttpAdapterHost()));
 

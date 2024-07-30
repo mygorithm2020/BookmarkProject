@@ -36,7 +36,7 @@ export class CategoryController {
   }
 
   @Get()
-  findAll(@Req() req: Request, @Res() res: Response) {
+  findAll(@Req() req: Request) {
     console.log(req.headers);
     console.log(req.headers["referer"]);
     console.log(req.headers['user-agent']);
@@ -48,12 +48,17 @@ export class CategoryController {
 
   @Get("/admin")
   findAllAdmin(@Req() req: Request) {
-    console.log(req.headers);
-    console.log(req.headers['user-agent']);
-    console.log(req.ip);
-    console.log(req.cookies);
     // res.cookie("test", "test");
     return this.categoryService.findAll();
+  }
+
+  @Get('/admin/:id')
+  findOneAdmin(@Param('id') id: string) {
+    console.log(id);
+    if (!id){
+      throw new HttpException("no id", HttpStatus.BAD_REQUEST);
+    }
+    return this.categoryService.findOne(id);
   }
 
   @Get(':id')
@@ -74,7 +79,7 @@ export class CategoryController {
   @Patch('/admin')
   async updateAdmin(@Body() category: Category) {
     let res = await this.categoryService.update(category.CategoryId, category);
-    return res;
+    return res.affected;
   }
 
   // @Patch(':id')

@@ -7,11 +7,13 @@ import { Repository } from 'typeorm';
 import {v4 as uuidV4} from 'uuid'
 import { MysqlException } from 'src/publicComponents/ExceptionHandler';
 import { ServerCache } from 'src/publicComponents/memoryCache';
+import { CustomUtils } from 'src/publicComponents/utils';
 
 @Injectable()
 export class CategoryService {
 
-  constructor(@InjectRepository(Category) private cRepo : Repository<Category>){
+  constructor(@InjectRepository(Category) private cRepo : Repository<Category>,
+  private readonly customUtils : CustomUtils){
 
   }
 
@@ -61,7 +63,6 @@ export class CategoryService {
           CategoryId : true,          
           Name : true,
           NameKR : true,
-          Status : true,
           Layer : true,
           Sequence : true,
         },
@@ -83,17 +84,18 @@ export class CategoryService {
     console.log(`This action returns a #${id} category`);
     return this.cRepo.findOne({
       where : {
-        CategoryId :  id
+        CategoryId :  id,
+        IsDeleted : 0
       }
-    })
-    
+    })    
   }
 
   async update(id: string, updateCategoryDto: Category) {
     console.log(`This action updates a #${id} category`);
     // 반환값이 뭐지...??
     // console.log(await this.cRepo.update(id, updateCategoryDto))
-    return await this.cRepo.update(id, updateCategoryDto);
+    
+    return await this.cRepo.update(id, {...updateCategoryDto, UpdatedDate : this.customUtils.getUTCDate()});
   }
 
   async remove(id: string) {

@@ -601,6 +601,7 @@ export class SiteService {
       AppLinkIOS : updateSite.AppLinkIOS,
       Status : updateSite.Status,
       // IsDeleted : updateCategoryDto.IsDeleted
+      UpdatedDate : this.customUtils.getUTCDate(),
     });
   }
 
@@ -633,7 +634,8 @@ export class SiteService {
   async remove(id: string) {
     console.log(`This action removes a #${id} category`);
     await this.sRepo.update(id, {
-      IsDeleted : 1
+      IsDeleted : 1,
+      UpdatedDate : this.customUtils.getUTCDate()
     })
   }
 

@@ -148,7 +148,7 @@ export class Site {
         res += `<ul id="site-card-box">`
         if (!siteList || siteList.length === 0){
             console.log("sdd");
-            res += `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
+            res += `<div class="no-data-templet">등록된 사이트가 없습니다.</div>`;
 
         } else {
             for (let i = 0 ; i < siteList.length; i++){

@@ -5,9 +5,9 @@ select UTC_TIMESTAMP();
 select CURDATE(), YEAR(CURDATE()), MONTH(CURDATE()), DAY(CURDATE());
 SHOW DATABASES;
 SHOW TABLES;
-describe ta_member;
+describe ta_category;
 SHOW FULL COLUMNS FROM ta_category;
-SHOW INDEX FROM ta_member;
+SHOW INDEX FROM ta_category;
 SHOW INDEX FROM ta_site;
 select * from information_schema.table_constraints WHERE TABLE_NAME = 'ta_member';
 SHOW CREATE TABLE ta_member
@@ -15,8 +15,8 @@ SELECT CHAR_LENGTH("sss");
 
 CREATE INDEX 인덱스이름 ON 테이블이름 (필드이름1, 필드이름2, ...);
 
-show table status LIKE 'ta_site';
-ANALYZE TABLE ta_site;
+show table status LIKE 'ta_category';
+ANALYZE TABLE ta_category;
 
 CREATE VIEW v_member
 AS SELECT mem_id, mem_name, addr FROM member
@@ -118,14 +118,15 @@ CREATE TABLE TA_Member (
 CREATE INDEX IDX_Member_MemEmail ON TA_Member (MemEmail);
 -- ALTER TABLE TA_Member MODIFY COLUMN password VARCHAR(64) NOT NULL;
 -- ALTER TABLE TA_Member ADD CONSTRAINT CHECK (Gender IN ('M', 'F'));  -- null 은 상관 없음
+SHOW INDEX FROM TA_Member
 
 -- 카테고리
 CREATE TABLE TA_Category(
     CategoryId CHAR(32) NOT NULL PRIMARY KEY,
     ParentId CHAR(32),
     Layer INT NOT NULL DEFAULT 1 COMMENT "카테고리간의 계층을 의미 1이 최상위 단계",
-    Name VARCHAR(32) NOT NULL UNIQUE,
-    NameKR VARCHAR(32) UNIQUE,
+    Name VARCHAR(32) NOT NULL,
+    NameKR VARCHAR(32),
     Status INT NOT NULL default 1 COMMENT "카테고리 등록상태 1:등록, 2: 사용, 3:보류",
     Sequence INT NOT NULL DEFAULT 99999999,
 
@@ -134,6 +135,7 @@ CREATE TABLE TA_Category(
     UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
 
 ) COMMENT "사이트의 카테고리 구분";
+ALTER TABLE TA_Category ADD UNIQUE (ParentId, Layer, Name);
 
 
 -- 사이트
