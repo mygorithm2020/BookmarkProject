@@ -12,7 +12,7 @@ if (key){
         case "1":
             mainContent.insertAdjacentHTML("beforeend",
             `<table id="notice_detail">
-            <tr class="notice_detail_row">
+            <tr class="notice_detail_row bg-color-3">
             <th>웹사이트 출시</th>
             <th>2024. 05. 31</th>
             <th>관리자</th>                  
@@ -36,7 +36,7 @@ if (key){
             </tr>
             </table>
             <div id="tolist_box">
-            <a id="tolist_btn" href="notice.html">목록으로</a>
+            <a id="tolist_btn" class="bg-color-4" href="notice.html">목록으로</a>
             </div>
             `
         );        

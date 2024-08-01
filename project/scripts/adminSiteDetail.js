@@ -29,8 +29,13 @@ mainContent01El.insertAdjacentHTML("beforeend", siteDetailtoHtmlAdmin(site, Cate
 // 수정하기 버튼 클릭 이벤트 추가
 let siteEdit = document.getElementById("site-edit-form");
 siteEdit.addEventListener("submit", async (target) => {
-  alert("정말 수정하시겠습니까?");
   target.preventDefault();
+  var confirmRes = confirm("정말 수정하시겠습니까?");
+  if(confirmRes){
+    siteEdit.disabled = true;
+  } else {
+    return;
+  }
 
   //  여기서 값 추출하는 과정 추가 하고
   console.log(siteEdit);
@@ -75,16 +80,18 @@ siteEdit.addEventListener("submit", async (target) => {
   const res = await Site.updateSiteAdmin(site);
   if (res.SiteId){
     alert("수정이 완료되었습니다.");
-    mainContent01El.querySelector("form").remove();
-    // 수정된 데이터로 변경
+    // 내용만 변경하면 이벤트 기능이 안 붙음
+    // mainContent01El.querySelector("form").remove();
+    // // 수정된 데이터로 변경
 
-    // 내용 표시
-    mainContent01El.insertAdjacentHTML("beforeend", siteDetailtoHtmlAdmin(site, Category.categories));
-    // location.reload();
+    // // 내용 표시
+    // mainContent01El.insertAdjacentHTML("beforeend", siteDetailtoHtmlAdmin(site, Category.categories));
+    location.reload();
   }else{
     alert("수정이 실패했습니다. 잠시 후 다시 시도해주세요!");
 
   }
+  siteEdit.disabled = false;
 
 });
 

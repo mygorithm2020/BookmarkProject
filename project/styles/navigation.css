@@ -1,7 +1,7 @@
 nav {
     max-width: 1280px;
     margin: 0 auto;
-    background-color: lightblue;
+    z-index: 3;
     /* display: flex;
     padding: 10px;
     align-items: center;
@@ -69,7 +69,6 @@ nav .selected {
     position: absolute;
     max-width: 1280px;
     margin: 0;
-    background-color: lightblue;
     transition: all 0.4s;    
 }
 

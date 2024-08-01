@@ -5,36 +5,45 @@
 }
 
 .site-card {
-    border: 4px solid #f1f3f6;
-    height: 80px;
-    margin: 10px;
-    
+    border: 4px solid black;
+    height: 150px;    
+    margin-top: 6px;
 }
 
 .site-card:hover {
     box-shadow: 0px 0px 6px 1px gray;
 }
 
-.site-card-list {
+.site-card-list {    
     height: 100%;
     display: flex;
     justify-content: left;
 }
+
 .site-card-list > li:first-child {
     padding: 6px;
-    flex: 1;    
+    flex: 4;    
     text-align: center;
 }
 
 .site-card-list > li {
-    border: 1px solid black;
     padding: 6px;
     flex: 3;
     overflow: hidden;
-    align-content: center;
+    color: black;    
 }
 
 .site_card_img {
-    max-height: 90%;
+    height: 90%;
     max-width: 90%;
+}
+
+.info-top{
+    height: 50%;
+    font-weight: bold;
+}
+
+.info-bottom{
+    height: 50%;
+    
 }

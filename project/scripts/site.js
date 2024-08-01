@@ -38,6 +38,54 @@ export class Site {
     // 숫자(뷰, 좋아요, 싫어요)
     // 1000 넘어가면 표기 변경 구현
 
+    static listToHtmlTemp(siteList){
+        let res = "";
+        if (!siteList || siteList.length === 0){
+            console.log("sdd");
+            res = `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
+            return res;
+
+        }
+
+        res += `<ul id="site-card-box">`
+        for (let i = 0 ; i < siteList.length; i++){
+            // if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
+            //     siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
+            // }
+            res += `
+            <li class="site-card">
+                <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
+                    <div class="site-card-top">
+                        <img class="site-card-img" src="${siteList[i].Img ? siteList[i].Img : '../images/noImage.jpg'}" alt="no images">
+                        <ul class="site-sub-info">
+                            <li>방문수 ${siteList[i].Views}</li>
+                            <li>방문수 ${siteList[i].Views}</li>
+                                                         
+                        </ul>
+                    </div>
+                    <div class="site-card-mid bg-color-5">
+                        <div>
+                            ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
+                        </div>
+                        <ul class="site-detail-box">
+                            <li>방문수 ${siteList[i].Views}</li>
+                                                         
+                        </ul>
+                    </div>
+                    <p class="site-card-bottom bg-color-5">
+                        ${siteList[i].SiteDescription? siteList[i].SiteDescription : ""}   
+                    </p>                         
+                </a>     
+                  
+            </li>`;
+        }
+                        
+        res += `
+        </ul>`
+
+        return res;
+    }
+
 
     static listToHtmlv2(siteList){
         let res = "";
@@ -93,7 +141,7 @@ export class Site {
     static listToHtmlForAdmin(siteList){
         let res = "";
 
-        res += `<ul id="site-card-box">`
+        res += `<ul id="site-card-box" class="bg-color-3">`
         if (!siteList || siteList.length === 0){
             console.log("sdd");
             res += `<div class="no-data-templet">등록된 사이트가 없습니다.</div>`;
@@ -111,17 +159,21 @@ export class Site {
                                 <img class="site_card_img" src="${siteList[i].Img ? siteList[i].Img : '../images/noImage.jpg'}" alt="no images">    
                             </li>
                             <li>
-                                ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
+                                <div class="info-top">
+                                    ${siteList[i].URL}
+                                </div>  
+                                <div class="info-bottom">
+                                    ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}
+                                </div>                                
                             </li>
                             <li>
-                                ${siteList[i].URL}
-                            </li>
-                            <li>
-                                ${this.siteStatus[siteList[i].Status]}                            
-                            </li>
-                            <li>
-                                ${siteList[i].Categories && siteList[i].Categories.length > 0? "카테고리 등록" : "카테고리 미등록"}
-                            </li>
+                                <div class="info-top">
+                                    ${this.siteStatus[siteList[i].Status]}
+                                </div>
+                                <div class="info-bottom">
+                                    ${siteList[i].Categories && siteList[i].Categories.length > 0? "카테고리 등록" : "카테고리 미등록"}
+                                </div>                                                            
+                            </li>                            
                             <li>
                                 ${siteList[i].SiteDescription}                            
                             </li>                        
@@ -299,7 +351,7 @@ export class Site {
     }
 
     static async axiosPut(url, body){
-        let data = await axios.post(url, body)
+        let data = await axios.put(url, body)
         .then((result) => {
             console.log(result); 
             return result.data;   

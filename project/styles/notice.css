@@ -23,7 +23,7 @@ a:hover {
 
 
 .notice_card:nth-child(1){
-    background-color: lightblue;
+    
 }
 
 .notice_card >th {
@@ -79,7 +79,7 @@ a:hover {
 }
 
 .notice_detail_row:nth-child(1){
-    background-color: lightblue;
+    
 }
 
 .notice_detail_row >th{
@@ -115,7 +115,6 @@ a:hover {
 #tolist_btn{
     margin: 20px;
     padding: 6px;
-    background-color: lightblue;
     border-radius: 10px 10px 10px 10px;
     width: 16%;
     text-align: center;

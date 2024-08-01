@@ -63,12 +63,6 @@ async function setCategoryPage(){
         // console.log(res);
         if (res.CategoryId){
             location.reload();
-        }else if (res.errCode){
-            if (res.errCode === 21){
-                alert("이미 등록된 카테고리 입니다.");
-            }else{
-                alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요!");
-            }
         }
         spinner.classList.toggle("cover");
         addSiteBtn.disabled = false;
@@ -148,18 +142,6 @@ async function setSitePage(){
         </div>`
     );
 
-
-    // 카테고리 표시
-    let cqdsd = new Category();
-    Category.categories = await cqdsd.getCategoryAdmin();
-    mainContent01El.insertAdjacentHTML("beforeend", cqdsd.listToHtmlForAdminSummary(Category.categories));
-    // cqdsd.setNavigationBox(Category.categories);
-
-    let sites = await Site.getAllSitesAdmin();
-    //  HTML에 추가
-    mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));            
-    // 카드 이벤트 효과 추가
-
     // 검색 기능 추가
     let searchEl = document.querySelector("#search-box > input");
     searchEl.addEventListener("input", ()=> {
@@ -168,10 +150,11 @@ async function setSitePage(){
         if (!searchEl.value){
             filterdSites = sites;
         } else{
+            const searchValue = searchEl.value.toLowerCase()
             for(const oneSite of sites){
-                if ((oneSite.URL && oneSite.URL.includes(searchEl.value)) || 
-                (oneSite.Name &&  oneSite.Name.includes(searchEl.value)) || 
-                (oneSite.NameKR && oneSite.NameKR.includes(searchEl.value))){
+                if ((oneSite.URL && oneSite.URL.includes(searchValue)) || 
+                (oneSite.Name &&  oneSite.Name.includes(searchValue)) || 
+                (oneSite.NameKR && oneSite.NameKR.includes(searchValue))){
                     filterdSites.push(oneSite);
                 }
             }
@@ -183,11 +166,26 @@ async function setSitePage(){
         mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(filterdSites));
     });
 
+
+    // 카테고리 표시
+    let cqdsd = new Category();
+    Category.categories = await cqdsd.getCategoryAdmin();
+    // mainContent01El.insertAdjacentHTML("beforeend", cqdsd.listToHtmlForAdminSummary(Category.categories));
+    // cqdsd.setNavigationBox(Category.categories);
+
+    let sites = await Site.getAllSitesAdmin();
+    //  HTML에 추가
+    mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));            
+    // 카드 이벤트 효과 추가
+
+    
+
     spinner.classList.toggle("cover");
 }
 
 function setMemberPage(){
 
+    spinner.classList.toggle("cover");
 }
 
 

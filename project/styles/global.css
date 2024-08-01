@@ -11,8 +11,7 @@ body {
     font-family: "Noto Sans KR", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;    
-    margin: 0;
-    
+    margin: 0;    
 }
 
 a {
@@ -55,6 +54,7 @@ main {
 .hidden {
     /* visibility: hidden; */
     opacity: 0;
+    visibility: hidden;
     /* height: 0; */
 }
 
@@ -74,6 +74,28 @@ main {
     font-size: 2rem;
     text-align: center;
     vertical-align: middle;
+}
+
+.bg-color-1 {
+    background-color: #92C7CF;    
+}
+
+.bg-color-2 {
+    background-color: #AAD7D9;
+
+}
+
+.bg-color-3 {
+    background-color: #FBF9F1;
+
+}
+
+.bg-color-4 {
+    background-color: #E5E1DA;
+}
+
+.bg-color-5 {
+    background-color: aliceblue;
 }
 
 

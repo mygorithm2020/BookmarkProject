@@ -11,7 +11,7 @@ let mainContent01El = document.getElementById("main_content01");
 let sites = await Site.getRecommendedSite();
 Site.shuffle(sites);
 //  HTML에 추가
-mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(sites));            
+mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlTemp(sites));            
 // 카드 이벤트 효과 추가
 Site.cardEvent();
 

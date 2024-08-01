@@ -27,7 +27,6 @@ export class ServerCache {
                 return null;
             }
 
-
         return this.cachedCategorys.categorys;   
     }
 
@@ -42,9 +41,9 @@ export class ServerCache {
     // 나중에 다양한 조건으로 더 알맞은 사이트 추천
     // 생일(나이), 성별, 관심 카테고리
     static getRecommendSites(categorys? : Category[], birth? : string, gender? : string) : Site[]{ 
-        // 시간이 지났거나, 값이 없으면 => 하루마다
+        // 시간이 지났거나, 값이 없으면 => 시간마다
         if (!this.recommendSites || !this.recommendSites.sites || 
-            this.recommendSites.lastDate.getUTCDate() !== new Date().getUTCDate()){
+            this.recommendSites.lastDate.getUTCHours() !== new Date().getUTCHours()){
                 return null;
             }
 
@@ -95,8 +94,6 @@ export class ServerCache {
         this.restrictedViews.lastUpdate = new Date();
         this.restrictedViews.keyValues.clear();
     }
-
-    
 
     if (this.restrictedViews.keyValues.has(str)){
       res = true;
