@@ -39,7 +39,7 @@ console.log(process.env.DB_HOST);
     username : process.env.DB_USERNAME,
     password : process.env.DB_PASSWORD,
     // entities : [Book, Category, Site, Member],
-    autoLoadEntities : true,
+    autoLoadEntities : true,   // 이렇게 하면 릴레이션에만 있고 forFeature(각 세부 모듈)에 없으면 등록 안됨
     database : process.env.DB_DATABASE,
     synchronize : false,
     logging : true,

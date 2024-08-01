@@ -47,7 +47,7 @@ siteEdit.addEventListener("submit", async (target) => {
   console.log(siteEdit.querySelector("input[name='img']").value);
   console.log(siteEdit.querySelector("textarea[name='siteDescription']").value);
   console.log(siteEdit.querySelector("select[name='status']").value);
-  site.categories = [];
+  site.Categories = [];
   for(const one of siteEdit.querySelectorAll("input[name='category']")){
     console.log(one);
     if (one.checked){
@@ -73,7 +73,7 @@ siteEdit.addEventListener("submit", async (target) => {
   
   console.log(site);
   const res = await Site.updateSiteAdmin(site);
-  if (res >0){
+  if (res.SiteId){
     alert("수정이 완료되었습니다.");
     mainContent01El.querySelector("form").remove();
     // 수정된 데이터로 변경

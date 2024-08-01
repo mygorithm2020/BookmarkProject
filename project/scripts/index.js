@@ -9,6 +9,7 @@ let mainContent01El = document.getElementById("main_content01");
 
 // 추천사이트 조회
 let sites = await Site.getRecommendedSite();
+Site.shuffle(sites);
 //  HTML에 추가
 mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(sites));            
 // 카드 이벤트 효과 추가

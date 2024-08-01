@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { CustomUtils } from "src/publicComponents/utils";
 import { CategorySite } from "src/site/entities/categorySite.entity";
 import { Site } from "src/site/entities/site.entity";

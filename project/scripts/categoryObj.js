@@ -26,6 +26,52 @@ export class Category{
         // ...other configs,
         timeout: 3000,
     });
+
+    static async axiosPost(path, body){
+        let data = await this.instance.post(path, body)
+        .then((result) => {
+            console.log(result); 
+            return result.data;   
+        })
+        .catch((error) => {
+            console.error(error);            
+            if (error.code === "ERR_NETWORK"){
+                // 현재 이용 불가능한 무언가 띄우기...
+                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+                alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+            } else if (error.response.data.errCode){
+                // 백엔드에서 미리 처리못한 에러 발생 문의 필요
+                if (error.response.data.errCode === 1){
+                    alert("내부 오류가 발생했습니다.");
+                }
+            }
+            return error.response.data;
+        });
+        return data;
+    }
+
+    static async axiosGet(path){
+        let data = await axios.get(path)
+        .then((result) => {
+            console.log(result); 
+            return result.data;   
+        })
+        .catch((error) => {
+            console.error(error);            
+            if (error.code === "ERR_NETWORK"){
+                // 현재 이용 불가능한 무언가 띄우기...
+                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+                alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+            } else if (error.response.data.errCode){
+                // 백엔드에서 미리 처리못한 에러 발생 문의 필요
+                if (error.response.data.errCode === 1){
+                    alert("내부 오류가 발생했습니다.");
+                }
+            }
+            return error.response.data;
+        });
+        return data;
+    }
     
     
 
@@ -83,7 +129,7 @@ export class Category{
     // AJAX
     getCategoryAdmin(){
         // 카테고리 불러오기
-        let data = axios.get("http://localhost:3000/category/admin")
+        let data = axios.get(`${this.API_HOST}/category/admin`)
         .then((result) => {
             console.log(result);
             return result.data;
@@ -108,8 +154,7 @@ export class Category{
         let data = axios.get(`${this.API_HOST}/category/admin/${categoryId}`)
         .then((result) => {
             console.log(result);
-            return result.data;
-            
+            return result.data;            
         })
         .catch((error) => {
             console.error(error);
@@ -165,12 +210,15 @@ export class Category{
 
     //카테고리 확장 버튼 클릭시 목록 리스트 구현
     async setExpandNavigationBox(categories){
+        // 일단 확장 기능은 막아두자
+        // return;
 
         // 카테고리 바 확장
         document.getElementById("category-open").addEventListener("click", e => {
             console.log("category-open click");
             const cate = document.getElementById("category-box-expand");            
             cate.classList.toggle("hidden");
+            cate.classList.toggle("show");
             // cate.classList.toggle("cover");
             // if (cate.style.display == "none"){
             //     cate.style.display = "block";
@@ -200,19 +248,6 @@ export class Category{
                 }
             }   
         }
-        // for (const cateIdx of categories){
-            
-        //     if (cateIdx.Layer === 1){
-        //         res.push(cateIdx);
-                
-        //         for (const cateJdx of categories){
-        //             if (cateJdx.Layer === 2 && cateJdx.ParentId === cateIdx.CategoryId){
-        //                 res.push(cateJdx);
-        //             }                
-        //         }
-        //     }            
-        // }
-
         return res;
     }
 

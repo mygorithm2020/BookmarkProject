@@ -75,17 +75,6 @@ console.log("category");
         };  
         
     }, 200);
-    
-
-    
-    // const pageKey = window.location.search.substring(5);   
-        
-
-    // let ss = document.getElementById("main_content01");
-
-    // ss.insertAdjacentHTML("beforeend", Site.listToHtml(siteList));
-
-    // document.getElementById("main_content01").innerHTML(Site.listToHtml(siteList));
 
     let addBtnElList =document.querySelectorAll(".add-my-bookmark");
     addBtnElList.forEach( (v, k) => {

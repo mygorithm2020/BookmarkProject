@@ -3,7 +3,7 @@ import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Site } from './entities/site.entity';
-import { FindOptionsOrder, Repository, UpdateResult } from 'typeorm';
+import { DataSource, FindOptionsOrder, Repository, UpdateResult } from 'typeorm';
 import {v4 as uuidV4} from 'uuid'
 import { URL } from 'url';
 import { EMPTY, catchError, firstValueFrom, lastValueFrom, map } from 'rxjs';
@@ -17,6 +17,7 @@ import { ServerCache } from 'src/publicComponents/memoryCache';
 import { CategorySite } from './entities/categorySite.entity';
 import * as iconv from "iconv-lite";
 import { Category } from 'src/category/entities/category.entity';
+import { promises } from 'dns';
 
 @Injectable()
 export class SiteService {
@@ -26,8 +27,11 @@ export class SiteService {
     @InjectRepository(CategorySite) private csRepo : Repository<CategorySite>,
     @InjectRepository(Category) private cRepo : Repository<Category>,
     private readonly httpService: HttpService,
-    private readonly customUtils : CustomUtils
-  ){}
+    private readonly customUtils : CustomUtils,
+    private dataSource: DataSource
+  ){
+    console.log("new SiteService()");
+  }
 
   
   getUrlObj(url : string): URL{
@@ -59,12 +63,32 @@ export class SiteService {
 
 
   readonly WEBPAGECNT = 21;
+
+  async standard(site : Site) : Promise<Site> {
+
+    // 도메인 로직 호출만 진행
+    let res = await this.sRepo.save(site);
+    // 만약 여기서 여러 도메인이 변경이 필요하면 의존성 주입으로 하위계층에 얽메이지 않게 인터페이스로 구성이 가능할까...???
+    // 제네릭타입을 쓰면 가능할거 같음
+    // dto를 최소한의로 활용... 정말 상황마다 다 만들 순 없고... 최소한의 제약 조건으로 활용하자
+    // 컨트롤러와 상관 없이 리턴값 생성
+    return res;
+  }
   
 
   async create(site: Site) : Promise<Site> {
     console.log('This action adds a new site');
+    if (!site.URL){
+      // 설계상 여기에 오기전에 에러가 발생함... 그래도 일단 만들어 놓음
+      throw new HttpException({
+        errCode : 23,
+        error : "url value is required"
+
+      }, HttpStatus.BAD_REQUEST);
+
+    }
         
-    let urlObj = this.getUrlObj(site.URL);    
+    let urlObj = this.getUrlObj(site.URL);
     console.log(urlObj);
 
     // origin 값으로 저장
@@ -108,6 +132,8 @@ export class SiteService {
 
   async createCategorySite(siteId : string, categories : string[]) : Promise<number>{
     "insert into TA_ReCategorySite values (categories, siteId, ...)";
+    this.csRepo.queryRunner.startTransaction();
+
     let cnt = 0;
     // 기존 등록된거 삭제하고 새로 등록
     await this.csRepo.delete({
@@ -571,6 +597,34 @@ export class SiteService {
     return res;    
   }
 
+  
+
+  async update(id: string, updateCategoryDto: Site) : Promise<UpdateResult> {
+    console.log(`This action updates a #${id} category`);    
+    // console.log(await this.cRepo.update(id, updateCategoryDto));
+    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
+    return await this.sRepo.update(id, updateCategoryDto);
+  }
+
+  async updateViews(id: string) : Promise<UpdateResult> {
+    console.log(`This action updateViews a #${id} site`);    
+    // console.log(await this.cRepo.update(id, updateCategoryDto));
+    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
+    return await this.sRepo.update(id, {
+      Views : () => "Views + 1",
+    })
+    .catch( (res)=> {
+      throw new HttpException({
+        errCode : 21,
+        error : res
+
+      }, HttpStatus.BAD_REQUEST);
+    });
+    // await this.commentRepository.update(comment.id, {
+    //   likeCount: () => 'like_count + 1',
+    // });
+  }
+
   async updateByAdmin(updateSite: Site) : Promise<UpdateResult> {
     console.log(`This action updates a #${updateSite.SiteId} category`);    
     console.log(updateSite);
@@ -605,30 +659,135 @@ export class SiteService {
     });
   }
 
-  async update(id: string, updateCategoryDto: Site) : Promise<UpdateResult> {
-    console.log(`This action updates a #${id} category`);    
-    // console.log(await this.cRepo.update(id, updateCategoryDto));
-    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
-    return await this.sRepo.update(id, updateCategoryDto);
-  }
+  async updateSiteAndCategorySiteAdmin(updateSite: Site) {
+    console.log(`This action updates a #${updateSite.SiteId} category`);    
+    console.log(updateSite);
 
-  async updateViews(id: string) : Promise<UpdateResult> {
-    console.log(`This action updateViews a #${id} site`);    
+    
     // console.log(await this.cRepo.update(id, updateCategoryDto));
     // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
-    return await this.sRepo.update(id, {
-      Views : () => "Views + 1",
-    })
-    .catch( (res)=> {
+    // return await this.sRepo.update({
+    //   SiteId : updateSite.SiteId,
+    // }, {
+    //   ...updateSite,
+    //   Categories : null
+    // });
+
+    if (updateSite.Status && updateSite.Status > 4){
       throw new HttpException({
         errCode : 21,
-        error : res
+        error : "Status value is between 1 ~ 4"
 
       }, HttpStatus.BAD_REQUEST);
-    });
-    // await this.commentRepository.update(comment.id, {
-    //   likeCount: () => 'like_count + 1',
-    // });
+    }
+
+    // 트랜잭션으로 묶기
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    const newUpdateSite = queryRunner.manager.create(Site, updateSite);
+    console.log(newUpdateSite);
+    
+    // establish real database connection using our new query runner
+    // await queryRunner.connect();
+
+    // lets now open a new transaction:
+    await queryRunner.startTransaction();
+    try {
+
+      let linkCategories = new Set<string>();
+      if (updateSite.Categories && updateSite.Categories.length > 0){
+        let categoryIds = [];
+      
+        for (const category of updateSite.Categories){
+          categoryIds.push(category.CategoryId);
+        }
+        // 카테고리마다 부모 카테고리 계속해서 찾고 다 연결해서 등록      
+        let allCtegories = await queryRunner.manager.find(Category);
+        while (categoryIds.length > 0){
+          const oneCategoryId = categoryIds.pop();
+          linkCategories.add(oneCategoryId);
+          for (const category of allCtegories){
+            if (category.CategoryId === oneCategoryId && category.ParentId){
+              categoryIds.push(category.ParentId);
+              break;
+            }
+          }
+        }
+      }
+
+      // 사이트 업데이트 하고
+      await queryRunner.manager.update(Site, {
+        SiteId : updateSite.SiteId,
+      }, {
+        Name : updateSite.Name,
+        NameKR : updateSite.NameKR,
+        IPAddress : updateSite.IPAddress,
+        Img : updateSite.Img,
+        SiteDescription : updateSite.SiteDescription,
+        AppLinkAndroid : updateSite.AppLinkAndroid,
+        AppLinkIOS : updateSite.AppLinkIOS,
+        Status : updateSite.Status,
+        // IsDeleted : updateCategoryDto.IsDeleted
+        UpdatedDate : this.customUtils.getUTCDate(),
+      });
+
+      //  카테고리 사이트 연결 리스트 삭제 후 다시 만들기
+      await queryRunner.manager.delete(CategorySite, {
+        SiteId : updateSite.SiteId,       
+      })
+
+      // 부모 카테고리까지 자동 등록 기능 필요..........
+      for (const categoryId of linkCategories){
+        const one = new CategorySite();
+        one.CategoryId = categoryId;
+        one.SiteId = updateSite.SiteId;
+        await queryRunner.manager.save(one);
+        
+      }
+      // execute some operations on this transaction:
+      // await queryRunner.manager.save(user1)
+      // await queryRunner.manager.save(user2)
+      // await queryRunner.manager.save(photos)
+
+      // commit transaction now:
+      await queryRunner.commitTransaction();
+    } catch (err) {
+        // since we have errors let's rollback changes we made
+        await queryRunner.rollbackTransaction();
+        throw new HttpException({
+          errCode : 22,
+          error : "An error occured during change"
+  
+        }, HttpStatus.INTERNAL_SERVER_ERROR);
+    } finally {
+        // you need to release query runner which is manually created:
+        // await queryRunner.release();
+    }
+  }
+
+  async updateCategorySiteAdmin(siteId : string, categories : string[]) : Promise<number>{
+    "insert into TA_ReCategorySite values (categories, siteId, ...)";
+    
+    let cnt = 0;
+    // 기존 등록된거 삭제하고 새로 등록
+    await this.csRepo.delete({
+      SiteId : siteId
+    });    
+
+    // 부모 카테고리까지 자동 등록 기능 필요..........
+    for (const categoryId of categories){
+      const one = new CategorySite();
+      one.CategoryId = categoryId;
+      one.SiteId = siteId
+      // 유니크라서 중복 떠도 걍 진행이 되니까 냅두자
+      try{
+        await this.csRepo.save(one);
+      } catch {
+
+      }
+      
+    }
+    return cnt;
   }
 
   async remove(id: string) {

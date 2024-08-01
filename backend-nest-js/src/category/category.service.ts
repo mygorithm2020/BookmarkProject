@@ -20,12 +20,10 @@ export class CategoryService {
   async create(category: Category) : Promise<Category> {
     // uuid 생성
     const newId = uuidV4().replaceAll("-", "");
-    console.log(newId);
     category.CategoryId = newId;
     const newCategory = this.cRepo.create(category);
+    
     console.log('This action adds a new category');
-    // let res = await this.cRepo.save(newCategory);
-    // return res;
     try{
       let res = await this.cRepo.save(newCategory);
       return res;

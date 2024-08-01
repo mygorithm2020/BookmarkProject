@@ -6,7 +6,15 @@ nav {
     padding: 10px;
     align-items: center;
     background: lightblue; */
-    /* border-radius: 12px;     */
+    /* border-radius: 12px;     */  
+    transition: all 1s;
+}
+
+.fixed-nav{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 nav a:hover {
@@ -22,7 +30,6 @@ nav .selected {
     display: flex;
     padding: 10px;
     align-items: center;
-    background: lightblue;
 }
 
 #category-open {
@@ -61,10 +68,9 @@ nav .selected {
 #category-box-expand{
     position: absolute;
     max-width: 1280px;
-    width: 100%;
     margin: 0;
     background-color: lightblue;
-    /* transition: all 1s ease-out; */
+    transition: all 0.4s;    
 }
 
 #category-box-expand-active{

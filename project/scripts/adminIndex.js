@@ -17,6 +17,7 @@ for (const navLiEl of navList){
 }
 let mainContent01El = document.getElementById("main_content01");
 let addBox = document.getElementById("add-box");
+let spinner = document.querySelector(".loading-spinner");            
 
 switch(pageKey){
     case "category":
@@ -46,26 +47,31 @@ async function setCategoryPage(){
     let addSiteBtn = document.getElementById("add-category");
     addSiteBtn.addEventListener("click", async (target) => {
         target.preventDefault();
-        alert("sss");
+        spinner.classList.toggle("cover");
+        addSiteBtn.disabled = true;
         const category = new Category();
         category.Name = addBox.querySelector("input[name='name']").value;
         category.NameKR = addBox.querySelector("input[name='nameKR']").value;
         console.log(category);
         if (!category.Name){
             alert("이름을 입력해주세요");
+            spinner.classList.toggle("cover");
+            addSiteBtn.disabled = false;
             return;
         }
         let res = await category.addCategoryAdmin(category);
         // console.log(res);
-        // if (res.CategoryId){
-        //     location.reload();
-        // }else if (res.errCode){
-        //     if (res.errCode === 21){
-        //         alert("이미 등록된 카테고리 입니다.");
-        //     }else{
-        //         alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요!");
-        //     }
-        // }
+        if (res.CategoryId){
+            location.reload();
+        }else if (res.errCode){
+            if (res.errCode === 21){
+                alert("이미 등록된 카테고리 입니다.");
+            }else{
+                alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요!");
+            }
+        }
+        spinner.classList.toggle("cover");
+        addSiteBtn.disabled = false;
     });
 
 
@@ -86,20 +92,33 @@ async function setCategoryPage(){
     console.log(Category.categories);
     console.log(cqdsd.transFormCategories(Category.categories));
     mainContent01El.insertAdjacentHTML("beforeend", cqdsd.listToHtmlForAdmin(cqdsd.transFormCategories(Category.categories)));
+    spinner.classList.toggle("cover");
 }
+
+{/* <label for="username">Username:</label> 
+  <input type="text" id="username" name="username" required> 
+  <button type="submit">Submit</button>  */}
 
 async function setSitePage(){
 
     addBox.insertAdjacentHTML("beforeend",`
-        <input type="url" placeholder="www.bookmark.com" required>
-        <button id="add-site">신규 사이트 등록</button>
+        <form>
+            <label>사이트 url    </label> 
+            <input type="text" placeholder="www.bookmark.com"/>
+            <button id="add-site" type="submit">신규 사이트 등록</button>            
+        </form>
         `);
     let addSiteBtn = document.getElementById("add-site");
     addSiteBtn.addEventListener("click", async (target) => {
         target.preventDefault();
+        spinner.classList.toggle("cover");
+        addSiteBtn.disabled = true;
         let siteUrl = addBox.querySelector("input");
         if (!siteUrl.value){
             alert("url을 입력해주세요");
+            spinner.classList.toggle("cover");
+            addSiteBtn.disabled = false;
+            return;            
         }
         const site = new Site();
         site.URL = siteUrl.value;
@@ -111,10 +130,15 @@ async function setSitePage(){
         }else if (res.errCode){
             if (res.errCode === 22){
                 alert("이미 등록된 사이트 입니다.");
-            }else{
+            } else if (res.errCode === 32){
+                alert("입력한 url이 정확한지 확인 후 다시 시도해주세요");
+
+            } else{
                 alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요!");
             }
         }
+        spinner.classList.toggle("cover");
+        addSiteBtn.disabled = false;
     });
 
     mainContent01El.insertAdjacentHTML("beforeend", 
@@ -158,6 +182,8 @@ async function setSitePage(){
         }        
         mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(filterdSites));
     });
+
+    spinner.classList.toggle("cover");
 }
 
 function setMemberPage(){

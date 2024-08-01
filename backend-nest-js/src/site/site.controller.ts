@@ -16,6 +16,13 @@ export class SiteController {
     private readonly categoryService: CategoryService
   ) {}
 
+  stancdard(@Body() createSiteDto: Site){
+    // 서비스 호출 등의 기능만 수행
+    let res = this.siteService.standard(createSiteDto);
+    // 리턴 형태 만들기 json으로
+    return res;
+  }
+
   //  단순히 db에 등록하는과정에 가까움
   // 결국 다시 누군가 수작업으로 확인 필요
   @Post()
@@ -103,9 +110,7 @@ export class SiteController {
   
   // 없으면 만들고 기존거 삭제하면서 새로운거만 받을 예정이라 put으로
   @Put("/category-site")
-  async createCategorySite(@Body() site: Site, @Ip() reqIp: string) {
-    console.log(reqIp);   
-        
+  async createCategorySite(@Body() site: Site, @Ip() reqIp: string) {        
     // 권한 체크
     // 관리자면 통과, 로그인 했으면 통과
     let categoryIds = [];
@@ -136,41 +141,44 @@ export class SiteController {
   // 전달받은 정보(칼럼)만 수정
   @Put("/admin")
   async updateSite(@Body() site: Site, @Ip() reqIp: string) {
-    console.log(reqIp);   
 
+    await this.siteService.updateSiteAndCategorySiteAdmin(site);
+    return {
+      SiteId : site.SiteId
+    };
 
-    let res = (await this.siteService.updateByAdmin(site)).affected;
+    // let res = (await this.siteService.updateByAdmin(site)).affected;
         
     // 권한 체크
     // 관리자면 통과, 로그인 했으면 통과
     
 
     
-    let linkCategories = new Set<string>();
-    if (site.Categories && site.Categories.length > 0){
-      let categoryIds = [];
+    // let linkCategories = new Set<string>();
+    // if (site.Categories && site.Categories.length > 0){
+    //   let categoryIds = [];
     
-      for (const category of site.Categories){
-        categoryIds.push(category.CategoryId);
-      }
-      console.log(categoryIds);
-      // 카테고리마다 부모 카테고리 계속해서 찾고 다 연결해서 등록      
-      let allCtegories = await this.categoryService.findAll();    
-      while (categoryIds.length > 0){
-        const oneCategoryId = categoryIds.pop();
-        linkCategories.add(oneCategoryId);
-        for (const category of allCtegories){
-          if (category.CategoryId === oneCategoryId && category.ParentId){
-            categoryIds.push(category.ParentId);
-            break;
-          }
-        }
-      }
-    }
+    //   for (const category of site.Categories){
+    //     categoryIds.push(category.CategoryId);
+    //   }
+    //   console.log(categoryIds);
+    //   // 카테고리마다 부모 카테고리 계속해서 찾고 다 연결해서 등록      
+    //   let allCtegories = await this.categoryService.findAll();    
+    //   while (categoryIds.length > 0){
+    //     const oneCategoryId = categoryIds.pop();
+    //     linkCategories.add(oneCategoryId);
+    //     for (const category of allCtegories){
+    //       if (category.CategoryId === oneCategoryId && category.ParentId){
+    //         categoryIds.push(category.ParentId);
+    //         break;
+    //       }
+    //     }
+    //   }
+    // }
     
-    await this.siteService.createCategorySite(site.SiteId, Array.from(linkCategories.values()));
+    // await this.siteService.createCategorySite(site.SiteId, Array.from(linkCategories.values()));
     
-    return res;
+    // return res;
   }
 
   @Patch('/views')

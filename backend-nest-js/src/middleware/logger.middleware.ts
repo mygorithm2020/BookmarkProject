@@ -21,24 +21,24 @@ export class LoggerMiddleware implements NestMiddleware {
         // console.log(req.referrer);
         // console.log(req.referrerPolicy);
         // console.log(req.signal);
-        console.log(req.url);
+        // console.log(req.url);
         
         next();
-        console.log(res.body);
-        console.log(res.headers);
-        console.log(res.ok);
-        console.log(res.redirected);
-        console.log(res.status);
-        console.log(res.statusText);
-        console.log(res.type);
-        console.log(res.url);
+        // console.log(res.body);
+        // console.log(res.headers);
+        // console.log(res.ok);
+        // console.log(res.redirected);
+        // console.log(res.status);
+        // console.log(res.statusText);
+        // console.log(res.type);
+        // console.log(res.url);
 
         // 바디도 넣고 싶은데... 흠 일단 보류
         // 응답이 왜이러지..
         const log = {
-        timeStamp: this.cUtil.getUTCDate(),
-        url: req.url,
-        res: res.status
+            timeStamp: this.cUtil.getUTCDate(),
+            url: req.url,
+            res: res.status
         };
 
         console.log(log);

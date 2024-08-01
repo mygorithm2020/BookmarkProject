@@ -35,58 +35,6 @@ export class Site {
         }
     }
 
-
-    // site 리스트를 html ul태그로 생성해주는 기능
-    static listToHtml(siteList){
-        let res = "";
-        if (siteList == null){
-            res = `<div>해당 카테고리에 등록된 사이트가 없습니다.</div>`;
-
-        }else{
-            res += `<ul id="site-card-box">`
-            for (let i = 0 ; i < siteList.length; i++){
-                if (siteList[i].Description && siteList[i].Description.length > 40){
-                    siteList[i].Description = siteList[i].Description.slice(0, 40) + "...";
-                }
-                res += `
-                <li class="site-card">                    
-                    <div>
-                        <a href="${siteList[i].URL}" target="_blank" rel="external">
-                            <div class="site_card_top">
-                                <div>
-                                    <img class="site_card_img" src="${siteList[i].Image}">
-                                </div>                                
-                                <div>
-                                    ${siteList[i].Name}<br>
-                                </div>
-                            </div>
-                            <ul class="site-detail-box">
-                                <li>클릭 수 ${siteList[i].Views}</li>
-                                <li>좋아요 ${siteList[i].Like}</li>
-                                <li>싫어요 1만</li>                                
-                            </ul>   
-                            <p class="site_card_description">
-                                ${siteList[i].Description}                              
-                            </p>                            
-                        </a>                                                        
-                    </div>                    
-                    <div class="site_card_bottom">
-                        <input type="button" name="좋아요요요??" value="좋아요">
-                        <input type="button" value="내 즐겨찾기 등록" class="add-my-bookmark"
-                         data-siteId=${siteList[i].SiteId}
-                         data-siteURL=${siteList[i].URL}
-                         >
-                    </div>
-                </li>`;
-            }
-                            
-            res += `
-            </ul>`
-        }
-
-        return res;
-    }
-
     // 숫자(뷰, 좋아요, 싫어요)
     // 1000 넘어가면 표기 변경 구현
 
@@ -238,25 +186,8 @@ export class Site {
     // 개수 많아지면 페이지 추가
     static async getAllSitesAdmin(page){
         console.log(this.API_HOST);
-
         // 모든 사이트 조회
-        let data = await axios.get(`${this.API_HOST}/site/admin/all`)
-        .then((result) => {
-            console.log(result);
-            return result.data;
-            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
-            Site.cardEvent();
-        })
-        .catch((error) => {
-            console.error(error);
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
-    
-            }
-            return null;            
-        });
+        let data = await this.axiosGet(`${this.API_HOST}/site/admin/all`);        
         return data;
     }
 
@@ -264,23 +195,7 @@ export class Site {
     static async getAllSites(page){
 
         // 모든 사이트 조회
-        let data = await axios.get(`${this.API_HOST}/site`)
-        .then((result) => {
-            console.log(result);
-            return result.data;
-            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
-            Site.cardEvent();
-        })
-        .catch((error) => {
-            console.error(error);
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
-    
-            }
-            return null;            
-        });
+        let data = await this.axiosGet(`${this.API_HOST}/site`);        
         return data;
     }
 
@@ -288,75 +203,57 @@ export class Site {
     static async getRecommendedSite(page){
 
         // 추천 사이트 조회
-        let data = await axios.get(`${this.API_HOST}/site/recommend`)
-        .then((result) => {
-            console.log(result);
-            Site.shuffle(result.data);
-            return result.data;
-            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
-            Site.cardEvent();
-        })
-        .catch((error) => {
-            console.error(error);
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
-                // document.querySelector("main").insertAdjacentHTML("beforeend","<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>");
+        let data = await this.axiosGet(`${this.API_HOST}/site/recommend`);
+        // let data = await axios.get(`${this.API_HOST}/site/recommend`)
+        // .then((result) => {
+        //     console.log(result);
+        //     Site.shuffle(result.data);
+        //     return result.data;
+        //     mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
+        //     Site.cardEvent();
+        // })
+        // .catch((error) => {
+        //     console.error(error);
+        //     if (error.code === "ERR_NETWORK"){
+        //         // 현재 이용 불가능한 무언가 띄우기...
+        //         // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+        //         document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
+        //         // document.querySelector("main").insertAdjacentHTML("beforeend","<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>");
     
-            }
-            return null;            
-        });
+        //     }
+        //     return null;            
+        // });
         return data;
     }
 
 
     static async getSiteByCategory(categoryId, page){
         console.log(`categoryId : ${categoryId}`);
-        let data = await axios.get(`${this.API_HOST}/site/category?id=${categoryId}&page=${page}`)
-        .then((result) => {
-            console.log(result); 
-            return result.data;   
-        })
-        .catch((error) => {
-            console.error(error);
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
-    
-            }
-            return null;
-        });
-        
+        let data = await this.axiosGet(`${this.API_HOST}/site/category?id=${categoryId}&page=${page}`);        
         return data;
     }
 
     static async getSiteById(siteId){
         console.log(`categoryId : ${siteId}`);
-        let data = await axios.get(`${this.API_HOST}/site/admin?id=${siteId}`)
-        .then((result) => {
-            console.log(result); 
-            return result.data;   
-        })
-        .catch((error) => {
-            console.error(error);
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
-    
-            }
-            return null;
-        });
-        
+        let data = await this.axiosGet(`${this.API_HOST}/site/admin?id=${siteId}`);
         return data;
     }
 
     //사이트 등록
     static async addSiteAdmin(site){
         console.log(site);
-        let data = await axios.post(`${this.API_HOST}/site`, site)
+        let data = await this.axiosPost(`${this.API_HOST}/site`, site);
+        return data;
+    }
+
+    //사이트 수정
+    static async updateSiteAdmin(site){
+        let data = await this.axiosPut(`${this.API_HOST}/site/admin`, site);
+        return data;        
+    }
+
+    static async axiosPost(url, body){
+        let data = await axios.post(url, body)
         .then((result) => {
             console.log(result); 
             return result.data;   
@@ -367,31 +264,64 @@ export class Site {
                 // 현재 이용 불가능한 무언가 띄우기...
                 // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
                 alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+            } else if (error.response.data.errCode){
+                // 백엔드에서 미리 처리못한 에러 발생 문의 필요
+                if (error.response.data.errCode === 1){
+                    alert("내부 오류가 발생했습니다.");
+                }
             }
             return error.response.data;
         });
         return data;
     }
 
-    //사이트 수정
-    static async updateSiteAdmin(site){
-        let data = await axios.put(`${this.API_HOST}/site/admin`, site)
+    static async axiosGet(url){
+        let data = await axios.get(url)
         .then((result) => {
             console.log(result); 
             return result.data;   
         })
         .catch((error) => {
-            console.error(error);
+            console.error(error);            
             if (error.code === "ERR_NETWORK"){
                 // 현재 이용 불가능한 무언가 띄우기...
                 // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
                 alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+            } else if (error.response.data.errCode){
+                // 백엔드에서 미리 처리못한 에러 발생 문의 필요
+                if (error.response.data.errCode === 1){
+                    alert("내부 오류가 발생했습니다.");
+                }
             }
-            return null;
+            return error.response.data;
         });
-        
         return data;
     }
+
+    static async axiosPut(url, body){
+        let data = await axios.post(url, body)
+        .then((result) => {
+            console.log(result); 
+            return result.data;   
+        })
+        .catch((error) => {
+            console.error(error);            
+            if (error.code === "ERR_NETWORK"){
+                // 현재 이용 불가능한 무언가 띄우기...
+                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+                alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+            } else if (error.response.data.errCode){
+                // 백엔드에서 미리 처리못한 에러 발생 문의 필요
+                if (error.response.data.errCode === 1){
+                    alert("내부 오류가 발생했습니다.");
+                }
+            }
+            return error.response.data;
+        });
+        return data;
+    }
+
+    
 
     
 }
