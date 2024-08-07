@@ -1,10 +1,10 @@
 import { Injectable, NestMiddleware } from "@nestjs/common";
 import { NextFunction } from "express";
-import { CustomUtils } from "src/publicComponents/utils";
+import { CustomUtils, FileAdapter } from "src/publicComponents/utils";
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-    constructor(private readonly cUtil : CustomUtils){
+    constructor(private readonly cUtil : CustomUtils, private readonly fAdapter : FileAdapter){
 
     }
 
@@ -37,11 +37,15 @@ export class LoggerMiddleware implements NestMiddleware {
         // 응답이 왜이러지..
         const log = {
             timeStamp: this.cUtil.getUTCDate(),
+            method : req.method,
             url: req.url,
             res: res.status
         };
-
-        console.log(log);
+        console.log(JSON.stringify(log));
+        const logData = log.timeStamp.toISOString() + ", " + log.method + ", " + log.url;
+        const logDate = log.timeStamp.getUTCFullYear() + 
+        (log.timeStamp.getMonth() +1).toString().padStart(2, "0") + log.timeStamp.getUTCDate().toString().padStart(2, "0") + ".log";
+        this.fAdapter.writeTheTxtFile(logData, logDate, "log", "middleware");
     }
 }
 

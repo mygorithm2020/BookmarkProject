@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, InternalServerErrorException } from "@nestjs/common";
 import { BaseExceptionFilter, HttpAdapterHost } from "@nestjs/core";
 import { Request, Response } from 'express';
-import { CustomUtils } from "src/publicComponents/utils";
+import { CustomUtils, FileAdapter } from "src/publicComponents/utils";
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -25,7 +25,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
-    constructor(private readonly cUtil : CustomUtils){
+    constructor(private readonly cUtil : CustomUtils, private readonly fAdapter : FileAdapter){
 
     }
     catch(exception: Error, host: ArgumentsHost) {
@@ -37,6 +37,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
         // 로그는 실제 에러를 작성
         const log = {
         timeStamp: this.cUtil.getUTCDate(),
+        method : req.method,
         url: req.url,
         exception,
         };
@@ -44,6 +45,10 @@ export class CustomExceptionFilter implements ExceptionFilter {
         try{
             console.log(log);
             // 파일에 기록하는 부분 추가
+            const logData = log.timeStamp.toISOString() + ", " + log.method + ", " + log.url + "," + log.exception;
+            const logDate = log.timeStamp.getUTCFullYear() + 
+            (log.timeStamp.getMonth() +1).toString().padStart(2, "0") + log.timeStamp.getUTCDate().toString().padStart(2, "0") + ".log";
+            this.fAdapter.writeTheTxtFile(logData, logDate, "log", "exceptionFilter");
 
         } catch {
 
@@ -51,15 +56,14 @@ export class CustomExceptionFilter implements ExceptionFilter {
         
 
         // 프론트에는 미리 설정 못했다는 의미로 서버에러 리턴
-        if (!(exception instanceof HttpException)) {
-          console.log("이건?");
-
-                  
+        if (!(exception instanceof HttpException)) {                  
           exception = new HttpException({
               errCode : 1,
               error : "Internal Server Error"
           }, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        
 
         const response = (exception as HttpException).getResponse();
         res.status((exception as HttpException).getStatus()).json(response);

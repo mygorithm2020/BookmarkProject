@@ -125,7 +125,7 @@ async function setSitePage(){
             if (res.errCode === 22){
                 alert("이미 등록된 사이트 입니다.");
             } else if (res.errCode === 32){
-                alert("입력한 url이 정확한지 확인 후 다시 시도해주세요");
+                alert("입력한 url이 정확한지 확인 후 다시 시도해주세요. 같은 문제가 계속 발생하면 관리자에게 따로 문의 부탁드립니다.");
 
             } else{
                 alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요!");

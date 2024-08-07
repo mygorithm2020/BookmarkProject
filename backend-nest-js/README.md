@@ -56,6 +56,7 @@
     NestJS : HttpModule로 response의 html 파일 인코딩 방식이 euc-kr이면 문자가 깨지는 현상,  utf-8이면 정상
         - 버퍼로 데이터 받은 후 iconv-lite 모듈로 헤더의 콘텐츠 타입 및 인코딩 방식 확인 후 디코딩
         - nest에서 사용시 그냥 import하면 에러가 발생하는 경우 import * as iconv from "iconv-lite"으로 변경
+        - 즉, import 에 바로 그 내용을 적는게 아니라 * 처리하고 as 로 해당 모듈이름을 적는 방법으로 처리
   
     Typeorm : Many to Many 관계를 중간에 따로 sql 로 생성한 junction table 을 활용해 연결하기
         - Site, CategorySite, Category 3가지 entity 참고

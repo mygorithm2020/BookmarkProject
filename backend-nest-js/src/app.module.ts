@@ -16,12 +16,14 @@ import { HttpModule } from '@nestjs/axios';
 import { MemberModule } from './member/member.module';
 import { Member } from './member/entities/member.entity';
 import { MysqlException } from './publicComponents/ExceptionHandler';
-import { CustomUtils } from './publicComponents/utils';
+import { CustomUtils, FileAdapter } from './publicComponents/utils';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { CategoryController } from './category/category.controller';
 import { MemberController } from './member/member.controller';
 import { SiteController } from './site/site.controller';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 dotenv.config();
 
@@ -29,6 +31,14 @@ console.log(process.env.DB_HOST);
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'images'),
+      serveRoot : '/images',
+      serveStaticOptions: {
+        index: false, // 인덱스 파일 제공 여부 설정
+        maxAge: '1h', // 캐시 유효 기간 설정
+      },
+    }),
     ConfigModule.forRoot({
       isGlobal : true,
     }),
@@ -44,9 +54,9 @@ console.log(process.env.DB_HOST);
     synchronize : false,
     logging : true,
     timezone : "z" // mysql에 들어있는 시간에서 자동으로 -9시간을 해오는거 해결
-  }),  TestModule, BooksModule, CategoryModule, SiteModule, MemberModule, AuthenticationModule, ],
+  }),  TestModule, BooksModule, CategoryModule, SiteModule, MemberModule, AuthenticationModule],
   controllers: [AppController],
-  providers: [AppService, CustomUtils],
+  providers: [AppService, CustomUtils, FileAdapter],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -57,11 +57,7 @@ export class Site {
                 <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
                     <div class="site-card-top">
                         <img class="site-card-img" src="${siteList[i].Img ? siteList[i].Img : '../images/noImage.jpg'}" alt="no images">
-                        <ul class="site-sub-info">
-                            <li>방문수 ${siteList[i].Views}</li>
-                            <li>방문수 ${siteList[i].Views}</li>
-                                                         
-                        </ul>
+                        
                     </div>
                     <div class="site-card-mid bg-color-5">
                         <div>
@@ -330,7 +326,7 @@ export class Site {
     static async axiosGet(url){
         let data = await axios.get(url)
         .then((result) => {
-            console.log(result); 
+            console.log(result);
             return result.data;   
         })
         .catch((error) => {

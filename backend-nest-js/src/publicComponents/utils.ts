@@ -2,6 +2,8 @@ import {v4 as uuidV4} from 'uuid'
 import * as bcrypt from 'bcrypt';
 import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
+import * as path from "path";
+import * as fs from 'fs';
 
 export class CustomUtils{
 
@@ -35,6 +37,8 @@ export class CustomUtils{
     let res = new Date(now_utc);
     return res;
   }
+
+  
   
 }
 
@@ -42,8 +46,30 @@ export class FileAdapter{
   // 파일읽기
 
   // 파일쓰기
+  // 절대 경로 기준으로 경로 및 파일명 설정
+  saveTheFile(data, fileName : string, ...paths : string[]) : void{
+    
+    const FilePath = path.resolve(__dirname, '..', '..', ...paths, fileName);
+    fs.mkdirSync(path.dirname(FilePath), { recursive: true });
+    fs.writeFileSync(FilePath, data);
+  }
+
+  writeTheTxtFile(data, fileName : string, ...paths : string[]) : void{
+    try {
+      const dataWithNewline = `${data}\n`;
+      const FilePath = path.resolve(__dirname, '..', '..', ...paths, fileName);
+      fs.mkdirSync(path.dirname(FilePath), { recursive: true });
+      fs.appendFileSync(FilePath, dataWithNewline, 'utf-8');
+      // await fs.promises.app(FilePath, data, 'utf8');
+    } catch (error) {
+      console.error(`Failed to append data to file: ${error.message}`);
+    }
+  }
 
   // 등등
+  sdsdsd(){
+    
+  }
 }
 
 export class CustomEncrypt {

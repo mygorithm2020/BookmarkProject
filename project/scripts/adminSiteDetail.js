@@ -120,7 +120,7 @@ function siteDetailtoHtmlAdmin(site, categories){
                       <td>이미지</td>
                       <td>
                         <input name="img" type="text" value="${site.Img? site.Img : ""}"></br>
-                        ${site.Img? "<img src='" + site.Img + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}
+                        ${site.Img? "<img src='" + Site.API_HOST + "/" + "images" + "/" + site.SiteId + "/" + site.Img + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}
                       </td>
                     </tr>
                     <tr>
