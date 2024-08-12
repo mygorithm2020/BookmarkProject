@@ -43,7 +43,7 @@ console.log(process.env.DB_HOST);
       isGlobal : true,
     }),
     TypeOrmModule.forRoot({
-    type : 'mariadb',
+    type : 'mysql',
     host : process.env.DB_HOST,
     port : parseInt(process.env.DB_PORT),
     username : process.env.DB_USERNAME,
