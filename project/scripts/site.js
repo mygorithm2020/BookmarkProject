@@ -2,8 +2,8 @@
 export class Site {
 
     // static API_HOST = "http://220.72.179.212:3000";
-    static API_HOST = "http://localhost:3000/api";
-    static IMG_HOST = "http://localhost:3000";
+    static API_HOST = "http://34.64.199.1:3000/api";
+    static IMG_HOST = "http://34.64.199.1:3000";
 
     static siteStatus = {
         1 : "기본 등록",

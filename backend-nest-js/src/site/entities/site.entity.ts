@@ -197,7 +197,7 @@ export class Site {
 
     @ManyToMany(type => Category) //, (category) => category.CategoryId
     @JoinTable({
-        name : "ta_recategorysite",
+        name : "TA_ReCategorySite",
         joinColumn : {
             name : "SiteId",
             referencedColumnName : "SiteId"   //타겟 테이블의 id값
