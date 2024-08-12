@@ -48,7 +48,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
             const logData = log.timeStamp.toISOString() + ", " + log.method + ", " + log.url + "," + log.exception;
             const logDate = log.timeStamp.getUTCFullYear() + 
             (log.timeStamp.getMonth() +1).toString().padStart(2, "0") + log.timeStamp.getUTCDate().toString().padStart(2, "0") + ".log";
-            this.fAdapter.writeTheTxtFile(logData, logDate, "log", "exceptionFilter");
+            this.fAdapter.writeLog(logData, logDate, "log", "exceptionFilter");
 
         } catch {
 

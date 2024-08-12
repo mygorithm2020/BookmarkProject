@@ -47,19 +47,73 @@ export class FileAdapter{
 
   // 파일쓰기
   // 절대 경로 기준으로 경로 및 파일명 설정
-  saveTheFile(data, fileName : string, ...paths : string[]) : void{
+  async saveTheFile(data, fileName : string, ...paths : string[]) : Promise<void>{
+    try{
+      const filePath = path.resolve(__dirname, '..', '..', ...paths, fileName);
+      if (!fs.existsSync(path.dirname(filePath))){
+        fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      }
+      // fs.writeFileSync(filePath, data);
+      fs.writeFile(filePath, data, (err) => {
+        console.log(err);
+      });
+
+    } catch (err) {
+      throw err; 
+    }
     
-    const FilePath = path.resolve(__dirname, '..', '..', ...paths, fileName);
-    fs.mkdirSync(path.dirname(FilePath), { recursive: true });
-    fs.writeFileSync(FilePath, data);
+  }
+
+  async removeDirectory(dirPath: string): Promise<void> {
+    try {
+      // 디렉토리의 모든 파일 및 하위 디렉토리 가져오기
+      const files = fs.readdirSync(dirPath);
+      for (const file of files) {
+        const filePath = path.join(dirPath, file);
+        const stats = fs.statSync(filePath);
+
+        fs.unlinkSync(filePath);
+      }
+      // 디렉토리 자체를 삭제
+      console.log(`Directory ${dirPath} deleted successfully.`);
+    } catch (error) {
+      console.error(`Error while deleting directory ${dirPath}: ${error.message}`);
+      
+    }
+  }
+
+  // 예외 파일들 제외하고 디렉터리 내부 파일들 삭제
+  removeFiles(dirPath : string, exceptFiles? : string[]){
+
+    try{
+
+    } catch {
+
+    }
+  }
+
+  writeLog(data, fileName : string, ...paths : string[]) : void{
+    try {
+      const dataWithNewline = `${data}\n`;
+      const filePath = path.resolve(__dirname, '..', '..', ...paths, fileName);
+      if (!fs.existsSync(path.dirname(filePath))){
+        fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      }
+      fs.appendFileSync(filePath, dataWithNewline, 'utf-8');
+      // await fs.promises.app(FilePath, data, 'utf8');
+    } catch (error) {
+      console.error(`Failed to append data to file: ${error.message}`);
+    }
   }
 
   writeTheTxtFile(data, fileName : string, ...paths : string[]) : void{
     try {
       const dataWithNewline = `${data}\n`;
-      const FilePath = path.resolve(__dirname, '..', '..', ...paths, fileName);
-      fs.mkdirSync(path.dirname(FilePath), { recursive: true });
-      fs.appendFileSync(FilePath, dataWithNewline, 'utf-8');
+      const filePath = path.resolve(__dirname, '..', '..', ...paths, fileName);
+      if (!fs.existsSync(path.dirname(filePath))){
+        fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      }
+      fs.appendFileSync(filePath, dataWithNewline, 'utf-8');
       // await fs.promises.app(FilePath, data, 'utf8');
     } catch (error) {
       console.error(`Failed to append data to file: ${error.message}`);

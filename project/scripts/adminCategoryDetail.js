@@ -28,14 +28,14 @@ categoryEdit.addEventListener("submit", async (target) => {
     reqData.Name = categoryEdit.querySelector("input[name='name").value;
     reqData.NameKR = categoryEdit.querySelector("input[name='nameKR").value;
     for (const one of categoryEdit.querySelectorAll("input[name='status")){
-        console.log(one);
+        
         if(one.checked){
             reqData.Status = parseInt(one.value);
             break;
         }
     }
 
-    console.log(reqData);
+    
     if (!reqData.Name || !reqData.NameKR || !reqData.Status){
         alert("누락된 입력값이 있습니다.");
         return;
@@ -132,10 +132,5 @@ function categoryToHtmlAdmin(category){
     return res;
 }
 
-let dd = new Date();
-let ss = Date.parse("2024-06-25T09:11:15.000Z");
-ss = new Date("2024-06-25T09:11:15.000Z");
-console.log(ss);
-console.log(ss.toLocaleString());
 
 

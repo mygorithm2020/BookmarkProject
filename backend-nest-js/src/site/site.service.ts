@@ -126,74 +126,30 @@ export class SiteService {
   }
 
   async createTest(site: Site) {
-    // console.log('This action adds a new site');
+    
+    // const sites = await this.findAll();
+
+    // for (const site of sites){
+    //   // 경로내의 파일들을 찾고, 데이터에 등록된 이미지가 아니면 삭제
+    //   const dirPath = path.join(__dirname, "..", "..", "images", site.SiteId);
+    //   try {
+    //     // 디렉토리의 모든 파일 및 하위 디렉토리 가져오기
         
-    // let urlObj = this.constraint.getUrlObj(site.URL);    
-    // console.log(urlObj);
-    
-    // // url 유효한지 확인
-    // // 여기가 문제구만.......
-    // let SiteModel = await this.setSiteParse(urlObj.origin);         
-    // if (SiteModel){
-    //   this.generateSite(SiteModel, urlObj);      
-    //   console.log(SiteModel);
-    // }
-    // //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
-    // console.log("===========================");
-
-    // let ss = await this.setSiteJSDOM(urlObj.origin);
-    // console.log(ss);
-
-    // console.log("===========================");
-
-    // let ww = await this.setSiteAxios(urlObj.origin);
-    // console.log(ww);
-    
-    // 이미지 링크 전달해서 결과 값 확인하고
-    // 파일로 저장해보자
-    if (!site.URL){
-      throw new HttpException({
-        errCode : 23,
-        error : "url value is required"
-
-      }, HttpStatus.BAD_REQUEST);
-
-    }    
+    //     const files = fs.readdirSync(dirPath);
+    //     for (const file of files) {
+    //       if (file !== site.Img){
+    //         const filePath = path.join(dirPath, file);
+    //         fs.unlinkSync(filePath);
+    //       }          
+    //     }
+    //     // 디렉토리 자체를 삭제
+    //     console.log(`Directory ${dirPath} deleted successfully.`);
+    //   } catch (error) {
+    //     console.error(`Error while deleting directory ${dirPath}: ${error.message}`);
         
-    let urlObj = this.constraint.getUrlObj(site.URL);
-    console.log(urlObj);
-    console.log(path.extname(site.URL));
-
-    let response = await this.apiClient.getSiteResponse(site.URL);
-    console.log(response);
-    console.log(__dirname);
-    let outputPath = path.resolve(__dirname, '..', '..', 'images', this.customUtils.get32UuId() + path.extname(site.URL));
-    console.log(outputPath);
-
-    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-
-    fs.writeFileSync(outputPath, response.data);
-    // // url 유효한지 확인
-    // // 이외의 사이트 문제는 그냥 따로 프로그램 돌려서 정보 수집하자
-    // let siteModel = await this.apiClient.setSiteParse(this.constraint.correctionUrl(urlObj));
-    // if (!siteModel){
-    //   // 설계상 여기에 오기전에 에러가 발생함... 그래도 일단 만들어 놓음
-    //   throw new HttpException({
-    //     errCode : 21,
-    //     error : "server Error, can not make site model"
-
-    //   }, HttpStatus.BAD_REQUEST);
-
-    // }
-    // await this.constraint.generateSite(siteModel, urlObj);      
-    // // console.log(siteModel);
-    // //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
-
-    // // 데이터 삽입
-    // const newSite = this.sRepo.create(siteModel);
-    // console.log(newSite);
-    // return await this.sRepo.save(newSite);
-    
+    //   }    
+      
+    // }    
   }
 
   async findAll(page? : number) : Promise<Site[]> {
@@ -336,57 +292,44 @@ export class SiteService {
     let result = ServerCache.getRecommendSites();
     if (!result){
       const reLoadSites : Site[] = await this.sRepo.query(
-        `(select * from ta_site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 20)
+        `(select * from TA_Site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 25)
         UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by Good DESC LIMIT 20)
+        (select * from TA_Site where isDeleted = 0 and status = 2 order by Good DESC LIMIT 25)
         UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by Bad ASC LIMIT 20)
+        (select * from TA_Site where isDeleted = 0 and status = 2 order by Bad ASC LIMIT 25)
         UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 20)
+        (select * from TA_Site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 25)
         order by rand()`        
       );
       ServerCache.setRecommendSites(reLoadSites);
       result = ServerCache.getRecommendSites();      
     }
+    console.log(result[0]);
     return result;
   }
 
   findOne(id: string) : Promise<Site> {
     console.log(`This action returns a #${id} category`);
     return this.sRepo.findOne({
+      select : {
+        SiteId : true,
+        URL : true,
+        Name : true,
+        NameKR : true,
+        Img : true,
+        SiteDescription : true,
+        Views : true,
+        Good : true,
+        Bad : true
+      },      
       where : {
         IsDeleted : 0,
         SiteId :  id
       }
-    })
-    
+    })    
   }
 
   findOneByAdmin(id: string) : Promise<Site> {
-    console.log("findOneByAdmin");
-    console.log(id);
-
-    // let temp = await this.sRepo.find({
-    //   select : {
-    //     Categories : {
-    //       CategoryId : true
-    //     }
-    //   },
-    //   relations : {
-    //     Categories : true
-    //   },
-    //   where : {
-    //     IsDeleted : 0,
-    //     Status : 2,
-    //     Categories : {
-    //       CategoryId : categoryId
-    //     }
-    //   },
-    //   order : orderOption,
-    //   skip : this.WEBPAGECNT * (page - 1),
-    //   take : this.WEBPAGECNT *  page,
-    // });
-
     return this.sRepo.findOne({
       where : {
         IsDeleted : 0,
@@ -395,8 +338,7 @@ export class SiteService {
       relations : {
         Categories : true
       }
-    });
-    
+    });    
   }
 
   async findOneByUrl(url: string, isDeleted? : boolean) : Promise<Site> {
@@ -411,19 +353,13 @@ export class SiteService {
     return res;    
   }
 
-  
-
   async update(id: string, updateCategoryDto: Site) : Promise<UpdateResult> {
-    console.log(`This action updates a #${id} category`);    
     // console.log(await this.cRepo.update(id, updateCategoryDto));
     // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
     return await this.sRepo.update(id, updateCategoryDto);
   }
 
   async updateViews(id: string) : Promise<UpdateResult> {
-    console.log(`This action updateViews a #${id} site`);    
-    // console.log(await this.cRepo.update(id, updateCategoryDto));
-    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
     return await this.sRepo.update(id, {
       Views : () => "Views + 1",
     })
@@ -442,14 +378,6 @@ export class SiteService {
   async updateByAdmin(updateSite: Site) : Promise<UpdateResult> {
     console.log(`This action updates a #${updateSite.SiteId}`);    
     console.log(updateSite);
-    // console.log(await this.cRepo.update(id, updateCategoryDto));
-    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
-    // return await this.sRepo.update({
-    //   SiteId : updateSite.SiteId,
-    // }, {
-    //   ...updateSite,
-    //   Categories : null
-    // });
     if (updateSite.Status && updateSite.Status > 4){
       throw new HttpException({
         errCode : 21,
@@ -586,7 +514,7 @@ export class SiteService {
         }, HttpStatus.INTERNAL_SERVER_ERROR);
     } finally {
         // you need to release query runner which is manually created:
-        // await queryRunner.release();
+        await queryRunner.release();
     }
   }
 
@@ -622,144 +550,5 @@ export class SiteService {
       UpdatedDate : this.customUtils.getUTCDate()
     })
   }
-
-  static restrictedViews : {lastUpdate : Date, keyValues : Set<string>};
-
-  // 조회수 조작을 막기 위해 같은 정보로 동일하게 오면 제한, 대신 메모리로 관리하므로 시간마다 값 초기화
-  static checkRestrictedViews(str) : boolean {
-    let res = false;
-    if (!SiteService.restrictedViews){
-      SiteService.restrictedViews = {
-        lastUpdate : new Date(),
-        keyValues : new Set<string>()
-      }  
-    } else if (SiteService.restrictedViews.lastUpdate.getUTCHours !== new Date().getUTCHours){
-      SiteService.restrictedViews.lastUpdate = new Date();
-      SiteService.restrictedViews.keyValues.clear();
-    }
-
-    
-
-    if (SiteService.restrictedViews.keyValues.has(str)){
-      res = true;
-
-      // //Create a Set
-      // let diceEntries = new Set<number>();
-
-      // //Add values
-      // diceEntries.add(1);
-      // diceEntries.add(2);
-      // diceEntries.add(3);
-      // diceEntries.add(4).add(5).add(6);   //Chaining of add() method is allowed
-      
-      // //Check value is present or not
-      // diceEntries.has(1);                 //true
-      // diceEntries.has(10);                //false
-      
-      // //Size of Set 
-      // diceEntries.size;                   //6
-      
-      // //Delete a value from set
-      // diceEntries.delete(6);              // true
-      
-      // //Clear whole Set
-      // diceEntries.clear();                //Clear all entries
-    } else{
-      SiteService.restrictedViews.keyValues.add(str);
-    }
-
-    console.log(SiteService.restrictedViews);
-
-    return res;      
-  }
-
-  private static basicRecommendSites : {lastDate : Date, sites : Site[]};
-
-  async getRecommendSite() : Promise<Site[]>{
-
-    // lock 처리
-    // 데이터 캐시처리, no 하루가 지날 때 마다 다시 조회하자
-    if (!SiteService.basicRecommendSites ||
-      SiteService.basicRecommendSites.lastDate.getUTCDate() !== new Date().getUTCDate()){
-
-      // 기준 조회수, 좋아요, 싫어요, 등록일 순, 취향....
-      // 걍 각 카테고리 탑 몇개씩 뽑아올 것인가.....
-
-      // orm으로 짜기 너무 복잡해서 일단 쿼리로 짬
-      let queryData = await this.sRepo.query(
-        `(select * from ta_site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 20)
-        UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by Good DESC LIMIT 20)
-        UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by Bad ASC LIMIT 20)
-        UNION
-        (select * from ta_site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 20)
-        order by rand()`        
-      );
-
-      console.log(queryData[0]);
-
-      SiteService.basicRecommendSites = {
-        lastDate : new Date(),
-        sites : queryData
-      }  
-      
-      
-      // 쿼리가 이상해...
-      // let data = await Promise.all([
-      //   this.cRepo.find({
-      //     where : {
-      //       IsDeleted : 0,
-      //       Status : 2,  
-      //     },
-      //     take : 20,
-      //     order : {
-      //       Views : "DESC"
-      //     }        
-      //   }),
-      //   this.cRepo.find({
-      //     where : {
-      //       IsDeleted : 0,
-      //       Status : 2,  
-      //     },
-      //     take : 20,
-      //     order : {
-      //       Like : "DESC"
-      //     }        
-      //   }),
-      //   this.cRepo.find({
-      //     where : {
-      //       IsDeleted : 0,
-      //       Status : 2,  
-      //     },
-      //     take : 20,
-      //     order : {
-      //       Dislike : "ASC"
-      //     }        
-      //   }),
-      //   this.cRepo.find({
-      //     where : {
-      //       IsDeleted : 0,
-      //       Status : 2,  
-      //     },
-      //     take : 20,
-      //     order : {
-      //       CreatedDate : "DESC"
-      //     }        
-      //   })
-      // ])
-      
-
-      // SiteService.basicRecommedSites = [];
-      // for (const da of data){
-      //   console.log(da);
-      //   SiteService.basicRecommedSites.concat(da);
-      // }
-    }
-    //  매번 셔플...???? 조금 과한데.... => 프론트로 옮기자
-    // this.customUtils.shuffle(SiteService.basicRecommendSites.sites);
-
-    return SiteService.basicRecommendSites.sites;
-  }
-
+  
 }

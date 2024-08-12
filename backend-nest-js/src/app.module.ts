@@ -36,16 +36,16 @@ console.log(process.env.DB_HOST);
       serveRoot : '/images',
       serveStaticOptions: {
         index: false, // 인덱스 파일 제공 여부 설정
-        maxAge: '1h', // 캐시 유효 기간 설정
+        maxAge: 1000000, // 캐시 유효 기간 설정
       },
     }),
     ConfigModule.forRoot({
       isGlobal : true,
     }),
     TypeOrmModule.forRoot({
-    type: 'mysql',
-    host : 'localhost',
-    port : 3306,
+    type : 'mariadb',
+    host : process.env.DB_HOST,
+    port : parseInt(process.env.DB_PORT),
     username : process.env.DB_USERNAME,
     password : process.env.DB_PASSWORD,
     // entities : [Book, Category, Site, Member],
@@ -53,7 +53,8 @@ console.log(process.env.DB_HOST);
     database : process.env.DB_DATABASE,
     synchronize : false,
     logging : true,
-    timezone : "z" // mysql에 들어있는 시간에서 자동으로 -9시간을 해오는거 해결
+    timezone : "z", // mysql에 들어있는 시간에서 자동으로 -9시간을 해오는거 해결
+    
   }),  TestModule, BooksModule, CategoryModule, SiteModule, MemberModule, AuthenticationModule],
   controllers: [AppController],
   providers: [AppService, CustomUtils, FileAdapter],

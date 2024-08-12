@@ -12,6 +12,7 @@ SHOW INDEX FROM ta_site;
 select * from information_schema.table_constraints WHERE TABLE_NAME = 'ta_member';
 SHOW CREATE TABLE ta_member
 SELECT CHAR_LENGTH("sss");
+-- INT, BIGINT, DECIMAL, FLOAT, DOUBLE, DATETIME, DATE, CHAR(0 ~ 255), VARCHAR(0 ~ 65356), TEXT, MEDIUMTEXT, LONGTEXT
 
 CREATE INDEX 인덱스이름 ON 테이블이름 (필드이름1, 필드이름2, ...);
 
@@ -94,7 +95,7 @@ CREATE TABLE TA_Authentication (
   IsAuth INT NOT NULL DEFAULT 0 COMMENT "0 : 미인증, 1: 인증완료",
   CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
   UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP) 
-);
+) ENGINE=InnoDB;
 CREATE INDEX IDX_Authentication_Email ON TA_Authentication (Email);
 CREATE INDEX IDX_Authentication_PhoneNo ON TA_Authentication (PhoneNo);
 
@@ -159,26 +160,25 @@ CREATE TABLE TA_Site(
     Bad INT  default 0,
     MemberId VARCHAR(64),
     -- Email VARCHAR(64), 
-    Status Int COMMENT  "카테고리 등록상태 1:일반등록(확인 x), 2: 사용, 3:보류, 4: 숨기기(문제), 5:자동 확인 중 사이트 에러, 6:자동 확인 중 성공 7: 자동 검토 중 보류" ,      
+    Status Int DEFAULT 1 COMMENT  "카테고리 등록상태 1:일반등록(확인 x), 2: 사용, 3:보류, 4: 숨기기(문제), 5:자동 확인 중 사이트 에러, 6:자동 확인 중 성공 7: 자동 검토 중 보류" ,      
 
     -- 기본 정보 -- 2순위
     Title VARCHAR(255),
     FaviconImg VARCHAR(512),
     Description VARCHAR(1024),
     Keywords VARCHAR(1024),
+    LogoImg VARCHAR(512),
 
     -- og 정보 -- default
     OGTitle VARCHAR(255),
     OGSiteName VARCHAR(255),
     OGImg VARCHAR(512),
     OGDescription VARCHAR(1024),
-    OGURL VARCHAR(255),
-
-    
+    OGURL VARCHAR(255),   
         
     IsDeleted SMALLINT NOT NULL DEFAULT 0,
     CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
-    UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+    UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
     
 
 );
@@ -186,6 +186,7 @@ CREATE INDEX IDX_Site_URL ON TA_Site (URL);
 CREATE INDEX IDX_Site_Views ON TA_Site (Views);
 CREATE INDEX IDX_Site_Good ON TA_Site (Good);
 -- ALTER TABLE TA_Site MODIFY COLUMN Bad INT  default 0;
+
 
 describe ta_site;
 

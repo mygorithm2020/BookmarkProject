@@ -45,7 +45,7 @@ export class LoggerMiddleware implements NestMiddleware {
         const logData = log.timeStamp.toISOString() + ", " + log.method + ", " + log.url;
         const logDate = log.timeStamp.getUTCFullYear() + 
         (log.timeStamp.getMonth() +1).toString().padStart(2, "0") + log.timeStamp.getUTCDate().toString().padStart(2, "0") + ".log";
-        this.fAdapter.writeTheTxtFile(logData, logDate, "log", "middleware");
+        this.fAdapter.writeLog(logData, logDate, "log", "middleware");
     }
 }
 

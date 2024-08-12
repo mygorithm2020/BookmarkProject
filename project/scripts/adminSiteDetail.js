@@ -3,9 +3,9 @@ import { Category } from "./categoryObj.js";
 
 
 let curUrl = new URL(document.location.toString());
-console.log(curUrl.pathname);
+
 let siteId = curUrl.searchParams.get("site");
-console.log(siteId);
+
 
 let mainContent01El = document.getElementById("main_content01");
 
@@ -38,7 +38,7 @@ siteEdit.addEventListener("submit", async (target) => {
   }
 
   //  여기서 값 추출하는 과정 추가 하고
-  console.log(siteEdit);
+  // console.log(siteEdit);
   // console.log(siteEdit.name.value);
   // console.log(siteEdit.namekr.value);
   // console.log(siteEdit.name.value);
@@ -67,7 +67,11 @@ siteEdit.addEventListener("submit", async (target) => {
 
   site.Name = siteEdit.querySelector("input[name='name']").value;
   site.NameKR = siteEdit.querySelector("input[name='nameKR']").value;
-  site.Img = siteEdit.querySelector("input[name='img']").value;
+  if (siteEdit.querySelector("input[name='img']").value){
+    site.Img = siteEdit.querySelector("input[name='img']").value;
+  } else {
+    site.Img = undefined;
+  }
   site.SiteDescription = siteEdit.querySelector("textarea[name='siteDescription']").value;
   site.Name = siteEdit.querySelector("input[name='name']").value;
   if (siteEdit.querySelector("select[name='status']").value > 4){
@@ -117,11 +121,26 @@ function siteDetailtoHtmlAdmin(site, categories){
                       <td><input name="nameKR" type="text" value="${site.NameKR? site.NameKR : ''}"></td>
                     </tr>                    
                     <tr>
-                      <td>이미지</td>
+                      <td>수정 희망 이미지</td>
                       <td>
-                        <input name="img" type="text" value="${site.Img? site.Img : ""}"></br>
-                        ${site.Img? "<img src='" + Site.API_HOST + "/" + "images" + "/" + site.SiteId + "/" + site.Img + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}
+                        <input name="img" type="text"></br>
                       </td>
+                    </tr>
+                    <tr>
+                      <td>표시 이미지</td>
+                      <td>         
+                        <p>${site.Img}</p>
+                        <img src='${site.Img && site.Img.startsWith("http") ? site.Img : Site.API_HOST + "/" + "images" + "/" + site.SiteId + "/" + site.Img}' alt="no images">               
+      
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>표시 설명</td>
+                      <td><textarea name="siteDescription">${site.SiteDescription? site.SiteDescription : ""}</textarea></td>
+                    </tr>
+                    <tr>
+                      <td>제목</td>
+                      <td>${site.Title}</td>
                     </tr>
                     <tr>
                       <td>파비콘 이미지</td>
@@ -131,17 +150,37 @@ function siteDetailtoHtmlAdmin(site, categories){
                       </td>
                     </tr>
                     <tr>
+                      <td>공식 설명</td>
+                      <td>${site.Description}</td>
+                    </tr>
+                    <tr>
+                      <td>키워드</td>
+                      <td>${site.Keywords}</td>
+                    </tr>
+                    <tr>
+                      <td>링크 제목</td>
+                      <td>${site.OGTitle}</td>
+                    </tr>
+                    <tr>
+                      <td>링크 사이트 이름</td>
+                      <td>${site.OGSiteName}</td>
+                    </tr>
                     <tr>
                       <td>외부 공유 이미지</td>
                       <td>
                         <p>${site.OGImg}</p>                        
                         ${site.OGImg? "<img src='" + site.OGImg + "' alt='이미지 불러오기 실패'>" : "등록된 이미지 없음"}
                       </td>
-                    </tr>                    
+                    </tr>  
                     <tr>
-                      <td>설명</td>
-                      <td><textarea name="siteDescription">${site.SiteDescription? site.SiteDescription : ""}</textarea></td>
+                      <td>링크 설명</td>
+                      <td>${site.OGDescription}</td>
                     </tr>
+                    <tr>
+                      <td>링크 URL</td>
+                      <td>${site.OGURL}</td>
+                    </tr>            
+                      
                     <tr>
                       <td>방문 수</td>
                       <td>${site.Views}</td>

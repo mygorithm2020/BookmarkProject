@@ -60,6 +60,14 @@
   
     Typeorm : Many to Many 관계를 중간에 따로 sql 로 생성한 junction table 을 활용해 연결하기
         - Site, CategorySite, Category 3가지 entity 참고
+  
+    TypeORM : mariaDB(10.1.13) 연결 중  발생 에러
+        - version 체크 부분에서 split 에러가 나는걸 확인하고 직접 노드 모듈스(typeorm/driver/mysql/mysqldriver.js)에서 해당 부분 찾아서 데이터 처리함
+    이게 맞을지는 모르겠는데 일단 해결은 됨
+        - insert 과정에서 returning 문법이 쓰이고 있고 에러가 발생해서 위와 마찬가지로 코드 수정
+        - select 과정에서 결과값이 버퍼로 오는 문제..........
+        - mariadb 10.11.* 이상 버전으로 확인해보니 결국 select가 buffer로 와서 생긴 문제였음... string을 parseInt하는 부분은 에러가 없음.....
+        - 고로 위 문제는 db version 변경으로 처리하고 위는 롤백
 
 
 
