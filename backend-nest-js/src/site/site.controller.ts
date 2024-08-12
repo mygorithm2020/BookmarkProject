@@ -84,8 +84,8 @@ export class SiteController {
   findSitesByCategory(
     @Query("id") categoryId : string, 
     @Query("page") page: number, 
-    @Query("page") sort: string, 
-    @Query("page") sortdir: number){
+    @Query("sort") sort: string, 
+    @Query("sortdir") sortdir: number){
     console.log(`categoryId : ${categoryId}`);
     let sortdirBool : boolean = sortdir == 0 ? false : true;
     let result = this.siteService.findOnlyByCategory(categoryId, page, sort, sortdirBool);

@@ -232,14 +232,14 @@ export class SiteService {
           Views : orderDesc? "DESC" : "ASC"
         }
         break;
-      case "bad":
+      case "good":
         orderOption = {
-          Views : orderDesc? "DESC" : "ASC"
+          Good : orderDesc? "DESC" : "ASC"
         }
         break;
       case "createDate":
         orderOption = {
-          Views : orderDesc? "DESC" : "ASC"
+          CreatedDate : orderDesc? "DESC" : "ASC"
         }
         break;
       default:

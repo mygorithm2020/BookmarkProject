@@ -66,7 +66,7 @@ export class Category {
 
     @ManyToMany(type => Site) //, (category) => category.CategoryId
     @JoinTable({
-        name : "ta_recategorysite",
+        name : "TA_ReCategorySite",
         joinColumn : {
             name : "CategoryId",
             referencedColumnName : "CategoryId" 

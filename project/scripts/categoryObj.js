@@ -19,11 +19,11 @@ export class Category{
 
     static categories = [];
 
-    API_HOST = "http://34.64.199.1:3000/api";
-    // API_HOST = "http://220.72.179.212:3000";
+    API_HOST = "http://localhost:3000/api";
+    // API_HOST = "http://34.64.199.1:3000";
 
     instance = axios.create({
-        baseURL: 'http://34.64.199.1:3000/api',
+        baseURL: 'http://localhost:3000/api',
         // ...other configs,
         timeout: 3000,
     });
