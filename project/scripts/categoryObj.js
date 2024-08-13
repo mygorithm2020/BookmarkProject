@@ -198,7 +198,8 @@ export class Category{
     async setNavigationBox(categories){
         let q = document.getElementById("nav_list_box");
         
-        if (!categories){
+        if (!categories || categories.length === 0){
+            q.insertAdjacentHTML("beforeend", `<li>등록된 카테고리가 없습니다.</li>`);
             return;
         }
         // 세팅

@@ -47,10 +47,10 @@ console.log("category");
     asd.textContent += ` - ${pageKey}`;
 
     const siteMapTextEl = document.querySelector(".site-map-text");
-    
-
+    let spinner = document.querySelector(".loading-spinner");
+    let numOfInterval = 0;
     let reqCategory = setInterval(async () => {        
-        console.log(Category.categories);
+        numOfInterval++;
         let targetCategoryId = "";
         if (Category.categories && Category.categories.length > 0){
             for(const category of Category.categories){
@@ -68,11 +68,16 @@ console.log("category");
             // 카드 이벤트 효과 추가
             Site.cardEvent();
             
-            let spinner = document.querySelector(".loading-spinner");
-            console.log(spinner);
+            
             spinner.classList.toggle("cover");
             clearInterval(reqCategory);
         };  
+
+        // 적당히 하다 안되면 그만
+        if (numOfInterval > 20){
+            spinner.classList.toggle("cover");
+            clearInterval(reqCategory);
+        }
         
     }, 200);
 

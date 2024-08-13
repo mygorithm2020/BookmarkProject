@@ -1,6 +1,6 @@
 /* 헤더와 푸터용 css 파일 */
 
-header {
+#header-full-box {
     max-width: 1280px;
     margin: 0 auto;
     display: flex;

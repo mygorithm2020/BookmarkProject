@@ -8,6 +8,11 @@
 - 기술 스택 : JavaScript, NodeJS, NestJS, Typescript, MySQL
 - 목표 : v1 버전(정적웹사이트)에 백엔드 서버 및 DB 추가
 - 프로젝트 실행 방법: 
+  - mysql 설치 및 환경 구성
+  - mysql.sql 파일 바탕으로 db, user, table create
+  - 필요한 node 설치
+  - 현재 경로에서 db연결 관련 .env파일 생성
+  - npm install, npm run start:dev
 - 링크 : 
 - 결과 미리보기  
 <br>
@@ -80,11 +85,12 @@
         - git으로 프로젝트 다운로드
         - 환경파일 등 추가(vi를 통해)
         - npm i, npm run build 등으로 실행 환경 구성
-        - mysql 설치
+        - mysql(8.4.0) 최신 LTS 설치
         - 유저 생성, 권한 부여, db 생성, table 생성, data migration
         - gcp 콘솔사이트에서 외부ip 방화벽 규칙생성으로 포트별 ip 접근 설정
 
-### 환경세팅
+### 개발환경세팅
+- node 20.10.0
 - npm v10.2.3
 - nestJS
 - mysql 8.0.37
