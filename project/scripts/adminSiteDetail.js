@@ -130,7 +130,7 @@ function siteDetailtoHtmlAdmin(site, categories){
                       <td>표시 이미지</td>
                       <td>         
                         <p>${site.Img}</p>
-                        <img src='${site.Img && site.Img.startsWith("http") ? site.Img : Site.API_HOST + "/" + "images" + "/" + site.SiteId + "/" + site.Img}' alt="no images">               
+                        <img src='${site.Img && site.Img.startsWith("http") ? site.Img : Site.IMG_HOST  + "/" + site.SiteId + "/" + site.Img}' alt="no images">               
       
                       </td>
                     </tr>

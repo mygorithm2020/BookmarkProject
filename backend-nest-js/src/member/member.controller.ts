@@ -34,7 +34,6 @@ export class MemberController {
   @Get("/email")
   findOnebyEmail(
     @Query("email") email : string){
-    console.log(`email : ${email}`);
     let result = this.memberService.findOneByEmail(email);
     return result;
   }

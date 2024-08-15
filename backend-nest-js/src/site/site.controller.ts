@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, Ip, Req, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, Ip, Req, Query, UseInterceptors } from '@nestjs/common';
 import { SiteService } from './site.service';
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
@@ -8,6 +8,7 @@ import { ApiResult } from 'src/publicComponents/apiResult';
 import { Response, Request } from 'express';
 import { CategoryService } from 'src/category/category.service';
 import { ServerCache } from 'src/publicComponents/memoryCache';
+import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
 
 @ApiTags("site")
 @Controller('site')
@@ -75,7 +76,7 @@ export class SiteController {
   // 나중에 로그인했으면 로그인 정보 받아서 로직에 관여
   @Get("/recommend")
   findRecommended(@Ip() reqIp: string) {
-    console.log(reqIp);
+    // console.log(reqIp);
     return this.siteService.findRecommedSites();
   }
 

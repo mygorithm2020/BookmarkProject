@@ -1,7 +1,14 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 
-export class CustomExceptionHandler {
+export class CHttpException {
+    static set(status :HttpStatus, code: string | number, msg? : string){
+        throw new HttpException({
+            code,
+            message : msg
     
+        }, status);
+
+    }
 }
 
 export class MysqlException {

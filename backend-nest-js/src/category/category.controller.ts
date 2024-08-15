@@ -1,13 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Req, HttpException, HttpStatus, Res, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Req, HttpException, HttpStatus, Res, UseFilters, ParseIntPipe, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
-import { HttpExceptionFilter } from 'src/middleware/http-exception.filter';
+import { RolesGuard } from 'src/middleware/auth.guard';
+import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
 
 @ApiTags("category")
+@UseGuards(RolesGuard)
+// @UseInterceptors(LoggingInterceptor)
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -31,17 +34,18 @@ export class CategoryController {
 
   
   @Post("/admin")  
-  createAdmin(@Body() createCategoryDto: Category) {
+  createAdmin(@Req() req: Request, @Body() createCategoryDto: Category) {
+    
     return this.categoryService.create(createCategoryDto);
   }
 
   @Get()
   findAll(@Req() req: Request) {
-    console.log(req.headers);
-    console.log(req.headers["referer"]);
-    console.log(req.headers['user-agent']);
-    console.log(req.ip);
+    // let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
+    // console.log(ip);
+    // console.log(req.headers);
     console.log(req.cookies);
+    console.log(req.headers.cookie);
     // res.cookie("test", "test");
     return this.categoryService.findAllPublic();
   }
@@ -49,12 +53,14 @@ export class CategoryController {
   @Get("/admin")
   findAllAdmin(@Req() req: Request) {
     // res.cookie("test", "test");
+    console.log(req.cookies);
+    console.log(req.cookies["username3"]);
+    console.log(req.headers.cookie);
     return this.categoryService.findAll();
   }
 
   @Get('/admin/:id')
   findOneAdmin(@Param('id') id: string) {
-    console.log(id);
     if (!id){
       throw new HttpException("no id", HttpStatus.BAD_REQUEST);
     }
@@ -64,7 +70,6 @@ export class CategoryController {
   @Get(':id')
   findOne(@Req() req: Request) {
     const id : string = req.params["id"];
-    console.log(id);
     if (!id){
       throw new HttpException("no id", HttpStatus.BAD_REQUEST);
     }

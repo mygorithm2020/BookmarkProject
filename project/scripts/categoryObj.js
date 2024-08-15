@@ -1,3 +1,4 @@
+import { ApiRequest } from "./apiRequest.js";
 
 export class Category{
 
@@ -19,11 +20,11 @@ export class Category{
 
     static categories = [];
 
-    API_HOST = "http://localhost:3000/api";
+    API_HOST = ApiRequest.NEST_API_HOST + "/api";
     // API_HOST = "http://34.64.199.1:3000";
 
     instance = axios.create({
-        baseURL: 'http://localhost:3000/api',
+        baseURL: ApiRequest.NEST_API_HOST + "/api",
         // ...other configs,
         timeout: 3000,
     });
@@ -130,7 +131,7 @@ export class Category{
     // AJAX
     getCategoryAdmin(){
         // 카테고리 불러오기
-        let data = axios.get(`${this.API_HOST}/category/admin`)
+        let data = axios.get(`${this.API_HOST}/category/admin`, { withCredentials: true })
         .then((result) => {
             console.log(result);
             return result.data;
@@ -173,7 +174,7 @@ export class Category{
 
     getCategory(){
         // 카테고리 불러오기
-        let data = this.instance.get("/category")
+        let data = this.instance.get("/category", { withCredentials: true })
         .then((result) => {
             console.log(result);
             return result.data;

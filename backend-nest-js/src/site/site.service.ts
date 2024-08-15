@@ -65,7 +65,6 @@ export class SiteService {
     }    
         
     let urlObj = this.constraint.getUrlObj(site.URL);
-    console.log(urlObj);
 
     // 기존에 있는지 확인
     let previous = await this.findOneByUrl(this.constraint.correctionUrl(urlObj), false);
@@ -304,7 +303,6 @@ export class SiteService {
       ServerCache.setRecommendSites(reLoadSites);
       result = ServerCache.getRecommendSites();      
     }
-    console.log(result[0]);
     return result;
   }
 

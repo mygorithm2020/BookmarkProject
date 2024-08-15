@@ -1,9 +1,10 @@
+import { ApiRequest } from "./apiRequest.js";
 
 export class Site {
 
     // static API_HOST = "http://220.72.179.212:3000";
-    static API_HOST = "http://localhost:3000/api";
-    static IMG_HOST = "http://localhost:3000";
+    static API_HOST = ApiRequest.NEST_API_HOST + "/api";
+    static IMG_HOST = ApiRequest.NEST_API_HOST + "/images";
 
     static siteStatus = {
         1 : "기본 등록",
@@ -58,7 +59,7 @@ export class Site {
             <li class="site-card">
                 <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
                     <div class="site-card-top">                    
-                        <img class="site-card-img" src="${siteList[i].Img && siteList[i].Img.startsWith('http') ? siteList[i].Img : Site.IMG_HOST + "/" + "images" + "/" + siteList[i].SiteId + "/" + siteList[i].Img}" alt="no images">
+                        <img class="site-card-img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ?Site.IMG_HOST + "/" + siteList[i].SiteId + "/" + siteList[i].Img : siteList[i].Img}" alt="no images">
                         
                     </div>
                     <div class="site-card-mid bg-color-5">
@@ -105,7 +106,7 @@ export class Site {
                     <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
                         <div class="site_card_top">
                             <div>                            
-                                <img class="site_card_img" src="${siteList[i].Img ? Site.IMG_HOST + "/" + "images" + "/" + site.SiteId + "/" + site.Img : '../images/noImage.jpg'}" alt="no images">
+                                <img class="site_card_img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ? Site.IMG_HOST + "/" + site.SiteId + "/" + site.Img : '../images/noImage.jpg'}" alt="no images">
                             </div>                                
                             <div>
                                 ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}<br>
@@ -154,7 +155,7 @@ export class Site {
                     <a class="external_link" href="siteDetail.html?site=${siteList[i].SiteId}"  rel="external" data-siteId=${siteList[i].SiteId}>
                         <ul class="site-card-list">
                             <li>
-                                <img class="site_card_img" src="${siteList[i].Img ? this.IMG_HOST + "/images/" + siteList[i].SiteId + "/" + siteList[i].Img : '../images/noImage.jpg'}" alt="no images">    
+                                <img class="site_card_img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ? this.IMG_HOST + "/" + siteList[i].SiteId + "/" + siteList[i].Img : '../images/noImage.jpg'}" alt="no images">    
                             </li>
                             <li>
                                 <div class="info-top">

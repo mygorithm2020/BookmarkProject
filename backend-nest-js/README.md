@@ -73,6 +73,10 @@
         - select 과정에서 결과값이 버퍼로 오는 문제..........
         - mariadb 10.11.* 이상 버전으로 확인해보니 결국 select가 buffer로 와서 생긴 문제였음... string을 parseInt하는 부분은 에러가 없음.....
         - 고로 위 문제는 db version 변경으로 처리하고 위는 롤백
+    Cookie : 브라우저에 있는 AJAX(axios)를 활용해 백엔드인 nestjs 서버에 전달하는 과정에서 문제
+        - 전달을 위해 클라이언트(웹브라우저)에서 axios에 withCredentials : true 추가
+        - nestjs 에서 main.ts 에 enablecors에 credentials : true 추가하고 app.use(cookieParser()) 를 추가
+        - nestjs에서 쿠키를 설정하면 브라우저에 설정되나, 요청에는 쿠키가 전달 안되는 문제 발생
 
 #### 배포
     웹 호스팅 : 가비아, cafe24 등에서 nodejs 호스팅을 찾았지만 너무 구 버전이고, 제한 사항이 많아 진행이 어려움
@@ -88,6 +92,7 @@
         - mysql(8.4.0) 최신 LTS 설치
         - 유저 생성, 권한 부여, db 생성, table 생성, data migration
         - gcp 콘솔사이트에서 외부ip 방화벽 규칙생성으로 포트별 ip 접근 설정
+        - ubuntu 에서 screen 활용해서 ssh 연결 종료 후에도 백그라운드에서 서버 작동
 
 ### 개발환경세팅
 - node 20.10.0

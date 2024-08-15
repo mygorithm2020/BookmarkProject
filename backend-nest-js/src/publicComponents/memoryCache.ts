@@ -20,7 +20,7 @@ export class ServerCache {
 
     // 그냥 시간으로 하지말고 새로 카테고리를 추가하면 자동으로 변경되는게 나을 듯...
     static getCategorys() : Category[]{ 
-        console.log(`getCa ${this.cachedCategorys}`)    
+           
         // 시간이 지났거나, 값이 없으면 => 하루마다
         if (!this.cachedCategorys || !this.cachedCategorys.categorys || 
             this.cachedCategorys.lastDate.getUTCDate() !== new Date().getUTCDate()){

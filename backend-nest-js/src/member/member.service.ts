@@ -63,7 +63,6 @@ export class MemberService {
     memObj.MemberId = newId;
     this.correctionMemObj(memObj);
 
-    console.log(memObj);
     const newMem = this.mRepo.create(memObj);
     console.log(newMem);
     let res = await this.mRepo.save(newMem);

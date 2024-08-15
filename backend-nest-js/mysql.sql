@@ -139,6 +139,8 @@ CREATE TABLE TA_Category(
 ALTER TABLE TA_Category ADD UNIQUE (ParentId, Layer, Name);
 
 
+describe TA_Site
+
 -- 사이트
 CREATE TABLE TA_Site(
     SiteId CHAR(32) NOT NULL PRIMARY KEY,
@@ -146,8 +148,8 @@ CREATE TABLE TA_Site(
     -- 보여지는 정보이며, 입력(수정)도 가능함, 아래 순위별로 데이터 채워짐
 
     URL VARCHAR(255) NOT NULL,
-    Name VARCHAR(32),
-    NameKR VARCHAR(32),
+    Name VARCHAR(255),
+    NameKR VARCHAR(255),
     IPAddress VARCHAR(32),
     Img VARCHAR(512),
     SiteDescription VARCHAR(1024),
@@ -186,6 +188,7 @@ CREATE INDEX IDX_Site_URL ON TA_Site (URL);
 CREATE INDEX IDX_Site_Views ON TA_Site (Views);
 CREATE INDEX IDX_Site_Good ON TA_Site (Good);
 -- ALTER TABLE TA_Site MODIFY COLUMN Bad INT  default 0;
+
 
 
 describe ta_site;

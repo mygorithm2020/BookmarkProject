@@ -38,6 +38,18 @@ export class CustomUtils{
     return res;
   }
 
+  // 콘솔로그와 해당 파일의 위치까지 출력
+  logWithLocation(message) {
+    const stack = new Error().stack;
+    const lines = stack.split('\n');
+    const callerLine = lines[2]; // 스택에서 호출자의 정보가 포함된 라인
+    const logMsg = {
+      Loc : callerLine.trim(),
+      msg : message
+    }
+    console.log(logMsg);
+  }
+
   
   
 }

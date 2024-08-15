@@ -43,9 +43,9 @@ export class CustomExceptionFilter implements ExceptionFilter {
         };
 
         try{
-            console.log(log);
             // 파일에 기록하는 부분 추가
-            const logData = log.timeStamp.toISOString() + ", " + log.method + ", " + log.url + "," + log.exception;
+            const logData = JSON.stringify(log);
+            console.log(logData);
             const logDate = log.timeStamp.getUTCFullYear() + 
             (log.timeStamp.getMonth() +1).toString().padStart(2, "0") + log.timeStamp.getUTCDate().toString().padStart(2, "0") + ".log";
             this.fAdapter.writeLog(logData, logDate, "log", "exceptionFilter");
@@ -53,6 +53,8 @@ export class CustomExceptionFilter implements ExceptionFilter {
         } catch {
 
         }
+
+        let resException :HttpException;
         
 
         // 프론트에는 미리 설정 못했다는 의미로 서버에러 리턴
@@ -63,7 +65,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
           }, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        
+        // resException = exception as HttpException;
 
         const response = (exception as HttpException).getResponse();
         res.status((exception as HttpException).getStatus()).json(response);

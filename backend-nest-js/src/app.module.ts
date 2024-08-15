@@ -24,6 +24,8 @@ import { MemberController } from './member/member.controller';
 import { SiteController } from './site/site.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggingInterceptor } from './middleware/logging.interceptor';
 
 dotenv.config();
 
@@ -57,7 +59,12 @@ console.log(process.env.DB_HOST);
     
   }),  TestModule, BooksModule, CategoryModule, SiteModule, MemberModule, AuthenticationModule],
   controllers: [AppController],
-  providers: [AppService, CustomUtils, FileAdapter],
+  providers: [AppService, CustomUtils, FileAdapter,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -28,7 +28,6 @@ export class CategoryService {
       let res = await this.cRepo.save(newCategory);
       return res;
     } catch (err) {
-      console.log(err);
       MysqlException.throwHttpException(err.code, 21);      
     }
     
@@ -52,10 +51,9 @@ export class CategoryService {
 
   async findAllPublic() : Promise<Category[]> {
     let result  = ServerCache.getCategorys();
-    console.log(`result ${result}`);
     
     if (!result || result.length === 0){
-      console.log("읎다");
+      
       let newCategorys = await this.cRepo.find({
         select : {
           CategoryId : true,          
@@ -71,7 +69,6 @@ export class CategoryService {
       });
       ServerCache.setCategorys(newCategorys);
       result = ServerCache.getCategorys();
-      console.log(`result22 ${result}`);
     }
 
     // let data = await this.cRepo.find()
