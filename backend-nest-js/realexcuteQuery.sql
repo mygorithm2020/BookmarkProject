@@ -29,6 +29,14 @@ select * from ta_site order by views;
 -- UPDATE TA_Site p1 SET p1.IsDeleted= 1 WHERE p1.SiteId IN 
 --     (SELECT p2.SiteId from (SELECT * FROM TA_Site) p2 WHERE p2.createdDate > '2024-08-05');
 
+select * from ta_category;
+select * from ta_recategorysite;
+
+select * from ta_site where Siteid = '2990ae2ad6404710b351c67110c11beb'
+select * from ta_site where img = 'favicon.ico'
+update ta_site set img = null where img = ''
+
+
 select * from ta_site where siteId = '0bda754655344afaaf216fd5bceb74c1'
 
 SELECT * FROM TA_CATEGORY order by createddate desc where status = 2;

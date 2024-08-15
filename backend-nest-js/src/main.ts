@@ -29,7 +29,7 @@ async function bootstrap() {
   // cors 설정
   app.enableCors({
     // origin : ["http://127.0.0.1:5500"]
-    origin : [/127.0.0.1:/, /localhost:/, /220.72.179.212:/, /dothomeftp.dothome.co.kr/, /mygorithm2020.mycafe24.com/],
+    origin : [/127.0.0.1:/, /localhost:/, /220.72.179.212:/, /dothomeftp.dothome.co.kr/, /mygorithm2020.mycafe24.com/, /browseys.site/],
     credentials : true
   });
 
