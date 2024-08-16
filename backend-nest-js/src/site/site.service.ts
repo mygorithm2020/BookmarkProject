@@ -30,7 +30,6 @@ export class SiteService {
     @InjectRepository(Site) private sRepo : Repository<Site>,
     @InjectRepository(CategorySite) private csRepo : Repository<CategorySite>,
     @InjectRepository(Category) private cRepo : Repository<Category>,
-    private readonly httpService: HttpService,
     private readonly customUtils : CustomUtils,
     private readonly constraint : Constraint,
     private readonly apiClient : ApiClient,
@@ -328,6 +327,7 @@ export class SiteService {
   }
 
   findOneByAdmin(id: string) : Promise<Site> {
+    // return null;
     return this.sRepo.findOne({
       where : {
         IsDeleted : 0,

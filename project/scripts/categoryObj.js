@@ -173,8 +173,15 @@ export class Category{
     }
 
     getCategory(){
+        const auth = 'Basic ' + btoa('user:password');
         // 카테고리 불러오기
-        let data = this.instance.get("/category", { withCredentials: true })
+        let data = this.instance.get("/category", {
+            headers : {
+                Authorization: auth,
+                cookies : decodeURIComponent(document.cookie)
+            },
+            withCredentials : true
+        })
         .then((result) => {
             console.log(result);
             return result.data;

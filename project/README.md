@@ -69,6 +69,12 @@
     - position
     - float
 
+#### 오류 및 해결
+    개발 중에 백엔드 서버로 쿠키가 전달안되거나, 백엔드에서 전달받은 쿠키가 브라우저에 적용 안되는 문제
+    - axios를 통해 withCredential 옵션을 추가했으나 전달이 안됨
+    - 백엔드(nestjs)에서 쿠키를 설정하면 보이기는 하나 실제로 적용이 안되고 경고(this attempt to set a cookie via a set-cookie header was blocked due to user preferences)가 뜸
+    - 일단 수작업으로 쿠키를 구분해서 넘겨주기
+
 
 
 ### 환경세팅

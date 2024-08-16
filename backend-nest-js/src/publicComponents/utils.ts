@@ -4,7 +4,9 @@ import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
 import * as path from "path";
 import * as fs from 'fs';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class CustomUtils{
 
     //  피셔-예이츠 셔플(Fisher-Yates shuffle)
@@ -26,6 +28,15 @@ export class CustomUtils{
     const newId = uuidV4().replaceAll("-", "");
     return newId;
   } 
+
+  // 원하는 길이
+  getUuId(len : number): string{
+    if (len <= 0) {
+      throw new Error("len is bigger than zero");
+    }
+    const newId = uuidV4().replaceAll("-", "").slice(0, len);
+    return newId;
+  }
 
 
   // utc 타임스탬프 리턴
@@ -54,6 +65,7 @@ export class CustomUtils{
   
 }
 
+@Injectable()
 export class FileAdapter{
   // 파일읽기
 
@@ -94,6 +106,24 @@ export class FileAdapter{
     }
   }
 
+  async removeFile(dirPath: string, filePath : string): Promise<void> {
+    try {
+      // 디렉토리의 모든 파일 및 하위 디렉토리 가져오기
+      const files = fs.readdirSync(dirPath);
+      for (const file of files) {
+        // const filePath = path.join(dirPath, file);
+        const stats = fs.statSync(filePath);
+
+        fs.unlinkSync(filePath);
+      }
+      // 디렉토리 자체를 삭제
+      console.log(`Directory ${dirPath} deleted successfully.`);
+    } catch (error) {
+      console.error(`Error while deleting directory ${dirPath}: ${error.message}`);
+      
+    }
+  }
+
   // 예외 파일들 제외하고 디렉터리 내부 파일들 삭제
   removeFiles(dirPath : string, exceptFiles? : string[]){
 
@@ -110,9 +140,12 @@ export class FileAdapter{
       const filePath = path.resolve(__dirname, '..', '..', ...paths, fileName);
       if (!fs.existsSync(path.dirname(filePath))){
         fs.mkdirSync(path.dirname(filePath), { recursive: true });
+        // 오래된 파일 삭제도 넣자
       }
-      fs.appendFileSync(filePath, dataWithNewline, 'utf-8');
-      // await fs.promises.app(FilePath, data, 'utf8');
+      fs.appendFile(filePath, dataWithNewline, 'utf-8', (err) => {
+
+      })
+      // fs.appendFileSync(filePath, dataWithNewline, 'utf-8');
     } catch (error) {
       console.error(`Failed to append data to file: ${error.message}`);
     }

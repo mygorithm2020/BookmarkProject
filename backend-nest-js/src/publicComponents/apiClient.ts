@@ -136,7 +136,7 @@ export class ApiClient{
               // // console.log(`name : ${metaEl[idx].getAttribute("name")}`);
               // // console.log(`property : ${metaEl[idx].getAttribute("property")}`);
               // // console.log(`attri : ${JSON.stringify(metaEl[idx].attrs)}`);
-              console.log("------------------------");          
+              // console.log("------------------------");          
     
               if (metaEl[idx].getAttribute("name")){
                 const metaFromName = metaEl[idx].getAttribute("name").toLowerCase();

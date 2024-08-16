@@ -40,13 +40,14 @@ export class CategoryController {
   }
 
   @Get()
-  findAll(@Req() req: Request) {
+  findAll(@Req() req: Request, @Res({passthrough : true}) res : Response) {
     // let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
     // console.log(ip);
     // console.log(req.headers);
     console.log(req.cookies);
     console.log(req.headers.cookie);
-    // res.cookie("test", "test");
+    res.cookie("test", "test", {sameSite : "none", httpOnly : true});
+    // res.end();
     return this.categoryService.findAllPublic();
   }
 

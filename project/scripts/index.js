@@ -1,6 +1,10 @@
-
 import { Site } from "./site.js";
-encodeURIComponent()
+console.log(encodeURIComponent("https://www.hanbit.co.kr/src/10473"));
+console.log(btoa("https://www.hanbit.co.kr/src/10473"));
+const bd = window.btoa("https://www.hanbit.co.kr/src/10473");
+console.log(bd);
+console.log(window.atob(bd));
+console.log(navigator.userAgent);
 console.log(decodeURIComponent(document.cookie));
 console.log("open index");
 document.cookie = "user=John; path=/; expires=Tue, 19 Jan 2038 03:14:07 GMT; max-age=0";

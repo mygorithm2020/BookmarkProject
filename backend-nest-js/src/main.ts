@@ -1,7 +1,6 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { LoggerMiddleware, midLogger } from './middleware/logger.middleware';
 import { AllExceptionsFilter, CustomExceptionFilter, HttpExceptionFilter } from './middleware/http-exception.filter';
 import { CustomUtils, FileAdapter } from './publicComponents/utils';
 import * as cookieParser from 'cookie-parser';

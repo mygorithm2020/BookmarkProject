@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
 import { UpdateAuthenticationDto } from './dto/update-authentication.dto';
 import { Authentication } from './entities/authentication.entity';
 
-@Controller('authentication')
+@Controller('auth')
 export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) {}
 
@@ -14,11 +14,25 @@ export class AuthenticationController {
   }
 
   //인증번호 발송
-  @Post("/email")
+  @Post("/send/email")
   sendEmailAuth(
     @Body() auth : Authentication){
     let result = this.authService.sendAuthEmail(auth.Email);
     return result;
+  }
+
+  // 인증번호 확인
+  @Post("/check/email")
+  async checkAuth(
+    @Body() auth : Authentication){
+    let result = await this.authService.checkAuthCode(auth.Email, auth.AuthCode);
+    if (!result){
+      throw new HttpException({
+        errCode : 11,
+        error : "please check the email and code"
+      }, HttpStatus.BAD_REQUEST);
+    }
+    return {};
   }
 
   @Get()

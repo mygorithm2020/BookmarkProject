@@ -3,6 +3,9 @@ import { AuthenticationService } from './authentication.service';
 import { AuthenticationController } from './authentication.controller';
 import { Authentication } from './entities/authentication.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CustomUtils, FileAdapter } from 'src/publicComponents/utils';
+import { Constraint } from 'src/publicComponents/constraint';
+import { ApiClient } from 'src/publicComponents/apiClient';
 
 @Module({
   imports : [
@@ -12,6 +15,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     
   ],
   controllers: [AuthenticationController],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService, CustomUtils, Constraint, ApiClient, FileAdapter],
 })
 export class AuthenticationModule {}

@@ -54,11 +54,11 @@ export class SiteController {
   
 
   // body가 필요해서 post로
-  @Post("/url")
-  findOneByUrl(@Body() site: Site) {
-    console.log(site);
-    return this.siteService.findOneByUrl(site.URL);
-  }
+  // @Post("/url")
+  // findOneByUrl(@Body() site: Site) {
+  //   console.log(site);
+  //   return this.siteService.findOneByUrl(site.URL);
+  // }
 
   // 실제 다 부르는건 말이 안되니까..... 페이징 느낌처럼 개수를 나누는 처리 필요
   // 숫자 1당 20개씩하고 없으면 리턴 없고...
@@ -100,7 +100,16 @@ export class SiteController {
 
   @Get('/admin')
   findOneByAdmin(@Query('id') siteId: string) {
+    console.log(siteId);
     return this.siteService.findOneByAdmin(siteId);
+  }
+
+  // body가 필요해서 post로
+  @Get("/url/:base64url")
+  findOneByUrl(@Param('base64url') url : string) {
+    console.log(url);
+    url = atob(url);
+    return this.siteService.findOneByUrl(url);
   }
   
 

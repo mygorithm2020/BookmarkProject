@@ -1,14 +1,75 @@
 import { Site } from "src/site/entities/site.entity";
-import { CustomUtils, FileAdapter } from "./utils";
+import { CustomEncrypt, CustomUtils, FileAdapter } from "./utils";
 import { ApiClient } from "./apiClient";
 import * as path from "path";
 import * as fs from 'fs';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { Member } from "src/member/entities/member.entity";
 
+// 나중에 엔터니 내부로 옮겨야 할거 같음
+@Injectable()
 export class Constraint {
 
-  static cUtils :CustomUtils = new CustomUtils();
-  static apiClient :ApiClient = new ApiClient();  
-  static fileAdapter :FileAdapter = new FileAdapter();
+  // static cUtils :CustomUtils = new CustomUtils();
+  // static apiClient :ApiClient = new ApiClient();
+  // static fileAdapter :FileAdapter = new FileAdapter();
+
+  constructor(
+    private readonly cUtils :CustomUtils,
+    private readonly apiClient :ApiClient,
+    private readonly fileAdapter :FileAdapter,
+  ){}
+
+
+  correctionMemObj(memObj : Member){
+    if (!memObj.MemEmail || !memObj.password){
+      throw new HttpException({
+        errCode : 21,
+        error : "email and pw are required"
+      }, HttpStatus.BAD_REQUEST);
+    }  
+    if (!this.emailCheck(memObj.MemEmail)){
+      throw new HttpException({
+        errCode : 22,
+        error : "input right email address"
+      }, HttpStatus.BAD_REQUEST);
+    }
+
+    if (!this.passwordCheck(memObj.password)){
+      throw new HttpException({
+        errCode : 23,
+        error : "input right password, password must be at least 6 character"
+      }, HttpStatus.BAD_REQUEST);
+    }
+    // 비밀번호 암호화
+    memObj.password = CustomEncrypt.getInstance().encryptHash(memObj.password);
+
+    if (memObj.NickName == null){
+      memObj.NickName = memObj.MemEmail.slice(0, memObj.MemEmail.indexOf("@"));      
+    }
+
+    // memObj.Authorization = 0;
+    // // 인증되었는지 확인 필요
+    // if (true){
+    //   memObj.Authorization = 1;
+    // }
+  }
+
+  emailCheck(email : string) : boolean{
+    let res = true;
+    if (!email.includes("@")){
+      res = false;
+    }
+    return res
+  }
+
+  passwordCheck(pw : string) : boolean{
+    let res = true;
+    if (pw.length < 6){
+      res = false;
+    }
+    return res
+  }
   
   getUrlObj(url : string): URL{
 
@@ -40,7 +101,7 @@ export class Constraint {
     if (!imgLink || !imgLink.startsWith("http")){
       throw new Error();
     }
-    let imgRes = await Constraint.apiClient.getSiteResponse(imgLink);
+    let imgRes = await this.apiClient.getSiteResponse(imgLink);
     let extension = ".png"; //path.extname(imgLink)
     if (imgLink.includes(".jpg")){
       extension = ".jpg";
@@ -50,15 +111,15 @@ export class Constraint {
       extension = ".svg";
     }
     // 이미지가 계속 등록되므로 기존 이미지들 삭제하는 로직 추가
-    let imgFile = Constraint.cUtils.get32UuId() + extension;
-    Constraint.fileAdapter.saveTheFile(imgRes.data, imgFile, 'images', id);
+    let imgFile = this.cUtils.get32UuId() + extension;
+    this.fileAdapter.saveTheFile(imgRes.data, imgFile, 'images', id);
     // const imgFilePath = path.resolve(__dirname, '..', '..', 'images', id, imgFile);
 
     // fs.mkdirSync(path.dirname(imgFilePath), { recursive: true });
 
     // fs.writeFileSync(imgFilePath, imgRes.data);
 
-    Constraint.fileAdapter.removeFiles("", [imgFile]);
+    this.fileAdapter.removeFiles("", [imgFile]);
 
     return imgFile;
   }
@@ -66,7 +127,7 @@ export class Constraint {
   // 사이트 객체 데이터 보정
   async generateSite(site : Site, urlObj : URL){
 
-    site.SiteId = Constraint.cUtils.get32UuId();
+    site.SiteId = this.cUtils.get32UuId();
     site.URL = this.correctionUrl(urlObj);
     
     if(!site.Status){
@@ -87,7 +148,7 @@ export class Constraint {
       // 이거 존재하는지 확인
       // 파비콘 없으면 기본 url에 /favicon.ico 로 보정
       try{
-          await Constraint.apiClient.getSiteResponse(urlObj.origin + "/favicon.ico");
+          await this.apiClient.getSiteResponse(urlObj.origin + "/favicon.ico");
           site.FaviconImg = urlObj.origin + "/favicon.ico";
 
       } catch (err) {

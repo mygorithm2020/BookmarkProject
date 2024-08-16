@@ -18,7 +18,7 @@ import { Member } from './member/entities/member.entity';
 import { MysqlException } from './publicComponents/ExceptionHandler';
 import { CustomUtils, FileAdapter } from './publicComponents/utils';
 import { AuthenticationModule } from './authentication/authentication.module';
-import { LoggerMiddleware } from './middleware/logger.middleware';
+import { FirewallMiddleware, LoggerMiddleware } from './middleware/logger.middleware';
 import { CategoryController } from './category/category.controller';
 import { MemberController } from './member/member.controller';
 import { SiteController } from './site/site.controller';
@@ -26,6 +26,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './middleware/logging.interceptor';
+import { Constraint } from './publicComponents/constraint';
+import { ApiClient } from './publicComponents/apiClient';
+import { ServerCache } from './publicComponents/memoryCache';
 
 dotenv.config();
 
@@ -59,7 +62,7 @@ console.log(process.env.DB_HOST);
     
   }),  TestModule, BooksModule, CategoryModule, SiteModule, MemberModule, AuthenticationModule],
   controllers: [AppController],
-  providers: [AppService, CustomUtils, FileAdapter,
+  providers: [AppService, CustomUtils, FileAdapter, Constraint, ApiClient,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
@@ -69,10 +72,10 @@ console.log(process.env.DB_HOST);
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-    .apply(LoggerMiddleware)
+    .apply(LoggerMiddleware, FirewallMiddleware)
     .exclude(
       {path : "/", method : RequestMethod.POST}
     )
-    .forRoutes(CategoryController, MemberController, SiteController);
+    .forRoutes('*');
   }
 }

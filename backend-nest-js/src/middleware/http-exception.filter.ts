@@ -33,6 +33,8 @@ export class CustomExceptionFilter implements ExceptionFilter {
         const req = ctx.getRequest<Request>();
         const res = ctx.getResponse<Response>();
 
+        console.log("exception");
+
         // console.log(exception);
         // 로그는 실제 에러를 작성
         const log = {
