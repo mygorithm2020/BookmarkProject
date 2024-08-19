@@ -173,11 +173,11 @@ export class Category{
     }
 
     getCategory(){
-        const auth = 'Basic ' + btoa('user:password');
+        const auth = 'qwdqwdqwdqd ' + "qwdqwdqwdwqdwdqwSD" + btoa('user:password');
         // 카테고리 불러오기
         let data = this.instance.get("/category", {
             headers : {
-                Authorization: auth,
+                Authorization: ApiRequest.HEADER_AUTH,
                 cookies : decodeURIComponent(document.cookie)
             },
             withCredentials : true

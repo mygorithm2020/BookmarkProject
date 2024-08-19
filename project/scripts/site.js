@@ -254,7 +254,7 @@ export class Site {
     static async getRecommendedSite(page){
 
         // 추천 사이트 조회
-        let data = await this.axiosGet(`${this.API_HOST}/site/recommend`);
+        let data = await this.axiosGet(`${this.API_HOST}/site/recommend`, { withCredentials: true });
         // let data = await axios.get(`${this.API_HOST}/site/recommend`)
         // .then((result) => {
         //     console.log(result);

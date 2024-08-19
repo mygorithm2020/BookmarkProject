@@ -44,9 +44,9 @@ export class CategoryController {
     // let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
     // console.log(ip);
     // console.log(req.headers);
-    console.log(req.cookies);
-    console.log(req.headers.cookie);
-    res.cookie("test", "test", {sameSite : "none", httpOnly : true});
+    // console.log(req.cookies);
+    // console.log(req.headers.cookie);
+    // res.cookie("test", "test", {sameSite : "none", httpOnly : true});
     // res.end();
     return this.categoryService.findAllPublic();
   }
@@ -57,24 +57,32 @@ export class CategoryController {
     console.log(req.cookies);
     console.log(req.cookies["username3"]);
     console.log(req.headers.cookie);
-    return this.categoryService.findAll();
+    return this.categoryService.findAllAdmin();
   }
 
   @Get('/admin/:id')
   findOneAdmin(@Param('id') id: string) {
     if (!id){
-      throw new HttpException("no id", HttpStatus.BAD_REQUEST);
+      throw new HttpException({
+        errCode : 11,
+        error : "no id"
+
+      }, HttpStatus.BAD_REQUEST);      
     }
-    return this.categoryService.findOne(id);
+    return this.categoryService.findOneAdmin(id);
   }
 
   @Get(':id')
   findOne(@Req() req: Request) {
     const id : string = req.params["id"];
     if (!id){
-      throw new HttpException("no id", HttpStatus.BAD_REQUEST);
+      throw new HttpException({
+        errCode : 11,
+        error : "no id"
+
+      }, HttpStatus.BAD_REQUEST);
     }
-    return this.categoryService.findOne(id);
+    return this.categoryService.findOneAdmin(id);
   }
 
   // @Get(':id')
@@ -84,13 +92,14 @@ export class CategoryController {
 
   @Patch('/admin')
   async updateAdmin(@Body() category: Category) {
-    let res = await this.categoryService.update(category.CategoryId, category);
+    let res = await this.categoryService.updateAdmin(category.CategoryId, category);
     return res.affected;
   }
 
   // @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoryDto: Category) {
-    return this.categoryService.update(id, updateCategoryDto);
+    
+    // return this.categoryService.updateAdmin(id, updateCategoryDto);
   }
 
   

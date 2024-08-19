@@ -1,4 +1,5 @@
 import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, NestInterceptor } from "@nestjs/common";
+import { Response } from "express";
 import { catchError, Observable, tap } from "rxjs";
 import { CustomUtils, FileAdapter } from "src/publicComponents/utils";
 
@@ -44,7 +45,11 @@ export class LoggingInterceptor implements NestInterceptor {
       .handle()
       .pipe(
         tap(() => {            
-            const res = context.switchToHttp().getResponse();
+            const res = context.switchToHttp().getResponse<Response>();
+            // 로그인을 위해서는 쿠키말고 다른 방법을 써야 함(크롬에서 서드파티 쿠키 사용 불가능)
+            res.cookie("intercept", "test", {maxAge : 100000, sameSite : "none", secure : true, httpOnly : true});
+            // res.setHeader("au")
+            // res.cookie()
             // console.log(`After... ${Date.now() - now}ms`);
             const resLog = {
               timeStamp: this.cUtil.getUTCDate(),

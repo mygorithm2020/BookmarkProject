@@ -38,7 +38,8 @@ export class SiteService {
     console.log("new SiteService()");
   }
 
-  readonly WEBPAGECNT = 21;
+  // 한번에 50개 정도
+  readonly WEBPAGECNT = 50;
 
   async standard(site : Site) : Promise<Site> {
 
@@ -64,9 +65,10 @@ export class SiteService {
     }    
         
     let urlObj = this.constraint.getUrlObj(site.URL);
+    const tartgetUrl = this.constraint.correctionUrl(urlObj);
 
     // 기존에 있는지 확인
-    let previous = await this.findOneByUrl(this.constraint.correctionUrl(urlObj), false);
+    let previous = await this.findOneByUrlAdmin(tartgetUrl, false);
     if (previous){
       throw new HttpException({
         errCode : 22,
@@ -76,7 +78,7 @@ export class SiteService {
     
     // url 유효한지 확인
     // 이외의 사이트 문제는 그냥 따로 프로그램 돌려서 정보 수집하자
-    let siteModel = await this.apiClient.setSiteParse(this.constraint.correctionUrl(urlObj));
+    let siteModel = await this.apiClient.setSiteParse(tartgetUrl);
     if (!siteModel){
       // 설계상 여기에 오기전에 에러가 발생함... 그래도 일단 만들어 놓음
       throw new HttpException({
@@ -99,58 +101,49 @@ export class SiteService {
 
   async createCategorySite(siteId : string, categories : string[]) : Promise<number>{
     "insert into TA_ReCategorySite values (categories, siteId, ...)";
-    this.csRepo.queryRunner.startTransaction();
+    const queryRun = this.csRepo.queryRunner;
+    queryRun.startTransaction();
 
     let cnt = 0;
-    // 기존 등록된거 삭제하고 새로 등록
-    await this.csRepo.delete({
-      SiteId : siteId
-    });    
-
-    // 부모 카테고리까지 자동 등록 기능 필요..........
-    for (const categoryId of categories){
-      const one = new CategorySite();
-      one.CategoryId = categoryId;
-      one.SiteId = siteId
-      // 유니크라서 중복 떠도 걍 진행이 되니까 냅두자
-      try{
-        await this.csRepo.save(one);
-      } catch {
-
-      }
+    try {
+      // 기존 등록된거 삭제하고 새로 등록
       
+      await queryRun.manager.delete(CategorySite, {
+        SiteId : siteId
+      });    
+
+      // 부모 카테고리까지 자동 등록 기능 필요..........
+      for (const categoryId of categories){
+        const one = new CategorySite();
+        one.CategoryId = categoryId;
+        one.SiteId = siteId
+        // 유니크라서 중복 떠도 걍 진행이 되니까 냅두자
+        await queryRun.manager.save(one);
+        cnt += 1;
+      }
+
+      await queryRun.commitTransaction();      
+    } catch (err) {
+        // since we have errors let's rollback changes we made
+        await queryRun.rollbackTransaction();
+        throw new HttpException({
+          errCode : 22,
+          error : "An error occured during change"
+  
+        }, HttpStatus.INTERNAL_SERVER_ERROR);
+    } finally {
+        // you need to release query runner which is manually created:
+        await queryRun.release();
     }
+    
     return cnt;
   }
 
   async createTest(site: Site) {
     
-    // const sites = await this.findAll();
-
-    // for (const site of sites){
-    //   // 경로내의 파일들을 찾고, 데이터에 등록된 이미지가 아니면 삭제
-    //   const dirPath = path.join(__dirname, "..", "..", "images", site.SiteId);
-    //   try {
-    //     // 디렉토리의 모든 파일 및 하위 디렉토리 가져오기
-        
-    //     const files = fs.readdirSync(dirPath);
-    //     for (const file of files) {
-    //       if (file !== site.Img){
-    //         const filePath = path.join(dirPath, file);
-    //         fs.unlinkSync(filePath);
-    //       }          
-    //     }
-    //     // 디렉토리 자체를 삭제
-    //     console.log(`Directory ${dirPath} deleted successfully.`);
-    //   } catch (error) {
-    //     console.error(`Error while deleting directory ${dirPath}: ${error.message}`);
-        
-    //   }    
-      
-    // }    
   }
 
-  async findAll(page? : number) : Promise<Site[]> {
+  async findAllAdmin(page? : number) : Promise<Site[]> {
     console.log("This action returns all site");
     if(!page){
       page = 1;
@@ -199,7 +192,7 @@ export class SiteService {
     });
   }
 
-  async findOnlyByCategory(categoryId : string, page? : number, orderBy? : string, orderDesc? : boolean) : Promise<Site[]> {
+  async findByCategoryPublic(categoryId : string, page? : number, orderBy? : string, orderDesc? : boolean) : Promise<Site[]> {
     console.log(`This action returns site in ${categoryId} category`);
     console.log(`categoryId : ${categoryId}, page : ${page}`);
     page = page? page : 1;
@@ -305,7 +298,7 @@ export class SiteService {
     return result;
   }
 
-  findOne(id: string) : Promise<Site> {
+  findOnePublic(id: string) : Promise<Site> {
     console.log(`This action returns a #${id} category`);
     return this.sRepo.findOne({
       select : {
@@ -321,6 +314,7 @@ export class SiteService {
       },      
       where : {
         IsDeleted : 0,
+        Status : 2,
         SiteId :  id
       }
     })    
@@ -339,7 +333,32 @@ export class SiteService {
     });    
   }
 
-  async findOneByUrl(url: string, isDeleted? : boolean) : Promise<Site> {
+  // 외부용
+  async findOneByUrlPublic(url: string) : Promise<Site> {
+    url = this.constraint.correctionUrl(this.constraint.getUrlObj(url));
+    console.log(`This action returns a by #${url} site`);
+    let res : Site = await this.sRepo.findOne({
+      select : {
+        SiteId : true,
+        URL : true,
+        Name : true,
+        NameKR : true,
+        Img : true,
+        Views : true,
+        Good : true,
+        Bad : true,
+        Categories : true
+      },
+      where : {
+        URL : url,
+        Status : 2,
+        IsDeleted : 1
+      },
+    })
+    return res;    
+  }
+
+  async findOneByUrlAdmin(url: string, isDeleted? : boolean) : Promise<Site> {
     url = this.constraint.correctionUrl(this.constraint.getUrlObj(url));
     console.log(`This action returns a by #${url} site`);
     let res : Site = await this.sRepo.findOne({
@@ -351,9 +370,11 @@ export class SiteService {
     return res;    
   }
 
-  async update(id: string, updateCategoryDto: Site) : Promise<UpdateResult> {
+  // 전체를 변경하는거라 사용할일은.....
+  async updateAll(id: string, updateCategoryDto: Site) : Promise<UpdateResult> {
     // console.log(await this.cRepo.update(id, updateCategoryDto));
     // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
+    updateCategoryDto.UpdatedDate = this.customUtils.getUTCDate();
     return await this.sRepo.update(id, updateCategoryDto);
   }
 
@@ -393,25 +414,26 @@ export class SiteService {
       SiteDescription : updateSite.SiteDescription,
       AppLinkAndroid : updateSite.AppLinkAndroid,
       AppLinkIOS : updateSite.AppLinkIOS,
+      MemberId : updateSite.MemberId,
       Status : updateSite.Status,
-      // IsDeleted : updateCategoryDto.IsDeleted
+      Title : updateSite.Title,
+      FaviconImg : updateSite.FaviconImg,
+      Description : updateSite.Description,
+      Keywords : updateSite.Keywords,
+      OGTitle : updateSite.OGTitle,
+      OGSiteName : updateSite.OGSiteName,
+      OGImg : updateSite.OGImg,
+      OGDescription : updateSite.OGDescription,
+      OGURL : updateSite.OGURL,
       UpdatedDate : this.customUtils.getUTCDate(),
     });
   }
 
-  async updateSiteAndCategorySiteAdmin(updateSite: Site) {
+  async updateSiteAndCategorySiteAdmin(updateSite: Site) : Promise<boolean> {
     console.log(`This action updates a #${updateSite.SiteId}`);    
     console.log(updateSite);
 
-    
-    // console.log(await this.cRepo.update(id, updateCategoryDto));
-    // 반환값이 뭐지...?? => UpdateResult { generatedMaps: [], raw: [], affected: 1 }
-    // return await this.sRepo.update({
-    //   SiteId : updateSite.SiteId,
-    // }, {
-    //   ...updateSite,
-    //   Categories : null
-    // });
+    let res = false;
 
     if (updateSite.Status && updateSite.Status > 4){
       throw new HttpException({
@@ -502,6 +524,7 @@ export class SiteService {
 
       // commit transaction now:
       await queryRunner.commitTransaction();
+      res = true;
     } catch (err) {
         // since we have errors let's rollback changes we made
         await queryRunner.rollbackTransaction();
@@ -514,6 +537,7 @@ export class SiteService {
         // you need to release query runner which is manually created:
         await queryRunner.release();
     }
+    return res;
   }
 
   async updateCategorySiteAdmin(siteId : string, categories : string[]) : Promise<number>{
@@ -541,7 +565,7 @@ export class SiteService {
     return cnt;
   }
 
-  async remove(id: string) {
+  async removeAdmin(id: string) {
     console.log(`This action removes a #${id} category`);
     await this.sRepo.update(id, {
       IsDeleted : 1,

@@ -5,6 +5,7 @@ import * as path from "path";
 import * as fs from 'fs';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Member } from "src/member/entities/member.entity";
+import { Category } from "src/category/entities/category.entity";
 
 // 나중에 엔터니 내부로 옮겨야 할거 같음
 @Injectable()
@@ -21,7 +22,7 @@ export class Constraint {
   ){}
 
 
-  correctionMemObj(memObj : Member){
+  generateMemObj(memObj : Member){
     if (!memObj.MemEmail || !memObj.password){
       throw new HttpException({
         errCode : 21,
@@ -41,6 +42,10 @@ export class Constraint {
         error : "input right password, password must be at least 6 character"
       }, HttpStatus.BAD_REQUEST);
     }
+
+    const newId = this.cUtils.get32UuId();
+    memObj.MemberId = newId;
+
     // 비밀번호 암호화
     memObj.password = CustomEncrypt.getInstance().encryptHash(memObj.password);
 
@@ -48,11 +53,31 @@ export class Constraint {
       memObj.NickName = memObj.MemEmail.slice(0, memObj.MemEmail.indexOf("@"));      
     }
 
+    // 승인으로 시작
+    memObj.Authentication = 2;
+
+    // 기본은 일반 유저
+    memObj.Authorization = 1;
+
     // memObj.Authorization = 0;
     // // 인증되었는지 확인 필요
     // if (true){
     //   memObj.Authorization = 1;
     // }
+  }
+
+  async makeSessionId(memberId : string) : Promise<string> {
+    // 값 여러개를 더해서 암호화하기
+    let res = memberId +"|"+ new Date().toUTCString();
+    console.log(res);
+    console.log(Buffer.from(res, "utf-8").toString("base64"));
+    return res;
+  }
+
+  decryptSessionId(memberId : string) : string {
+    // 값 여러개를 더해서 암호화하기
+    let res = memberId + new Date().toUTCString();
+    return res;
   }
 
   emailCheck(email : string) : boolean{
@@ -122,6 +147,19 @@ export class Constraint {
     this.fileAdapter.removeFiles("", [imgFile]);
 
     return imgFile;
+  }
+
+  // 카테고리 객체 데이터 보정
+  generateCategory(category : Category){
+    if (!category.Name){
+      throw new HttpException({
+        errCode : 22,
+        error : "name is required"
+      }, HttpStatus.BAD_REQUEST);   
+    }
+    category.CategoryId = this.cUtils.get32UuId();
+    category.Status = 1;
+    category.IsDeleted = 0;
   }
 
   // 사이트 객체 데이터 보정

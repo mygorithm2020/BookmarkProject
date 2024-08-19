@@ -21,6 +21,7 @@ document.cookie = "username3=John Doe; expires=Thu, 18 Dec 2024 12:00:00 UTC; pa
 document.cookie = "username4=John Doe; expires=Thu, 18 Dec 2024 12:00:00 UTC; path=/; Secure";
 
 
+
 fetch('https://api.ipify.org?format=json')
 .then(response => response.json())
 .then(data => {
@@ -47,9 +48,14 @@ let spinner = document.querySelector(".loading-spinner");
 console.log(spinner);
 spinner.classList.toggle("cover");
 
+
+
 window.onload = async function() {
     setTimeout(() => {
         console.log("ssss");
+        // const asdqwcc = document.querySelector("#header_main_logo").parentElement;
+        // console.log(asdqwcc);
+        // asdqwcc.click();
         
     }, 1000);
 

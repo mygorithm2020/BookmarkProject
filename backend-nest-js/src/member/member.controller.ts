@@ -21,7 +21,7 @@ export class MemberController {
     let result = null;
     if (authRecord){
       if (authRecord[0].IsAuth == 1 && (new Date().getTime() - authRecord[0].UpdateDate.getTime() < 3600000)){
-        const mem = await this.memberService.create(createMemberDto);
+        const mem = await this.memberService.createPublic(createMemberDto);
         if (mem && mem.MemberId){
           result = {MemEmail : mem.MemEmail};
         }
@@ -36,12 +36,9 @@ export class MemberController {
     return {SessiondId : sessiondId};
   }
 
-  @Get()
+  @Get("/admin")
   findAll() {
-    let res = this.memberService.findAll();
-    res.then((r) => {
-      console.log(r);
-    })
+    let res = this.memberService.findAllAdmin();
     return res;
   }
 
@@ -51,7 +48,7 @@ export class MemberController {
   @Get("/duplicate")
   async checkDuplicate(
     @Query("email") email : string){
-    let result = await this.memberService.findOneByEmail(email);
+    let result = await this.memberService.findOneByEmailPublic(email);
     if (result && result.MemberId){
       return {email : email};
     }
@@ -62,13 +59,13 @@ export class MemberController {
   @Get("/email")
   findOnebyEmail(
     @Query("email") email : string){
-    let result = this.memberService.findOneByEmail(email);
+    let result = this.memberService.findOneByEmailPublic(email);
     return result;
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.memberService.findOne(id);
+    return this.memberService.findOnePublic(id);
   }
 
   @Patch(':id')

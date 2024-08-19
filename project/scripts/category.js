@@ -59,7 +59,13 @@ console.log("category");
                     siteMapTextEl.innerHTML = category.NameKR;   
                     break;
                 }        
-            }                        
+            }
+            
+            if (!targetCategoryId){
+                clearInterval(reqCategory);
+                alert("잘못된 요청 페이지 입니다.");
+                window.location.href = "./index.html";
+            }
 
             // getSiteByCategory(targetCategoryId, 1);
             let mainContent01El = document.getElementById("main_content01");
@@ -74,12 +80,12 @@ console.log("category");
         };  
 
         // 적당히 하다 안되면 그만
-        if (numOfInterval > 20){
+        if (numOfInterval > 10){
             spinner.classList.toggle("cover");
             clearInterval(reqCategory);
         }
         
-    }, 200);
+    }, 400);
 
     let addBtnElList =document.querySelectorAll(".add-my-bookmark");
     addBtnElList.forEach( (v, k) => {

@@ -8,35 +8,33 @@ import {v4 as uuidV4} from 'uuid'
 import { MysqlException } from 'src/publicComponents/ExceptionHandler';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 import { CustomUtils } from 'src/publicComponents/utils';
+import { Constraint } from 'src/publicComponents/constraint';
 
 @Injectable()
 export class CategoryService {
 
   constructor(@InjectRepository(Category) private cRepo : Repository<Category>,
-  private readonly customUtils : CustomUtils){
+  private readonly customUtils : CustomUtils,
+  private readonly constraint : Constraint,){
 
   }
 
-  async create(category: Category) : Promise<Category> {
-    // uuid 생성
-    const newId = uuidV4().replaceAll("-", "");
-    category.CategoryId = newId;
+  async create(category: Category) : Promise<Category> {    
+    this.constraint.generateCategory(category);
     const newCategory = this.cRepo.create(category);
     
-    console.log('This action adds a new category');
     try{
       let res = await this.cRepo.save(newCategory);
       return res;
     } catch (err) {
-      MysqlException.throwHttpException(err.code, 21);      
+      throw new HttpException({
+        errCode : 21,
+        error : err.errCode
+      }, HttpStatus.BAD_REQUEST);   
     }
-    
-    
-    // return await this.cRepo.save(newCategory);
-    
   }
 
-  async findAll() : Promise<Category[]> {
+  async findAllAdmin() : Promise<Category[]> {
     
     let categories = await this.cRepo.find({
       where : {
@@ -49,6 +47,7 @@ export class CategoryService {
     return categories;
   }
 
+  // 자주 요청되며, 바뀌지 않으니 캐시해서 이용
   async findAllPublic() : Promise<Category[]> {
     let result  = ServerCache.getCategorys();
     
@@ -75,7 +74,25 @@ export class CategoryService {
     return result;
   }
 
-  findOne(id: string) : Promise<Category> {
+  findOnePublic(id: string) : Promise<Category> {
+    console.log(`This action returns a #${id} category`);
+    return this.cRepo.findOne({
+      select : {
+        CategoryId : true,          
+        Name : true,
+        NameKR : true,
+        Layer : true,
+        Sequence : true,
+      },
+      where : {
+        CategoryId :  id,
+        Status : 2,
+        IsDeleted : 0
+      }
+    })    
+  }
+
+  findOneAdmin(id: string) : Promise<Category> {
     console.log(`This action returns a #${id} category`);
     return this.cRepo.findOne({
       where : {
@@ -85,7 +102,7 @@ export class CategoryService {
     })    
   }
 
-  async update(id: string, updateCategoryDto: Category) {
+  async updateAdmin(id: string, updateCategoryDto: Category) {
     console.log(`This action updates a #${id} category`);
     // 반환값이 뭐지...??
     // console.log(await this.cRepo.update(id, updateCategoryDto))
@@ -96,7 +113,8 @@ export class CategoryService {
   async remove(id: string) {
     console.log(`This action removes a #${id} category`);
     await this.cRepo.update(id, {
-      IsDeleted : 1
+      IsDeleted : 1,
+      UpdatedDate : this.customUtils.getUTCDate()
     })
   }
 }

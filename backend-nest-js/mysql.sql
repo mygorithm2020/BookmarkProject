@@ -108,7 +108,7 @@ CREATE TABLE TA_Member (
   NickName VARCHAR(32), 
   Birth CHAR(8),
   Gender CHAR(1) CHECK (Gender IN ('M', 'F')) COMMENT "남자 : M, 여자 : F",
-  Authentication INT DEFAULT 0 COMMENT "0 이면 미승인 1이면 승인 2이면 차단된 계정",  
+  Authentication INT DEFAULT 1 COMMENT "1 이면 미승인 2이면 승인 3이면 차단된 계정",  
   Authorization INT DEFAULT 1 COMMENT "1 : 일반, 개인, 2: 회사계정, 3: 관리자.... ..",
 
   IsDeleted SMALLINT NOT NULL DEFAULT 0 CHECK (IsDeleted >= 0),

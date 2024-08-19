@@ -29,6 +29,7 @@ import { LoggingInterceptor } from './middleware/logging.interceptor';
 import { Constraint } from './publicComponents/constraint';
 import { ApiClient } from './publicComponents/apiClient';
 import { ServerCache } from './publicComponents/memoryCache';
+import { JwtService } from './auth/jwt/jwt.service';
 
 dotenv.config();
 
@@ -41,7 +42,7 @@ console.log(process.env.DB_HOST);
       serveRoot : '/images',
       serveStaticOptions: {
         index: false, // 인덱스 파일 제공 여부 설정
-        maxAge: 1000000, // 캐시 유효 기간 설정
+        maxAge: 100000, // 캐시 유효 기간 설정
       },
     }),
     ConfigModule.forRoot({
@@ -67,6 +68,7 @@ console.log(process.env.DB_HOST);
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
+    JwtService,
   ],
 })
 export class AppModule implements NestModule {
