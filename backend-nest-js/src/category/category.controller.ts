@@ -5,11 +5,12 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
-import { RolesGuard } from 'src/middleware/auth.guard';
+import { AuthGuard, RolesGuard } from 'src/middleware/auth.guard';
 import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
 
 @ApiTags("category")
 @UseGuards(RolesGuard)
+@UseGuards(AuthGuard)
 // @UseInterceptors(LoggingInterceptor)
 @Controller('category')
 export class CategoryController {

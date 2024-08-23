@@ -171,6 +171,8 @@ export class FileAdapter{
   }
 }
 
+// 이건 의존성 주입 안하고 싱글톤 방법으로 놔둬 봄.....
+@Injectable()
 export class CustomEncrypt {
   private static instance : CustomEncrypt;
   private constructor(){
@@ -206,7 +208,7 @@ export class CustomEncrypt {
   private static AESKEY : string = "m/zE7KOYFCV6oxFBvC2IiBC/C7WdQ/cjdMLuABFVdPM=";
 
   // 양방향 암호화
-  async encryptAes256(origin : string) : Promise<string>{
+  encryptAes256(origin : string) : string{
     const password = 'customKey is mine';
 
     // The key length is dependent on the algorithm.
@@ -220,7 +222,7 @@ export class CustomEncrypt {
     return encryptedText.toString("base64");
   }
 
-  async decryptAes256(encryptedText : string) : Promise<string>{
+  decryptAes256(encryptedText : string) : string{
     let encryptedBuf = Buffer.from(encryptedText, "base64");
     const decipher = createDecipheriv('aes-256-ctr', Buffer.from(CustomEncrypt.AESKEY, "base64"), Buffer.from(CustomEncrypt.AESIV, "base64"));
     const decryptedText = Buffer.concat([

@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthenticationService } from 'src/authentication/authentication.service';
+import { AuthGuard } from 'src/middleware/auth.guard';
 
 @ApiTags("member")
 @Controller('member')
+// @UseGuards(AuthGuard)
 export class MemberController {
   constructor(private readonly memberService: MemberService,
     private readonly authService: AuthenticationService
@@ -31,9 +33,9 @@ export class MemberController {
   }
 
   @Post("/login")
-  login(@Body() createMemberDto: Member) {
-    let sessiondId = this.memberService.loginWithEmailPw(createMemberDto.MemEmail, createMemberDto.password);
-    return {SessiondId : sessiondId};
+  async signIn(@Body() createMemberDto: Member) {
+    let result = await this.memberService.signInWithEmailPw(createMemberDto.MemEmail, createMemberDto.password);
+    return result;
   }
 
   @Get("/admin")

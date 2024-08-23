@@ -8,6 +8,7 @@ import { CustomEncrypt, CustomUtils } from 'src/publicComponents/utils';
 import * as bcrypt from 'bcrypt';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 import { Constraint } from 'src/publicComponents/constraint';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class MemberService {
@@ -16,6 +17,7 @@ export class MemberService {
     @InjectRepository(Member) private mRepo: Repository<Member>,
     private readonly customUtils : CustomUtils,
     private readonly constraint : Constraint,
+    private jwtService: JwtService,
   ) { }
 
   async createPublic(memObj: CreateMemberDto) : Promise<Member> {        
@@ -38,36 +40,45 @@ export class MemberService {
 
   
 
-  async loginWithEmailPw(email : string, pw : string) : Promise<string> { 
+  async signInWithEmailPw(email : string, pw : string) : Promise<{ access_token: string }> { 
     console.log('This action loginWithEmailPw');
     
     // 이메일과 비밀번호에 해당하는게 있는지 체크
     const member = await this.findOneByEmailAdmin(email);
-    if (!member || !member.MemberId || !bcrypt.compareSync(pw, member.password)){
-      throw new HttpException({
-        errCode : 24,
-        error : "There is no member corresponding email and pw"
-      }, HttpStatus.BAD_REQUEST);
-    } else if (member.Authentication == 1){ // 인증 상태 체크
-      throw new HttpException({
-        errCode : 25,
-        error : "need to auth"
-      }, HttpStatus.BAD_REQUEST);
+    // if (!member || !member.MemberId || !bcrypt.compareSync(pw, member.password)){
+    //   throw new HttpException({
+    //     errCode : 24,
+    //     error : "There is no member corresponding email and pw"
+    //   }, HttpStatus.BAD_REQUEST);
+    // } else if (member.Authentication == 1){ // 인증 상태 체크
+    //   throw new HttpException({
+    //     errCode : 25,
+    //     error : "need to auth"
+    //   }, HttpStatus.BAD_REQUEST);
 
-    } else if (member.Authentication == 3){
-      throw new HttpException({
-        errCode : 26,
-        error : "forbidden member"
-      }, HttpStatus.BAD_REQUEST);
-    }
+    // } else if (member.Authentication == 3){
+    //   throw new HttpException({
+    //     errCode : 26,
+    //     error : "forbidden member"
+    //   }, HttpStatus.BAD_REQUEST);
+    // }
 
     // 세션에 등록
     let sessionId : string = await this.constraint.makeSessionId(member.MemberId);
     ServerCache.setSession(sessionId);
-    sessionId = await CustomEncrypt.getInstance().encryptAes256(sessionId);
-
+    sessionId = CustomEncrypt.getInstance().encryptAes256(sessionId);
     // 세션 키 리턴
-    return sessionId;
+    // return sessionId;
+
+    let temp = {MemberEmail : member.MemEmail, Con : member.Authentication, Status : member.Authorization};
+    console.log(temp);
+
+    // 여기서 페이로드 값을 암호화 하고 다시 체크할 때 복호화해서 쓰자
+    const payload = {MemberEmail : member.MemEmail, Con : member.Authentication, Status : member.Authorization};
+    const refreshPayoad = {}
+    return {
+      access_token : await this.jwtService.signAsync(payload)
+    }    
     
   }
 
