@@ -1,5 +1,3 @@
-
-
 .prior_content{
     display: flex;
     justify-content: space-between;
@@ -17,7 +15,6 @@
 }
 
 #sort_criterion > form > select {
-    background-color: cadetblue;
     font-size: 1rem;
     color: white;
     padding: 5px;

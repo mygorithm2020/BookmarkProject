@@ -8,6 +8,11 @@
 - 기술 스택 : JavaScript, NodeJS, NestJS, Typescript, MySQL
 - 목표 : v1 버전(정적웹사이트)에 백엔드 서버 및 DB 추가
 - 프로젝트 실행 방법: 
+  - mysql 설치 및 환경 구성
+  - mysql.sql 파일 바탕으로 db, user, table create
+  - 필요한 node 설치
+  - 현재 경로에서 db연결 관련 .env파일 생성
+  - npm install, npm run start:dev
 - 링크 : 
 - 결과 미리보기  
 <br>
@@ -46,15 +51,58 @@
     CORS
     env
     Swagger
+    Bcrypt
+    crypto
+    Middleware
+    Filter
+    
 
+#### 오류 및 문제 해결
+    NestJS : HttpModule로 response의 html 파일 인코딩 방식이 euc-kr이면 문자가 깨지는 현상,  utf-8이면 정상
+        - 버퍼로 데이터 받은 후 iconv-lite 모듈로 헤더의 콘텐츠 타입 및 인코딩 방식 확인 후 디코딩
+        - nest에서 사용시 그냥 import하면 에러가 발생하는 경우 import * as iconv from "iconv-lite"으로 변경
+        - 즉, import 에 바로 그 내용을 적는게 아니라 * 처리하고 as 로 해당 모듈이름을 적는 방법으로 처리
+  
+    Typeorm : Many to Many 관계를 중간에 따로 sql 로 생성한 junction table 을 활용해 연결하기
+        - Site, CategorySite, Category 3가지 entity 참고
+  
+    TypeORM : mariaDB(10.1.13) 연결 중  발생 에러
+        - version 체크 부분에서 split 에러가 나는걸 확인하고 직접 노드 모듈스(typeorm/driver/mysql/mysqldriver.js)에서 해당 부분 찾아서 데이터 처리함
+    이게 맞을지는 모르겠는데 일단 해결은 됨
+        - insert 과정에서 returning 문법이 쓰이고 있고 에러가 발생해서 위와 마찬가지로 코드 수정
+        - select 과정에서 결과값이 버퍼로 오는 문제..........
+        - mariadb 10.11.* 이상 버전으로 확인해보니 결국 select가 buffer로 와서 생긴 문제였음... string을 parseInt하는 부분은 에러가 없음.....
+        - 고로 위 문제는 db version 변경으로 처리하고 위는 롤백
+    Cookie : 브라우저에 있는 AJAX(axios)를 활용해 백엔드인 nestjs 서버에 전달하는 과정에서 문제
+        - 전달을 위해 클라이언트(웹브라우저)에서 axios에 withCredentials : true 추가
+        - nestjs 에서 main.ts 에 enablecors에 credentials : true 추가하고 app.use(cookieParser()) 를 추가
+        - nestjs에서 쿠키를 설정하면 브라우저에 설정되나(오류 또는 경고 아이콘이 존재), 요청에는 쿠키가 전달 안되는 문제 발생
+        - 오류 확인 해보니 브라우저 옵션 떄문이었고, 서드파티 쿠키 차단 기능 떄문에 전달이 안되는 문제였음
+        - 근데 크롬에서 서드파티쿠키 차단은 이제 당연한(기본) 기능으로 자리 잡을 예정이니 다른 방안 필요
+        - 해결방안은 쿠키를 안쓰거나, 도메인을 일치시키거나......
 
+#### 배포
+    웹 호스팅 : 가비아, cafe24 등에서 nodejs 호스팅을 찾았지만 너무 구 버전이고, 제한 사항이 많아 진행이 어려움
+    서버 호스팅 : 마찬가지로 위 사이트에서도 사용이 가능하나 가상 서버 호스팅을 이용하는김에 클라우드를 이용
+    GCP : 실제 배포 진행하였고 과정은 아래와 같음
+        - gcp 계정 생성 및 콘솔 사이트 방문
+        - vm 인스턴스 생성(ubuntu 22.04 x86/64) : 리눅스 종류 및 버전 및 cpu는 일반적으로 많이 사용하는 케이스로 설정
+        - ssh 접속으로 필요한 환경 확인
+        - git은 기존에 설치되어 있었고, nvm 등을 활용해서 원하는 노드 버전 설치
+        - git으로 프로젝트 다운로드
+        - 환경파일 등 추가(vi를 통해)
+        - npm i, npm run build 등으로 실행 환경 구성
+        - mysql(8.4.0) 최신 LTS 설치
+        - 유저 생성, 권한 부여, db 생성, table 생성, data migration
+        - gcp 콘솔사이트에서 외부ip 방화벽 규칙생성으로 포트별 ip 접근 설정
+        - ubuntu 에서 screen 활용해서 ssh 연결 종료 후에도 백그라운드에서 서버 작동
 
-### 환경세팅
+### 개발환경세팅
+- node 20.10.0
 - npm v10.2.3
-- nest
+- nestJS
 - mysql 8.0.37
-- @nestjs/cli 10.0.0
-
+- 
 
 ### 추가 참고 내용(위 내용 외에 추가로 참고할만한 내용)
 

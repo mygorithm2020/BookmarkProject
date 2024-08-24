@@ -1,0 +1,46 @@
+#category-edit-box {
+    background-color: aliceblue;
+    padding: 20px;
+}
+
+#category-edit-box > li{
+    padding: 10px;
+    min-width: 90%;
+    display: flex;
+}
+
+#category-edit-box > li:nth-child(even){
+    background-color: white;
+}
+
+#category-edit-box > li > label:first-child{
+    font-size: 1.2rem;
+    width: 30%;
+}
+
+#category-edit-box > li > *:last-child{
+    width: 50%;
+    font-size: 1.1rem;
+}
+
+#category-edit-box > li > input{
+    padding-right: 6px;
+}
+
+.category-edit-btn{
+    width: 10%;
+    height: 2.0rem;
+    margin: 20px;
+    margin-top: 60px;
+    font-size: 1.3rem;
+}
+
+#sub-category-add-box{
+    background-color: aliceblue;
+    padding: 20px;
+}
+
+#sub-category-add-box >*{
+    margin: 6px;
+    font-size: 1.2rem;
+}

@@ -2,91 +2,95 @@
 
 #site-card-box {
     display: grid;
-    grid-template-columns: 33.3% 33.3% 33.3%;
+    grid-template-columns: 25% 25% 25% 25%;    
+    /* grid-template-columns: 25% 25% 25% 25%; */    
+    /* display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex-direction: row; */
+    /* align-content: stretch; */
     padding: 0;
 }
 
 #site-card-box>li {
-    border: 4px solid #f1f3f6;
-    margin: 10px;
-    padding: 10px;
+    /* border: 2px solid #f1f3f6; */
+    /* 배경 색 나중에 바꾸자 */
+    /* width: calc(100% / 3); */
+    height: 300px;
+    /* background-color: #f1f3f6; */
+    margin: 6px;
+    margin-bottom: 10px;
+    font-size: calc(0.9rem + 0.1vw + 0.1vh);
+    overflow: hidden;
+    border: 3px solid #f1f3f6;
+    border-radius: 6% 6%;
 }
 
 #site-card-box>li:hover {
-    box-shadow: 0px 0px 20px 1px gray;
+    box-shadow: 0px 0px 20px 1px gray;    
+    z-index: 2;
+    overflow: visible;
+    border-radius: 0;   
 }
 
-.site_card_top {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    height: 70px;
-    justify-content: flex-start;
-    
-}
-
-/* .site_card_top>img{
-    max-width: 35%;
-    
-    
-} */
-
-.site_card_top>div:nth-child(1){
-    width: 25%;
-    padding: 5px;
+.site-card-top {
+    background-color: white;
+    width: 100%;
+    height: 50%;  
+    padding: 6px; 
     display: flex;
     align-items: center;
-    justify-content: center;    
-    
-}
-
-.site_card_img {
-    height: 90%;
-    max-width: 90%;
-}
-
-.site_card_top>div:nth-child(2){
-    width: 70%;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    background-color: #f1f3f6;
-    overflow: hidden;
-}
-
-.site-detail-box {
-    padding: 5px;
-    
-
-}
-.site-detail-box>li {  
-    margin-right: 5px;    
-    display: inline-block;
-}
-
-.site_card_description{
-    margin: 5px;
-    border-bottom: 1px solid black;
-    
-}
-
-.site_card_bottom {
-    display: flex;
-    flex-direction: row;
     justify-content: space-between;
 }
 
-.site_card_bottom>input {        
-    border-radius: 5%;
-    border: none;
-    background-color: darkgray;
-    flex: 1;
-    margin: 5px 10px;
-    min-height: 30px;    
-    font-size: 0.9rem;
-    font-weight: bold;
+.site-card-img {
+    max-width: 80%;
+    height: 90%;
+    padding: 2px;
+    
 }
 
-.site_card_bottom>input:hover {        
-    cursor: pointer;
+/* 나중에 좋아요 생기면 디자인 변경하면서 이미지 오른쪽에 추가 */
+/* .site-sub-info{
+    background-color: aliceblue;
+    display: flex;
+    height: 90%;
+    flex-direction: column;    
+    padding: 10px;
+} */
+
+.site-card-mid {
+    width: 100%;
+    height: 25%;
+    padding: 8px;
+    color: black;
+}
+
+.site-card-mid >div {
+    height: 40%;
+    word-spacing: 0.2rem;
+    font-weight: 600;
+    font-size: calc(0.7rem + 0.2vw + 0.2vh);
+    overflow: hidden;
+}
+
+.site-card-mid >ul {
+    height: 60%;
+    font-size: calc(0.6rem + 0.2vw + 0.2vh);
+    margin-top: 3%;
+}
+
+
+.site-card-bottom{
+    width: 100%;
+    height: 25%;
+    padding: 8px;
+    font-size: calc(0.6rem + 0.2vw + 0.2vh);
+    margin: 0;
+    overflow: hidden;
+    color: black;
+}
+
+.site-card-bottom:hover{
+    font-weight: bold;
 }

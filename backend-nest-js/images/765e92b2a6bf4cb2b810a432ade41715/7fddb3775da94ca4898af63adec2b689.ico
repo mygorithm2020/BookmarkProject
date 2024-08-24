@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--[if IE 7]><html dir="ltr" lang="ko" class="ie7"><![endif]-->
+<!--[if IE 8]><html dir="ltr" lang="ko" class="ie8"><![endif]-->
+<!--[if IE 9]><html dir="ltr" lang="ko" class="ie9"><![endif]-->
+<html dir="ltr" lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=2, user-scalable=yes">
+    <title></title>
+	<script src="https://www.lotterentacar.net/publish/mbKor/js/jquery-1.12.4.min.js?cb=46cb1ed9-8c31-401f-9d6b-c1b2bb9b73a9"></script>
+    <link rel="stylesheet" type="text/css" href="https://www.lotterentacar.net/publish/pcKor/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="https://www.lotterentacar.net/publish/mbKor/css/style.css?cb=46cb1ed9-8c31-401f-9d6b-c1b2bb9b73a9" />
+    <link rel="stylesheet" type="text/css" href="https://www.lotterentacar.net/publish/mbKor/css/swiper.css?cb=46cb1ed9-8c31-401f-9d6b-c1b2bb9b73a9" />
+</head>
+
+<body>
+        
+	
+	
+<div id="container" style="width: 100%">
+	<div class="pc_cont">
+		<p align="center" style="text-align: center;"><img title="서비스점검 공지" alt="홈페이지 서비스 일시중단 안내 " src="./images/p_sysNotice_20220714.jpg">&nbsp;</p> 
+	</div>
+	<div class="m_cont">
+		<p><img id='sysNotice' name='sysNotice' src='./images/m_sysNotice_20220714.jpg' style='width: 100%;'></p>
+	</div>
+	<script type="text/javascript">
+		/*var filter = "win16|win32|win64|mac|macintel";
+		if ( navigator.platform ) {
+			if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) {			
+				$(".pc_cont").remove()
+			}
+			else {
+			console.log("platform:::: " +navigator.platform.toLowerCase());
+				$(".m_cont").remove()
+			}
+		}*/
+		if (window.navigator.userAgent.toLowerCase().indexOf("mobile") < 0) {
+			$(".m_cont").remove();	// PC
+		} else {
+			$(".pc_cont").remove();	// Mobile
+		}
+	</script>
+</div>
+</body>
+</html>

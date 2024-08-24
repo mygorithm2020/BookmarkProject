@@ -8,14 +8,6 @@
     <!--  -->
     <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
 
-    <!-- al 태그(모바일 접속시 자동 앱으로 연결) 테스트해보려고 넣어봄 소리바다에서 일단 가져옴-->
-    <meta property="al:ios:url" content="soribada30://">
-    <meta property="al:ios:app_store_id" content="346528006">
-    <meta property="al:ios:app_name" content="soribada">
-    <meta property="al:android:package" content="com.soribada.android">
-    <meta property="al:android:url" content="soribada30://">
-    <meta property="al:android:app_name" content="soribada">
-
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,11 +28,12 @@
             $("#header").load("header.html #navbar")
             */       
         });
-        console.log("html파일 연결");
+        
     </script> 
 
     <!-- axios 사용 -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
 
     <!-- 내부 css 파일 연결 -->
     <!-- <link rel="stylesheet" href="../css/dev.css"> -->
@@ -57,7 +50,7 @@
     <header id="header">
 
     </header>
-    <nav class="layer1">
+    <nav class="layer1 bg-color-2">
         
     </nav>        
     <main class="layer1">
@@ -68,6 +61,7 @@
         </section>
         <section id="main_content01">
             <h2 class="site-map-text">추천 사이트</h2>
+            <div class="loading-spinner"></div>
             <!-- <ul id="site-card-box">
                 <li class="site-card">                    
                     <div>
@@ -131,7 +125,7 @@
             </ul>
         </div>
     </aside>
-    <footer id="footer"></footer>
+    <footer id="footer" class="bg-color-1"></footer>
     <!-- js 파일들 추가 -->
     <script src="../scripts/index.js" type="module"></script>
 </body>

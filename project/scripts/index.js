@@ -1,70 +1,61 @@
-
 import { Site } from "./site.js";
-
+console.log(encodeURIComponent("https://www.hanbit.co.kr/src/10473"));
+console.log(btoa("https://www.hanbit.co.kr/src/10473"));
+const bd = window.btoa("https://www.hanbit.co.kr/src/10473");
+console.log(bd);
+console.log(window.atob(bd));
+console.log(navigator.userAgent);
+console.log(decodeURIComponent(document.cookie));
 console.log("open index");
+document.cookie = "user=John; path=/; expires=Tue, 19 Jan 2038 03:14:07 GMT; max-age=0";
+document.cookie = `usernamessss = ${encodeURIComponent("홍길동")}; httpOnly`;
 
-function Drawer(el, open=false){
-    this.el = el;
-    this.isOpen = open;
-    Object.assign(this.el.style, {
-        display : "block",
-        position: "fixed",
-        top: 0,
-        bottom: 0,
-        right : 0,
-        width: "350px",
-        padding: "10px",
-        backgroundColor: "white",
-        boxShadow: "0 30px 10px 10px rgba(0,0,0,0.1)",
-        transition: "all 0.4s ease-out"
-    });
-    (this.isOpen) ? this.open() : this.close();
-}
 
-Drawer.prototype.open = function() {
-    this.isOpen = true;
-    this.el.style.transform = "translate(0)";
-}
+// 만료기간을 넣어서 쿠키가 자동 만료 되도록 제작할 수 있다.(UTC time을 이용)
+document.cookie = "username2=John Doe; max-age=3600; samesite=strict; path=/;";
 
-Drawer.prototype.close = function() {
-    this.isOpen = false;
-    this.el.style.transform = "translate(400px)";
-}
+
+// 파라미터를 이용하여 쿠키가 어디 브라우저에 속할 수 있을지 알려줄 수 있다.
+document.cookie = "username3=John Doe; expires=Thu, 18 Dec 2024 12:00:00 UTC; path=/";
+
+document.cookie = "username4=John Doe; expires=Thu, 18 Dec 2024 12:00:00 UTC; path=/; Secure";
+
+
+
+fetch('https://api.ipify.org?format=json')
+.then(response => response.json())
+.then(data => {
+    console.log(data.ip);
+    document.cookie = `${decodeURIComponent("clienip")} = ${decodeURIComponent(data.ip)};`;
+})
+.catch(error => {
+    console.log('Error:', error);
+});
+
+
+let mainContent01El = document.getElementById("main_content01");
+
+
+// 추천사이트 조회
+let sites = await Site.getRecommendedSite();
+Site.shuffle(sites);
+//  HTML에 추가
+mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlTemp(sites));            
+// 카드 이벤트 효과 추가
+Site.cardEvent();
+
+let spinner = document.querySelector(".loading-spinner");
+console.log(spinner);
+spinner.classList.toggle("cover");
+
 
 
 window.onload = async function() {
-
-
     setTimeout(() => {
-        // header용 footer용도 따로 파야겠네...
-        const drawer = new Drawer(document.querySelector(".drawer"));
-        document.getElementById("enquiry").addEventListener("click", e =>{
-            if (drawer.isOpen){
-                drawer.close();
-            } else {
-                drawer.open();
-            }
-        });
-
         console.log("ssss");
-
-        
-
-        let mainContent01El = document.getElementById("main_content01");
-    
-        
-
-        // 추천 사이트 조회
-        axios.get("http://localhost:3000/site/recommend")
-        .then((result) => {
-            console.log(result);
-            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
-            Site.cardEvent();
-        })
-        .catch((error) => {
-            console.error(error);
-            
-        });
+        // const asdqwcc = document.querySelector("#header_main_logo").parentElement;
+        // console.log(asdqwcc);
+        // asdqwcc.click();
         
     }, 1000);
 
@@ -72,3 +63,18 @@ window.onload = async function() {
     
 
 };
+
+
+// let instance = axios.create({
+//     baseURL: 'https://some-domain.com/api/',
+//     // ...other configs,
+//     timeout: 1000,
+// });
+
+// instance.get("/")
+// .then( (res) => {
+//     console.log(res);
+// }) 
+// .catch((err) => {
+//     console.log(err);
+// })

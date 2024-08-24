@@ -1,0 +1,52 @@
+
+#add-box, #search-box{
+    margin: 10px;
+    min-height: 30px;
+}
+
+#add-box > input, #search-box>input{
+    min-width: 30%;
+    margin-right: 10px;
+    padding: 10px;
+    font-size: 1.1rem;
+}
+
+#search-box > label{
+    font-size: 1.1rem;
+    padding: 10px;
+}
+
+#add-box > button{
+    padding: 10px;
+}
+
+#category-box{
+    border: 2px solid black;
+    display: flex;
+    flex-direction: row;
+}
+
+#category-box li{
+    margin: 10px;
+}
+
+nav .selected {
+    font-weight: bold;
+    background-color: white;
+}
+
+#category_list {
+    width: 100%;
+}
+
+#category_list tr {
+    height: 40px;
+}
+
+.category-layer1 {
+    background-color: beige;
+}
+
+.category-layer2 {
+    background-color: darkgray;
+}

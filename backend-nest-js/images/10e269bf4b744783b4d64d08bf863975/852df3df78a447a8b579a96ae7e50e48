@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>부동산써브 - 부동산 거래의 시작과 끝</title>
+    <link href="/favicon_serve.ico" rel="shortcut icon" />
+    <link href="/favicon_serve.ico" rel="icon" />
+    <link href="/favicon-16x16.png" rel="icon" type="image/png" sizes="16x16" />
+    <link href="/favicon-32x32.png" rel="icon" type="image/png" sizes="32x32" />
+    <link href="/favicon-96x96.png" rel="icon" type="image/png" sizes="96x96" />
+    <link href="https://www.serve.co.kr" rel="canonical">
+    <meta property="og:title" content="부동산써브 - 부동산 거래의 시작과 끝.">
+    <meta property="og:url" content="https://www.serve.co.kr">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/public/SNS 공유 이미지_1200_627">
+    <meta property="og:site_name" content="부동산써브 - 부동산 거래의 시작과 끝">
+    <meta property="og:description" content="부동산써브,부동산 정보, 매물정보 등을 제공하는 종합 부동산 정보 제공 사이트">
+    <meta name="description" content="부동산써브,부동산 정보, 매물정보 등을 제공하는 종합 부동산 정보 제공 사이트" />
+    <meta name="keyword" content="부동산써브,벼룩시장,부동산,아파트,빌라,주택,토지,상가,사무실,월세,시세,매매,전세,직거래,네이버부동산,실거래,복덕방,공인중개사,매물,중개,실거래가">
+    <meta name="referrer" content="no-referrer">
+    <meta name="naver-site-verification" content="6e9ca7dca132b4040ea5c82898acda4ab8e0f6b2" />
+    <link rel="manifest" href="/manifest.json">
+
+  <script defer src="/js/chunk-vendors.js"></script><script defer src="/js/app.js"></script></head>
+  <body>
+    <noscript>
+      <strong>We're sorry but 부동산써브 - 부동산 거래의 시작과 끝 doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5ZZJZ6R" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

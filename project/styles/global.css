@@ -1,7 +1,8 @@
 /* 전체 사이트에 적용할 기본 옵션, 전체 크기나, 등등... */
 
+
 * {
-    box-sizing: border-box;
+    box-sizing: border-box; /* 테두리를 너비에 포함 */
     /* background-color: #001011;
     color: white; */
 }
@@ -9,10 +10,8 @@
 body {
     font-family: "Noto Sans KR", sans-serif;
     font-optical-sizing: auto;
-    font-style: normal;
-    
-    margin: 0;
-    
+    font-style: normal;    
+    margin: 0;    
 }
 
 a {
@@ -36,7 +35,7 @@ ul {
 }
 
 main {
-    min-height: 700px;
+    min-height: 800px;
     max-width: 1280px;
     margin: 0 auto;
 }
@@ -46,9 +45,27 @@ main {
     color: #03cf5d;
 }
 
+/* 영역자체를 삭제*/
+.cover {
+    display: none;
+}
+
 /* 안보이게 숨기기 */
 .hidden {
-    display: none;
+    /* visibility: hidden; */
+    opacity: 0;
+    visibility: hidden;
+    /* height: 0; */
+}
+
+/* 보이기 */
+.show {
+    opacity: 1;
+    /* visibility: visible; */
+    /* background-color: white; */
+    /* width: 100%; */
+    /* opacity: 0; */
+    /* transition: all 1s ease-out; */
 }
 
 /* 데이터가 없는 경우 */
@@ -57,4 +74,50 @@ main {
     font-size: 2rem;
     text-align: center;
     vertical-align: middle;
+}
+
+.bg-color-1 {
+    background-color: #92C7CF;    
+}
+
+.bg-color-2 {
+    background-color: #AAD7D9;
+
+}
+
+.bg-color-3 {
+    background-color: #FBF9F1;
+
+}
+
+.bg-color-4 {
+    background-color: #E5E1DA;
+}
+
+.bg-color-5 {
+    background-color: aliceblue;
+}
+
+
+/* 스피너 디자인 */
+.loading-spinner {
+    position: absolute;
+    left: 50%;
+    bottom: 40%;
+    width: 60px;
+    height: 60px;
+    border: 8px solid #3498db;
+    border-top: 8px solid transparent;
+    border-radius: 50%;
+    animation: rotate 2s linear infinite;
+
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

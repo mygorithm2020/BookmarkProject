@@ -1,12 +1,11 @@
 /* 헤더와 푸터용 css 파일 */
 
-header {
+#header-full-box {
     max-width: 1280px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
     padding: 20px;
-    background: #f2f4f7;
 }
 
 #header_left {
@@ -41,7 +40,6 @@ header {
     display: inline-block;
     margin: 10px;
     padding: 6px;
-    background-color: lightcyan;
     border-radius: 16px;
 }
 
@@ -69,12 +67,12 @@ header {
     height: 300px;    
 }
 
-/* main 영역 세부 구현 */
+/* main 영역 세부 구현
 
 .site-map-text {
     margin: 10px;
     padding-left: 20px;
-}
+} */
 
 
 
@@ -84,7 +82,6 @@ footer {
     max-width: 1280px;
     margin: 10px auto;
     padding: 10px;
-    background: #f2f4f7;
 }
 
 #footer_nav {
