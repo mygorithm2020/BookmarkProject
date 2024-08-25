@@ -166,21 +166,22 @@ CREATE TABLE TA_Site(
 
     -- 기본 정보 -- 2순위
     Title VARCHAR(255),
-    FaviconImg VARCHAR(512),
+    FaviconImg VARCHAR(1024),
     Description VARCHAR(1024),
     Keywords VARCHAR(1024),
-    LogoImg VARCHAR(512),
+    LogoImg VARCHAR(1024),
 
     -- og 정보 -- default
     OGTitle VARCHAR(255),
     OGSiteName VARCHAR(255),
-    OGImg VARCHAR(512),
+    OGImg VARCHAR(1024),
     OGDescription VARCHAR(1024),
     OGURL VARCHAR(255),   
         
     IsDeleted SMALLINT NOT NULL DEFAULT 0,
     CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
     UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+  
     
 
 );
