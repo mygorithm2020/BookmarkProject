@@ -13,7 +13,7 @@ import { MemberModule } from 'src/member/member.module';
     TypeOrmModule.forFeature([
       Authentication
     ]),
-    MemberModule    
+    // MemberModule    
     
   ],
   controllers: [AuthenticationController],

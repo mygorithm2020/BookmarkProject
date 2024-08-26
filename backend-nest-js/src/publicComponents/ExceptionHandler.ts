@@ -1,13 +1,12 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
 
-export class CHttpException {
-    static set(status :HttpStatus, code: string | number, msg? : string){
-        throw new HttpException({
-            code,
-            message : msg
-    
+export class CHttpException extends HttpException {
+    // 표준 규칙화
+    constructor(code: number, msg : string, status: number){
+        super({
+            ResCode : code,
+            ResMsg : msg
         }, status);
-
     }
 }
 

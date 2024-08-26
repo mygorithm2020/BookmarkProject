@@ -14,11 +14,10 @@ if (key){
             `<table id="notice_detail">
             <tr class="notice_detail_row bg-color-3">
             <th>웹사이트 출시</th>
-            <th>2024. 07. 31</th>
             <th>관리자</th>                  
             </tr>
             <tr class="notice_detail_row">
-            <td colspan="3">
+            <td colspan="2">
                 <p><h4>안녕하세요 이용자님 북마커 사이트가 출시되었습니다.</h4></p>
                 <p>
                 많은 관심 부탁드리며 주요 기능은 아래와 같습니다. <br><br>

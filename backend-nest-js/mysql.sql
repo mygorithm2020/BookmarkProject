@@ -99,11 +99,23 @@ CREATE TABLE TA_Authentication (
 CREATE INDEX IDX_Authentication_Email ON TA_Authentication (Email);
 CREATE INDEX IDX_Authentication_PhoneNo ON TA_Authentication (PhoneNo);
 
+-- 인증 토큰
+CREATE TABLE TA_AuthToken (
+  TokenId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  Token VARCHAR(512),
+  MemberId CHAR(32),
+  IP VARCHAR(64),  
+  UserAgent VARCHAR(512),
+  Origin VARCHAR(255),
+  CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간"
+) ENGINE=InnoDB;
+CREATE INDEX IDX_AuthToken_Token ON TA_AuthToken (Token);
+
 
 -- 회원
 CREATE TABLE TA_Member (
   MemberId CHAR(32) NOT NULL PRIMARY KEY,
-  password VARCHAR(64) NOT NULL,
+  Password VARCHAR(64) NOT NULL,
   MemEmail VARCHAR(255) NOT NULL,
   NickName VARCHAR(32), 
   Birth CHAR(8),

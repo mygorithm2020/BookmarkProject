@@ -80,8 +80,12 @@
 
 footer {
     max-width: 1280px;
-    margin: 10px auto;
+    margin: 10px auto;    
+}
+
+#footer-box {
     padding: 10px;
+
 }
 
 #footer_nav {

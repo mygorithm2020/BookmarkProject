@@ -3,18 +3,21 @@ import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from './entities/member.entity';
-import { Repository } from 'typeorm';
+import { Auth, Repository } from 'typeorm';
 import { CustomEncrypt, CustomUtils } from 'src/publicComponents/utils';
 import * as bcrypt from 'bcrypt';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 import { Constraint } from 'src/publicComponents/constraint';
 import { JwtService } from '@nestjs/jwt';
+import { AuthToken } from './entities/authtoken.entity';
+import { jwtConstants } from './entities/memberAuth.constant';
 
 @Injectable()
 export class MemberService {
 
   constructor(
     @InjectRepository(Member) private mRepo: Repository<Member>,
+    @InjectRepository(AuthToken) private aRepo: Repository<AuthToken>,
     private readonly customUtils : CustomUtils,
     private readonly constraint : Constraint,
     private jwtService: JwtService,
@@ -23,63 +26,104 @@ export class MemberService {
   async createPublic(memObj: CreateMemberDto) : Promise<Member> {        
     // 기존에 있으면 리턴
     const member = await this.findOneByEmailPublic(memObj.MemEmail);
-    if (member || member.MemberId){
+    
+    if (member){
       throw new HttpException({
         errCode : 21,
         error : "same email already exist"
       }, HttpStatus.BAD_REQUEST);
     }   
-    
+    console.log(memObj);
     this.constraint.generateMemObj(memObj);
     const newMem = this.mRepo.create(memObj);
     let res = await this.mRepo.save(newMem);
     return res;    
+    return null;
   }
 
   // 나중에 oauth 인증도 추가 구글이랑 네이버 정도...? 카카오까지?
-
   
 
-  async signInWithEmailPw(email : string, pw : string) : Promise<{ access_token: string }> { 
+  async signInWithEmailPw(
+    email : string, pw : string, ip : string, userAgent : string, origin : string
+  ) : Promise<{ accessToken: string, refreshToken : string, member : object}> { 
     console.log('This action loginWithEmailPw');
     
     // 이메일과 비밀번호에 해당하는게 있는지 체크
     const member = await this.findOneByEmailAdmin(email);
-    // if (!member || !member.MemberId || !bcrypt.compareSync(pw, member.password)){
-    //   throw new HttpException({
-    //     errCode : 24,
-    //     error : "There is no member corresponding email and pw"
-    //   }, HttpStatus.BAD_REQUEST);
-    // } else if (member.Authentication == 1){ // 인증 상태 체크
-    //   throw new HttpException({
-    //     errCode : 25,
-    //     error : "need to auth"
-    //   }, HttpStatus.BAD_REQUEST);
+    if (!member || !member.MemberId || !bcrypt.compareSync(pw, member.Password)){
+      throw new HttpException({
+        errCode : 24,
+        error : "There is no member corresponding email and pw"
+      }, HttpStatus.BAD_REQUEST);
+    } else if (member.Authentication == 1){ // 인증 상태 체크
+      throw new HttpException({
+        errCode : 25,
+        error : "need to auth"
+      }, HttpStatus.BAD_REQUEST);
 
-    // } else if (member.Authentication == 3){
-    //   throw new HttpException({
-    //     errCode : 26,
-    //     error : "forbidden member"
-    //   }, HttpStatus.BAD_REQUEST);
-    // }
+    } else if (member.Authentication == 3){
+      throw new HttpException({
+        errCode : 26,
+        error : "forbidden member"
+      }, HttpStatus.BAD_REQUEST);
+    }
+
+    const cEncrypt = CustomEncrypt.getInstance();
 
     // 세션에 등록
-    let sessionId : string = await this.constraint.makeSessionId(member.MemberId);
-    ServerCache.setSession(sessionId);
-    sessionId = CustomEncrypt.getInstance().encryptAes256(sessionId);
-    // 세션 키 리턴
-    // return sessionId;
+    if (false){
+      let sessionId : string = await this.constraint.makeSessionId(member.MemberId);
+      ServerCache.setSession(sessionId);
+      sessionId = cEncrypt.encryptAes256(sessionId);
+      // 세션 키 리턴
+      // return sessionId;
+    }
 
-    let temp = {MemberEmail : member.MemEmail, Con : member.Authentication, Status : member.Authorization};
-    console.log(temp);
-
+    
+    // JWT 방식
     // 여기서 페이로드 값을 암호화 하고 다시 체크할 때 복호화해서 쓰자
-    const payload = {MemberEmail : member.MemEmail, Con : member.Authentication, Status : member.Authorization};
-    const refreshPayoad = {}
+    
+    const payload =  {I : member.MemEmail, Ae : member.Authentication, Ao : member.Authorization};
+    // ip, useragent, 
+    const refreshPayoad = {I : member.MemEmail, DT : this.customUtils.getUTCDate()};
+    const aToken = cEncrypt.encryptAes256(await this.jwtService.signAsync(payload));
+    const rToken = cEncrypt.encryptAes256(await this.jwtService.signAsync(refreshPayoad, {
+      secret : jwtConstants.accessSecret,
+      expiresIn : '2d'
+    }));
+
+    // 리프레시 토큰 디비 저장
+    const at = new AuthToken();
+    at.Token = rToken;
+    at.MemberId = member.MemberId;
+    at.IP = ip;
+    at.UserAgent = userAgent;
+    at.Origin = origin;
+    await this.createToken(at);
+
     return {
-      access_token : await this.jwtService.signAsync(payload)
+      accessToken : aToken,
+      refreshToken : rToken,
+      member : {
+        MemberId : member.MemberId,
+        MemEmail : member.MemEmail,
+        NickName : member.NickName
+      }
     }    
     
+  }
+
+  createToken(authToken : AuthToken) : Promise<AuthToken> {
+    let res;
+    if (!authToken.Token){
+      throw new HttpException({
+        errCode : 21,
+        error : "failed to save token"
+      }, HttpStatus.BAD_REQUEST);
+    }
+    res = this.aRepo.save(authToken);
+    return res;
   }
 
   async findAllAdmin() : Promise<Member[]> {
@@ -112,7 +156,15 @@ export class MemberService {
 
   async findOneByEmailPublic(email: string) : Promise<Member> {
     console.log(`This action findOneByEmailPw`);
-    let res : Member = await this.mRepo.findOne({
+
+    if (!email){
+      throw new HttpException({
+        errCode : 21,
+        error : "email is required"
+      }, HttpStatus.BAD_REQUEST);      
+    }
+
+    let res = this.mRepo.findOne({
       select : {
         MemberId : true,
         MemEmail : true,
@@ -146,7 +198,7 @@ export class MemberService {
     let res : Member = await this.mRepo.findOne({
       where : {
         MemEmail : email,
-        password : pw,
+        Password : pw,
         IsDeleted : 0
       },
     })

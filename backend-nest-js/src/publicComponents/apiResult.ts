@@ -1,7 +1,12 @@
-export class ApiResult<T> {
-    Code : number;
+export interface ApiResult {
+    ResCode : number;
+    ResMsg : string;
+}
 
-    Message : string;
 
+export interface ApiResultExpand<T> extends ApiResult{
     Body : T;
 }
+
+
+let sss : ApiResultExpand<string>;

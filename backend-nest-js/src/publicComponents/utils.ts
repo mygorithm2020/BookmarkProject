@@ -208,7 +208,7 @@ export class CustomEncrypt {
   private static AESKEY : string = "m/zE7KOYFCV6oxFBvC2IiBC/C7WdQ/cjdMLuABFVdPM=";
 
   // 양방향 암호화
-  encryptAes256(origin : string) : string{
+  encryptAes256(origin : string, aesKey? : string, aesIV? : string) : string{
     const password = 'customKey is mine';
 
     // The key length is dependent on the algorithm.

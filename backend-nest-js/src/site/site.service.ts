@@ -49,6 +49,13 @@ export class SiteService {
     // 제네릭타입을 쓰면 가능할거 같음
     // dto를 최소한의로 활용... 정말 상황마다 다 만들 순 없고... 최소한의 제약 조건으로 활용하자
     // 컨트롤러와 상관 없이 리턴값 생성
+
+
+    
+    // test("Sdsdsds", () => {
+    //   expect(cEncrypt.encryptAes256("sssss")).toEqual("xxxxx");
+    // });
+    
     return res;
   }
   

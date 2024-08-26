@@ -10,7 +10,7 @@ import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
 
 @ApiTags("category")
 @UseGuards(RolesGuard)
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 // @UseInterceptors(LoggingInterceptor)
 @Controller('category')
 export class CategoryController {

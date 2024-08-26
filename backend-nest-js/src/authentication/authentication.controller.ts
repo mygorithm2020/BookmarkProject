@@ -15,25 +15,25 @@ export class AuthenticationController {
 
   //인증번호 발송
   @Post("/send/email")
-  sendEmailAuth(
+  async sendEmailAuth(
     @Body() auth : Authentication){
-    let result = this.authService.sendAuthEmail(auth.Email);
-    return result;
+      
+      let result = {};
+      let serviceRes = await this.authService.sendAuthEmail(auth.Email);
+      if (serviceRes){
+        result = {
+          Email : auth.Email
+        }
+
+      }
+      // let result = this.authService.sendAuthEmail(auth.Email);
+      // return {
+      //   Email : auth.Email
+      // };
+      return result;
   }
 
-  // 인증번호 확인
-  @Post("/check/email")
-  async checkAuth(
-    @Body() auth : Authentication){
-    let result = await this.authService.checkAuthCode(auth.Email, auth.AuthCode);
-    if (!result){
-      throw new HttpException({
-        errCode : 11,
-        error : "please check the email and code"
-      }, HttpStatus.BAD_REQUEST);
-    }
-    return {};
-  }
+  
 
   @Get()
   findAll() {
@@ -50,10 +50,20 @@ export class AuthenticationController {
     return this.authService.update(+id, updateAuthenticationDto);
   }
 
-  // 인증 번호 확인
-  @Patch()
-  checkEmailAuth(@Body() auth: Authentication) {
-    return this.authService.checkAuthEmail(auth.Email, auth.AuthCode);
+  // 인증번호 확인
+  @Patch("/check/email")
+  async checkAuth(
+    @Body() auth : Authentication){
+    let result = await this.authService.checkAuthCode(auth.Email, auth.AuthCode);
+    if (!result){
+      throw new HttpException({
+        errCode : 11,
+        error : "please check the email and code"
+      }, HttpStatus.BAD_REQUEST);
+    }
+    return {
+      Email : auth.Email
+    };
   }
 
   @Delete(':id')

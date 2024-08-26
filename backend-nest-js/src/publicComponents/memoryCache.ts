@@ -63,8 +63,7 @@ export class ServerCache {
 
         if (!this.sesstionList || !this.sesstionList.has(sessionId)){
             res = "";
-            return res;
-            
+            return res;            
         }
 
         const date = this.sesstionList.get(sessionId);
@@ -78,6 +77,8 @@ export class ServerCache {
             return res;
         }
 
+        // 인증 시간 갱신
+        this.setSession(sessionId);
         return res;
 
     }

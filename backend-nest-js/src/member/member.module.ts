@@ -10,18 +10,18 @@ import { AuthenticationService } from 'src/authentication/authentication.service
 import { Authentication } from 'src/authentication/entities/authentication.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './entities/memberAuth.constant';
+import { AuthToken } from './entities/authtoken.entity';
 
 @Module({
   imports : [
     TypeOrmModule.forFeature([
-      Member, Authentication
+      Member, Authentication, AuthToken
     ]),
     JwtModule.register({
       global: true,
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
-    }),
-    
+      secret: jwtConstants.accessSecret,
+      signOptions: { expiresIn: '10m' },
+    }),    
     
   ],
   controllers: [MemberController],

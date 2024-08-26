@@ -22,23 +22,25 @@ export class Constraint {
   ){}
 
 
+
+
   generateMemObj(memObj : Member){
-    if (!memObj.MemEmail || !memObj.password){
+    if (!memObj.MemEmail || !memObj.Password){
       throw new HttpException({
-        errCode : 21,
+        errCode : 51,
         error : "email and pw are required"
       }, HttpStatus.BAD_REQUEST);
     }  
-    if (!this.emailCheck(memObj.MemEmail)){
+    if (!this.isValidEmail(memObj.MemEmail)){
       throw new HttpException({
-        errCode : 22,
+        errCode : 52,
         error : "input right email address"
       }, HttpStatus.BAD_REQUEST);
     }
 
-    if (!this.passwordCheck(memObj.password)){
+    if (!this.passwordCheck(memObj.Password)){
       throw new HttpException({
-        errCode : 23,
+        errCode : 53,
         error : "input right password, password must be at least 6 character"
       }, HttpStatus.BAD_REQUEST);
     }
@@ -47,10 +49,26 @@ export class Constraint {
     memObj.MemberId = newId;
 
     // 비밀번호 암호화
-    memObj.password = CustomEncrypt.getInstance().encryptHash(memObj.password);
+    memObj.Password = CustomEncrypt.getInstance().encryptHash(memObj.Password);
 
     if (memObj.NickName == null){
       memObj.NickName = memObj.MemEmail.slice(0, memObj.MemEmail.indexOf("@"));      
+    }
+
+    if (!(memObj.Birth.length == 0) && !(memObj.Birth.length == 8)){
+      throw new HttpException({
+        errCode : 54,
+        error : "birth is 8 digits"
+      }, HttpStatus.BAD_REQUEST);
+    }
+
+    if (memObj.Gender){
+      if (!(["M", "F"].includes(memObj.Gender))){
+        throw new HttpException({
+          errCode : 55,
+          error : "Gender is M or F"
+        }, HttpStatus.BAD_REQUEST);
+      }      
     }
 
     // 승인으로 시작
@@ -58,12 +76,6 @@ export class Constraint {
 
     // 기본은 일반 유저
     memObj.Authorization = 1;
-
-    // memObj.Authorization = 0;
-    // // 인증되었는지 확인 필요
-    // if (true){
-    //   memObj.Authorization = 1;
-    // }
   }
 
   async makeSessionId(memberId : string) : Promise<string> {
@@ -78,6 +90,11 @@ export class Constraint {
     // 값 여러개를 더해서 암호화하기
     let res = memberId + new Date().toUTCString();
     return res;
+  }
+
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
 
   emailCheck(email : string) : boolean{
@@ -153,7 +170,7 @@ export class Constraint {
   generateCategory(category : Category){
     if (!category.Name){
       throw new HttpException({
-        errCode : 22,
+        errCode : 51,
         error : "name is required"
       }, HttpStatus.BAD_REQUEST);   
     }

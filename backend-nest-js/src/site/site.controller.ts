@@ -4,7 +4,7 @@ import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 import { Site } from './entities/site.entity';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { ApiResult } from 'src/publicComponents/apiResult';
+import { ApiResult, ApiResultExpand } from 'src/publicComponents/apiResult';
 import { Response, Request } from 'express';
 import { CategoryService } from 'src/category/category.service';
 import { ServerCache } from 'src/publicComponents/memoryCache';
@@ -63,9 +63,9 @@ export class SiteController {
   @Get()
   async findAllPublic() {
     let q = await this.siteService.findAllPublic();
-    let res = new ApiResult<Site[]>();
+    let res : ApiResultExpand<Site[]>;
     if (q.length > 0){
-      res.Code = 200;
+      res.ResCode = 200;
       res.Body = q;
     }
     return q;
@@ -90,7 +90,7 @@ export class SiteController {
     return result;
   }
 
-  // body가 필요해서 post로
+  // url base64인코딩해서 보내기
   @Get("/url/:base64url")
   findOneByUrl(@Param('base64url') url : string) {
     console.log(url);

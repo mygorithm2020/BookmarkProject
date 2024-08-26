@@ -58,7 +58,7 @@ export class Site {
             res += `
             <li class="site-card">
                 <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
-                    <div class="site-card-top">                    
+                    <div class="site-card-top ">                    
                         <img class="site-card-img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ?Site.IMG_HOST + "/" + siteList[i].SiteId + "/" + siteList[i].Img : siteList[i].Img}" alt="no images">
                         
                     </div>
@@ -68,6 +68,7 @@ export class Site {
                         </div>
                         <ul class="site-detail-box">
                             <li>방문수 ${siteList[i].Views}</li>
+                            
                                                          
                         </ul>
                     </div>
@@ -85,6 +86,7 @@ export class Site {
         return res;
     }
 
+    
 
     static listToHtmlv2(siteList){
         let res = "";

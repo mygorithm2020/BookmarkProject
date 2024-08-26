@@ -7,7 +7,7 @@ export class Member {
     MemberId : string;
 
     @Column()
-    password : string;
+    Password : string;
 
     @Column()
     MemEmail : string;
@@ -16,7 +16,7 @@ export class Member {
     NickName : string;
 
     @Column()
-    Birth  : string;
+    Birth  : string;  // 생년월일 8자리
 
     @Column()
     Gender  : string;

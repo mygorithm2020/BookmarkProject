@@ -41,7 +41,7 @@ console.log(process.env.DB_HOST);
       serveRoot : '/images',
       serveStaticOptions: {
         index: false, // 인덱스 파일 제공 여부 설정
-        maxAge: 100000, // 캐시 유효 기간 설정
+        maxAge: 600000, // 캐시 유효 기간 설정
       },
     }),
     ConfigModule.forRoot({
