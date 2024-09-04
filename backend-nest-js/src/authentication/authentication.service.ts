@@ -4,20 +4,29 @@ import { UpdateAuthenticationDto } from './dto/update-authentication.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Authentication } from './entities/authentication.entity';
 import { DataSource, Repository } from 'typeorm';
-import { CustomUtils } from 'src/publicComponents/utils';
+import { CustomEncrypt, CustomUtils } from 'src/publicComponents/utils';
 import { Constraint } from 'src/publicComponents/constraint';
 import { ApiClient } from 'src/publicComponents/apiClient';
+import { ServerCache } from 'src/publicComponents/memoryCache';
+import { Member } from 'src/member/entities/member.entity';
+import { JwtService } from '@nestjs/jwt';
+import { jwtConstants } from 'src/member/entities/memberAuth.constant';
+import { AuthToken } from './entities/authtoken.entity';
 
 @Injectable()
 export class AuthenticationService {
 
   constructor(
     @InjectRepository(Authentication) private aRepo : Repository<Authentication>,
+    @InjectRepository(AuthToken) private atRepo: Repository<AuthToken>,
     private readonly customUtils : CustomUtils,
     private readonly constraint : Constraint,
     private readonly apiClient : ApiClient,
-    private dataSource: DataSource
-  ){}
+    private dataSource: DataSource,
+    private jwtService: JwtService,
+  ){
+    console.log("new AuthenticationService");
+  }
 
   create(createAuthenticationDto: CreateAuthenticationDto) {
     
@@ -74,12 +83,109 @@ export class AuthenticationService {
 
   }
 
+  async createToken(
+    member : Member, ip : string, userAgent : string, origin : string
+  ) : Promise<{ AccessToken: string, RefreshToken : string}> {     
+    // // 세션에 등록
+    // if (false){
+    //   let sessionId : string = await this.constraint.makeSessionId(member.MemberId);
+    //   ServerCache.setSession(sessionId);
+    //   sessionId = cEncrypt.encryptAes256(sessionId);
+    //   // 세션 키 리턴
+    //   // return sessionId;
+    // }
+
+    return {
+      AccessToken : await this.createAccessToken(member),
+      RefreshToken : await this.createRefreshToken(member.MemberId, ip, userAgent, origin),
+    }        
+  }
+
+  async createAccessToken(member : Member) : Promise<string>{
+
+    const cEncrypt = CustomEncrypt.getInstance();    
+    // JWT 방식
+    // 여기서 페이로드 값을 암호화 하고 다시 체크할 때 복호화해서 쓰자    
+    const payload = { V : cEncrypt.encryptAes256(JSON.stringify({I : member.MemEmail, Ae : member.Authentication, Ao : member.Authorization}))};    
+    const aToken = await this.jwtService.signAsync(payload) ;    
+
+    return aToken;   
+    
+  }
+
+  async createRefreshToken(memberId: string, ip : string, userAgent : string, origin : string) : Promise<string>{
+    const cEncrypt = CustomEncrypt.getInstance();    
+    // JWT 방식
+    const refreshPayload = {DT : this.customUtils.getUTCDate()};
+    const rToken = await this.jwtService.signAsync(refreshPayload, {
+      secret : jwtConstants.refreshSecret,
+      expiresIn : '1d'
+    });
+
+    // 리프레시 토큰 디비 저장
+    const at = new AuthToken();
+    at.Token = rToken;
+    at.MemberId = memberId;
+    at.IP = ip;
+    at.UserAgent = userAgent;
+    at.Origin = origin;
+    await this.createAuthToken(at);
+
+    return rToken;
+  }
+
+  async refreshToken(tokenObj : AuthToken, member: Member) : Promise<{ AccessToken: string, RefreshToken : string}>{
+    // 정상이면 엑세스 토큰 생성
+    try {
+      const payload = await this.jwtService.verifyAsync(
+        tokenObj.Token,
+        {
+          secret: jwtConstants.refreshSecret
+        }
+      );
+      console.log(JSON.stringify(payload));
+    } catch (err) {
+      console.log(err);
+      throw new HttpException({
+        errCode : 22,
+        error : "expired token"
+      }, HttpStatus.UNAUTHORIZED);
+    }
+
+    const aToken = await this.createAccessToken(member);    
+    let rToken = tokenObj.Token;
+
+    // 그렇다면 리프레쉬 토큰은 언제 업데이트?
+    // 데이터 저장 되어 있으니 생성기준 얼마 안남았으면 재 생성 해주자
+    if (this.customUtils.getUTCDate().getTime() - tokenObj.CreateDate.getTime() > 80000000){
+      rToken = await this.createRefreshToken(member.MemberId, tokenObj.IP, tokenObj.UserAgent, tokenObj.Origin);
+    }    
+
+    return {
+      AccessToken : aToken,
+      RefreshToken : rToken,
+    }    
+
+  }
+
   findAll() {
     return `This action returns all authentication`;
   }
 
   findOne(id: number) {
     return `This action returns a #${id} authentication`;
+  }
+
+  findOneByTokenAdmin(token: string) : Promise<AuthToken> {
+    let res = this.atRepo.findOne({
+      where : {
+        Token : token
+      },
+      order : {
+        CreateDate : "DESC"
+      }
+    })
+    return res;    
   }
 
   async findByEmailAdmin(email : string) : Promise<Authentication[]> {
@@ -125,5 +231,18 @@ export class AuthenticationService {
 
   remove(id: number) {
     return `This action removes a #${id} authentication`;
+  }
+
+
+  createAuthToken(refreshToken : AuthToken) : Promise<AuthToken> {
+    let res;
+    if (!refreshToken.Token || !refreshToken.MemberId){
+      throw new HttpException({
+        errCode : 21,
+        error : "failed to save token"
+      }, HttpStatus.BAD_REQUEST);
+    }
+    res = this.atRepo.save(this.atRepo.create(refreshToken));
+    return res;
   }
 }

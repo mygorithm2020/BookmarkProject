@@ -6,11 +6,15 @@ import { Category } from './entities/category.entity';
 import { CustomUtils, FileAdapter } from 'src/publicComponents/utils';
 import { Constraint } from 'src/publicComponents/constraint';
 import { ApiClient } from 'src/publicComponents/apiClient';
+import { HttpModule, HttpService } from '@nestjs/axios';
 
 @Module({
   imports : [TypeOrmModule.forFeature([
     Category
-  ])],
+  ]), HttpModule
+  
+],
+  
   controllers: [CategoryController],
   providers: [CategoryService, CustomUtils, Constraint, ApiClient, FileAdapter],
 })

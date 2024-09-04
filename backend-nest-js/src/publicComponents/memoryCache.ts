@@ -1,7 +1,9 @@
 import { Category } from "src/category/entities/category.entity";
 import { Site } from "src/site/entities/site.entity";
 import { Lock } from "async-lock";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class ServerCache {
 
     // private static readonly _categoryLock = new Lock();
@@ -91,8 +93,8 @@ export class ServerCache {
         let res = false;
         if (!this.restrictedViews){
             this.restrictedViews = {
-            lastUpdate : new Date(),
-            keyValues : new Set<string>()
+                lastUpdate : new Date(),
+                keyValues : new Set<string>()
             }  
         } else if (this.restrictedViews.lastUpdate.getUTCHours() !== new Date().getUTCHours()){
             this.restrictedViews.lastUpdate = new Date();

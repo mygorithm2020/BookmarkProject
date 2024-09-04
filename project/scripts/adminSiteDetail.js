@@ -30,7 +30,7 @@ mainContent01El.insertAdjacentHTML("beforeend", siteDetailtoHtmlAdmin(site, Cate
 let siteEdit = document.getElementById("site-edit-form");
 siteEdit.addEventListener("submit", async (target) => {
   target.preventDefault();
-  var confirmRes = confirm("정말 수정하시겠습니까?");
+  var confirmRes = window.confirm("정말 수정하시겠습니까?");
   if(confirmRes){
     siteEdit.disabled = true;
   } else {

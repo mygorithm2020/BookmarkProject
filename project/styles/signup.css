@@ -1,0 +1,81 @@
+#main_content01 {
+    margin: 4% 20%;  
+    padding: 2%;
+    min-width: 360px;
+    display: flex;
+    justify-content: center;
+    border-top: 4px solid black;
+}
+
+form {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    color: black;
+    
+}
+
+label {
+    color: black;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin: 2px;
+    padding-bottom: 6px; 
+}
+
+input, select {    
+    font-size: 1rem;
+    padding: 6px;
+    margin: 2px;
+    margin-right: 6px;
+    margin-bottom: 10px;
+    max-width: 60%;
+    border-radius: 6px;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 10px;  
+}
+
+button {
+    width: 50%;
+    font-size: 1rem;
+    margin: 2px;
+    margin-bottom: 10px;
+    padding: 6px 20px 6px 20px;
+    border-radius: 6px;
+
+}
+
+
+
+.agree-check{
+    margin: 10px;
+}
+
+.agree-link{
+    height: 2rem;
+    font-size: 1.2rem;
+    margin: 2px;
+    padding: 2px;
+    color: black;
+    text-decoration: underline;
+}
+
+#detail-info-box{
+    display: flex;
+    flex-direction: column;
+    transition: all 1s;
+}
+
+#signup-btn{
+    
+    width: 60%;
+    font-size: 1.6rem;
+    padding: 10px;
+    
+}

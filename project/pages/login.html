@@ -36,7 +36,7 @@
     <!-- <link rel="stylesheet" href="../css/dev.css"> -->
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/header.css">
-    <!-- <link rel="stylesheet" href="../styles/login.css"> -->
+    <link rel="stylesheet" href="../styles/login.css">
     
     
 </head>
@@ -49,29 +49,28 @@
     </nav>        
     <main class="layer1">
         <section id="main_content01">
-            <h2 class="site-map-text">로그인</h2>
             <form action="" method="post">
-                <!-- <div class="imgcontainer">
-                  <img src="../images/login02.png" alt="Avatar" class="avatar">
-                </div> -->
-              
-                <div class="container">
-                  <label for="uemail"><b>Email(아이디)</b></label>
-                  <input type="text" placeholder="example@google.com" name="uemail" required>
-              
-                  <label for="psw"><b>Password</b></label>
-                  <input type="password" placeholder="Enter Password" name="psw" required>
-              
-                  <button type="submit">Login</button>
-                  <label>
-                    <input type="checkbox" checked="checked" name="remember"> 아이디 저장
-                  </label>
-                </div>             
+              <!-- <div class="imgcontainer">
+                <img src="../images/login02.png" alt="Avatar" class="avatar">
+              </div> -->
+            
+              <div class="container">
+                <label for="uemail"><b>이메일 또는 아이디</b></label>
+                <input type="email" placeholder="example@google.com" name="uemail" required>
+            
+                <label for="psw"><b>비밀번호</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" required>
+            
+                <button id="login-btn" type="submit">로그인</button>
+                <label>
+                  <input type="checkbox"  name="remember"> 아이디 저장
+                </label>
+              </div>             
                 
             </form>
             <div class="container" style="background-color:#f1f1f1">
-              <a href="signUp.html">회원가입</a>
-              <a href="pwsearch.html">비밀번호 찾기</a>
+              <a href="signUp.html" class="cancelbtn">회원가입</a>
+              <a href="pwsearch.html" class="cancelbtn">비밀번호 찾기</a>
               <!-- <button type="button" class="cancelbtn">회원가입</button> -->
             </div>
         </section>

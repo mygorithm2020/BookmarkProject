@@ -56,7 +56,7 @@ console.log("category");
             for(const category of Category.categories){
                 if (category.Name === pageKey || category.NameKR === pageKey){
                     targetCategoryId = category.CategoryId;
-                    siteMapTextEl.innerHTML = category.NameKR;   
+                    // siteMapTextEl.innerHTML = category.NameKR;   
                     break;
                 }        
             }

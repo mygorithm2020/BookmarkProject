@@ -92,6 +92,7 @@ CREATE TABLE TA_Authentication (
   PhoneCode VARCHAR(8),
   PhoneNo VARCHAR(16),
   AuthCode VARCHAR(16) NOT NULL COMMENT "인증 코드",
+  Count INT DEFAULT 0 COMMENT "인증 시도 횟수",
   IsAuth INT NOT NULL DEFAULT 0 COMMENT "0 : 미인증, 1: 인증완료",
   CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
   UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP) 

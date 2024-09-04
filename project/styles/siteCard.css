@@ -67,12 +67,12 @@
 }
 
 .site-card-mid >div {
-    display: inline-block;
     height: 55%;
     word-spacing: 0.2rem;
     font-weight: 600;
     font-size: calc(0.7rem + 0.2vw + 0.2vh);
     overflow: hidden;
+    white-space: nowrap;
 }
 
 .site-card-mid >ul {

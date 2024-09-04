@@ -21,6 +21,9 @@ select version();
 
 show tables;
 
+select * from TA_member
+select * from TA_Authentication
+
 select * from ta_site where siteid = '62fe83ca0943461e9e28491ee6260965'
 select * from ta_site where isDeleted = 0 and status = 2;
 select * from ta_site order by status;
@@ -36,6 +39,7 @@ select * from ta_site where Siteid = '2990ae2ad6404710b351c67110c11beb'
 select * from ta_site where img = 'favicon.ico'
 update ta_site set img = null where img = ''
 
+select * from ta_member
 
 select * from ta_site where siteId = '0bda754655344afaaf216fd5bceb74c1'
 

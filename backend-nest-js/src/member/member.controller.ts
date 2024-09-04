@@ -5,7 +5,7 @@ import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthenticationService } from 'src/authentication/authentication.service';
-import { AuthGuard } from 'src/middleware/auth.guard';
+import { CustomAuthGuard } from 'src/middleware/auth.guard';
 import { Request } from 'express';
 
 @ApiTags("member")
@@ -44,19 +44,6 @@ export class MemberController {
     return result;
   }
 
-  @Post("/login")
-  async signIn(@Body() createMemberDto: Member, @Req() req : Request) {
-    // 기존 토큰이 있다면 그대로 리턴해주면 그만 아닐까.....
-
-    let result = await this.memberService.signInWithEmailPw(createMemberDto.MemEmail, createMemberDto.Password, req.ip, req.headers['user-agent'], req.headers.origin);
-    if (result.accessToken && result.refreshToken){
-      console.log(result);
-    }
-    return result;
-  }
-
-  // 토큰 리프레쉬
-
   @Get("/admin")
   findAll() {
     let res = this.memberService.findAllAdmin();
@@ -73,19 +60,21 @@ export class MemberController {
 
       let result = await this.memberService.findOneByEmailPublic(email);
       if (result && result.MemberId){
-        return {email : email};
+        return {Email : email};
       }
       return {};
   }
 
 
+  @UseGuards(CustomAuthGuard)
   @Get("/email")
-  findOnebyEmail(
-    @Query("email") email : string){
+  findOnebyEmail(@Query("email") email : string){
+    email = decodeURIComponent(email);
     let result = this.memberService.findOneByEmailPublic(email);
     return result;
   }
 
+  @UseGuards(CustomAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.memberService.findOnePublic(id);

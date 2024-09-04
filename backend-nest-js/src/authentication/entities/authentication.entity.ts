@@ -19,6 +19,9 @@ export class Authentication {
     AuthCode : string;
 
     @Column()
+    Count : number;
+
+    @Column()
     IsAuth  : number;
 
     @Column()

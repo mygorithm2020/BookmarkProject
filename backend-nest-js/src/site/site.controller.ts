@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, Ip, Req, Query, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, Ip, Req, Query, UseInterceptors, UseGuards } from '@nestjs/common';
 import { SiteService } from './site.service';
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
@@ -9,6 +9,7 @@ import { Response, Request } from 'express';
 import { CategoryService } from 'src/category/category.service';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
+import { CustomAuthGuard } from 'src/middleware/auth.guard';
 
 @ApiTags("site")
 @Controller('site')
@@ -26,6 +27,7 @@ export class SiteController {
 
   //  단순히 db에 등록하는과정에 가까움
   // 결국 다시 누군가 수작업으로 확인 필요
+  @UseGuards(CustomAuthGuard)
   @Post()
   create(@Body() createSiteDto: Site, @Ip() reqIp: string) {
     // 권한 체크

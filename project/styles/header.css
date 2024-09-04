@@ -6,15 +6,18 @@
     display: flex;
     justify-content: space-between;
     padding: 20px;
+    /* background: rgba(51, 170, 51, .1); */
+    /* background: darkgray; */
 }
 
 #header_left {
-    flex: 1;
-    visibility: hidden;
+    
+    display: flex;
+    justify-content: left;
 }
 
 #header_mid {
-    flex: 1;
+    
     display: flex;
     justify-content: center;
 }
@@ -29,7 +32,7 @@
 }
 
 #header_right {
-    flex: 1;
+    
 }
 
 #header_nav {
@@ -38,17 +41,37 @@
 }
 #header_nav>li {
     display: inline-block;
-    margin: 10px;
+    margin: 6px;
     padding: 6px;
-    border-radius: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 6px;
+    border-bottom: 1px solid black;
+}
+
+#header_nav>li img {
+    vertical-align: middle;
+    height: 20px;
 }
 
 #header_nav>li a{
-    font-size: 18px;
+    color: black;
+    font-size: 1rem;
     font-weight: bold;    
 }
 
+#header_nav>li button{
+    color: black;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: inherit;
+    border: none;    
+    background: none;
+}
 
+#header_nav>li button:hover{
+    cursor: pointer;
+}
 
 /* 메인 배너용 */
 #main_banner {

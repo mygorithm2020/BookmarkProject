@@ -1,6 +1,7 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, InternalServerErrorException } from "@nestjs/common";
 import { BaseExceptionFilter, HttpAdapterHost } from "@nestjs/core";
 import { Request, Response } from 'express';
+import { HttpErrorCode } from "src/publicComponents/ExceptionHandler";
 import { CustomUtils, FileAdapter } from "src/publicComponents/utils";
 
 @Catch(HttpException)
@@ -62,7 +63,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
         // 프론트에는 미리 설정 못했다는 의미로 서버에러 리턴
         if (!(exception instanceof HttpException)) {                  
           exception = new HttpException({
-              errCode : 1,
+              errCode : HttpErrorCode.Unknown,
               error : "Internal Server Error"
           }, HttpStatus.INTERNAL_SERVER_ERROR);
         }

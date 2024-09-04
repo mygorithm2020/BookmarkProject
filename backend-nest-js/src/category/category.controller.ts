@@ -5,12 +5,11 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
-import { AuthGuard, RolesGuard } from 'src/middleware/auth.guard';
+import { CustomAuthGuard, RolesGuard } from 'src/middleware/auth.guard';
 import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
 
 @ApiTags("category")
 @UseGuards(RolesGuard)
-// @UseGuards(AuthGuard)
 // @UseInterceptors(LoggingInterceptor)
 @Controller('category')
 export class CategoryController {
@@ -24,6 +23,7 @@ export class CategoryController {
       }
     }
   })
+  @UseGuards(CustomAuthGuard)
   @Post()
   create(@Body() createCategoryDto: Category) {
     throw new HttpException({
@@ -39,6 +39,7 @@ export class CategoryController {
     
     return this.categoryService.create(createCategoryDto);
   }
+
 
   @Get()
   findAll(@Req() req: Request, @Res({passthrough : true}) res : Response) {
@@ -73,6 +74,7 @@ export class CategoryController {
     return this.categoryService.findOneAdmin(id);
   }
 
+  @UseGuards(CustomAuthGuard)
   @Get(':id')
   findOne(@Req() req: Request) {
     const id : string = req.params["id"];

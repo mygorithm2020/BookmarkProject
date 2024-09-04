@@ -180,7 +180,9 @@ export class Category{
                 Authorization: ApiRequest.HEADER_AUTH,
                 cookies : decodeURIComponent(document.cookie)
             },
-            withCredentials : true
+            withCredentials : true,
+            cookie : "ssss",
+            cookies : "Sssssss"
         })
         .then((result) => {
             console.log(result);
@@ -220,13 +222,26 @@ export class Category{
 
     //카테고리 확장 버튼 클릭시 목록 리스트 구현
     async setExpandNavigationBox(categories){
-        // 일단 확장 기능은 막아두자
-        // return;
+        const subCategoryBox = document.getElementById("subcategory-box");
+        const cate = document.getElementById("category-box-expand");
+        let subCate = "";
+        for(const cg of categories){
+            subCate += `
+            <li><a href="./category.html?key=${cg.Name}">${cg.NameKR}</a>   
+                <ul class="category-expand-each-box">             
+            `;
+            for (const childCg of cg.childCategories){
+                subCate += `<li><a href="./category.html?key=${childCg.Name}">${childCg.NameKR}</a> </li>`;
+            }
+            subCate += "</ul></li>";
+        }
+        subCategoryBox.insertAdjacentHTML("beforeend", subCate);
+        
+        
 
         // 카테고리 바 확장
         document.getElementById("category-open").addEventListener("click", e => {
-            console.log("category-open click");
-            const cate = document.getElementById("category-box-expand");            
+            console.log("category-open click");            
             cate.classList.toggle("hidden");
             cate.classList.toggle("show");
             // cate.classList.toggle("cover");

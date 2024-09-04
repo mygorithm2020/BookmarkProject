@@ -9,21 +9,22 @@ a:hover {
 
 /* 공지사항 리스트용 */
 #notice_list {
+    margin: 2% 0;
     width: 100%;    
-    border-collapse: collapse;    
+    border-collapse: collapse;
+    border-top: 2px solid black;
 }
 
 .notice_card{
-    border: 1px dotted black;
+    border-bottom: 1px solid black;
     margin: 10px;
     padding: 6px;
     font-size: 1.5rem;
-    color: black;
+    
 }
 
-
-.notice_card:nth-child(1){
-    
+.notice_card:hover{
+    background-color: rgba(206, 205, 205, 0.3);
 }
 
 .notice_card >th {
@@ -31,37 +32,11 @@ a:hover {
 }
 
 .notice_card >td {
-    padding: 6px;
+    padding: 10px 20px;
 }
 
-.notice_card > th:nth-child(1) {
-    width: 10%;
-}
-.notice_card > th:nth-child(2) {
-    width: 60%;
-}
-.notice_card > th:nth-child(3) {
-    width: 20%;
-}
-.notice_card > th:nth-child(4) {
-    width: 10%;
-}
-
-.notice_card > td:nth-child(1) {
-    width: 10%;
-    text-align: center;
-}
-.notice_card > td:nth-child(2) {
-    padding-left: 10px;
-    width: 60%;
-}
-.notice_card > td:nth-child(3) {
-    width: 20%;
-    text-align: center;
-}
-.notice_card > td:nth-child(4) {
-    width: 10%;
-    text-align: center;
+.notice_card a {
+    color: black;
 }
 
 /* 공지사항 세부 내용 */
@@ -103,7 +78,7 @@ a:hover {
 
 .notice_detail_row > td {
     padding: 30px;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 
@@ -115,10 +90,9 @@ a:hover {
 #tolist_btn{
     margin: 20px;
     padding: 6px;
-    border-radius: 10px 10px 10px 10px;
-    width: 16%;
+    width: 12%;
     text-align: center;
-    font-size: 2.0rem;
+    font-size: 1.2rem;
     color: black;
 
 }

@@ -60,7 +60,7 @@ console.log(process.env.DB_HOST);
     logging : true,
     timezone : "z", // mysql에 들어있는 시간에서 자동으로 -9시간을 해오는거 해결
     
-  }),  BooksModule, CategoryModule, SiteModule, MemberModule, AuthenticationModule],
+  }),  BooksModule, CategoryModule, SiteModule, MemberModule, AuthenticationModule, HttpModule],
   controllers: [AppController],
   providers: [AppService, CustomUtils, FileAdapter, Constraint, ApiClient,
     {

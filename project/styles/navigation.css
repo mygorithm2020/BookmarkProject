@@ -10,6 +10,9 @@ nav {
     transition: all 1s;
 }
 
+a:hover {
+}
+
 .fixed-nav{
     position: fixed;
     top: 0;
@@ -18,8 +21,8 @@ nav {
 }
 
 nav a:hover {
-    color: blue;
     font-weight: bold;
+    background: white;
 }
 
 nav .selected {
@@ -27,6 +30,7 @@ nav .selected {
 }
 
 #main-nav-box{
+    height: 60px;
     display: flex;
     padding: 10px;
     align-items: center;
@@ -38,7 +42,6 @@ nav .selected {
 }
 
 #nav_list_box {
-    
     font-size: 1.2rem;
     display: flex;
     justify-content: space-around;
@@ -48,15 +51,15 @@ nav .selected {
 #nav_list_box > li {
     display: inline-block;
     margin: 5px;
-    padding: 5px;
     min-width: 30px;
     text-align: center;    
 }
 /* 너비 좁아지면 카테고리 사이드로 빼자 세로로 */
 
 #nav_list_box li a {
+    padding: 12px;
     color: black;
-    display: block;
+    border-radius: 6px;
 }
 
 #category-box-show {
@@ -67,7 +70,7 @@ nav .selected {
 
 #category-box-expand{
     position: absolute;
-    max-width: 1280px;
+    width: 1280px;
     margin: 0;
     transition: all 0.4s;    
 }
@@ -77,23 +80,32 @@ nav .selected {
     /* transition: all 1s ease-out; */
 }
 
-#category-box-expand > ul {
+#subcategory-box {
     padding: 16px;
     display: flex;
     justify-content: space-around;
     flex-direction: row;
     flex-wrap: wrap;
+    border-top: 20px double gray ;
 }
 
-#category-box-expand > ul > li {
-    padding: 20px;
+#subcategory-box > li {
+    color: black;
+    padding: 6px;
     min-width: 16%;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 1.1rem;
+    text-align: center;
+}
+
+#subcategory-box li a {
+    padding: 8px;
+    color: black;
+    border-radius: 6px;
 }
 
 .category-expand-each-box{
-    padding: 12px;
+    padding: 6px;
     font-size: 1rem;
 }
 

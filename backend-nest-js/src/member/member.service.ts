@@ -9,7 +9,6 @@ import * as bcrypt from 'bcrypt';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 import { Constraint } from 'src/publicComponents/constraint';
 import { JwtService } from '@nestjs/jwt';
-import { AuthToken } from './entities/authtoken.entity';
 import { jwtConstants } from './entities/memberAuth.constant';
 
 @Injectable()
@@ -17,7 +16,6 @@ export class MemberService {
 
   constructor(
     @InjectRepository(Member) private mRepo: Repository<Member>,
-    @InjectRepository(AuthToken) private aRepo: Repository<AuthToken>,
     private readonly customUtils : CustomUtils,
     private readonly constraint : Constraint,
     private jwtService: JwtService,
@@ -38,16 +36,21 @@ export class MemberService {
     const newMem = this.mRepo.create(memObj);
     let res = await this.mRepo.save(newMem);
     return res;    
-    return null;
   }
 
   // 나중에 oauth 인증도 추가 구글이랑 네이버 정도...? 카카오까지?
   
 
-  async signInWithEmailPw(
-    email : string, pw : string, ip : string, userAgent : string, origin : string
-  ) : Promise<{ accessToken: string, refreshToken : string, member : object}> { 
+  async checkWithEmailPw(
+    email : string, pw : string
+  ) : Promise<Member> { 
     console.log('This action loginWithEmailPw');
+    if (!email || !pw){
+      throw new HttpException({
+        errCode : 21,
+        error : "please input email and password"
+      }, HttpStatus.BAD_REQUEST);
+    }
     
     // 이메일과 비밀번호에 해당하는게 있는지 체크
     const member = await this.findOneByEmailAdmin(email);
@@ -67,64 +70,18 @@ export class MemberService {
         errCode : 26,
         error : "forbidden member"
       }, HttpStatus.BAD_REQUEST);
-    }
-
-    const cEncrypt = CustomEncrypt.getInstance();
-
-    // 세션에 등록
-    if (false){
-      let sessionId : string = await this.constraint.makeSessionId(member.MemberId);
-      ServerCache.setSession(sessionId);
-      sessionId = cEncrypt.encryptAes256(sessionId);
-      // 세션 키 리턴
-      // return sessionId;
-    }
-
-    
-    // JWT 방식
-    // 여기서 페이로드 값을 암호화 하고 다시 체크할 때 복호화해서 쓰자
-    
-    const payload =  {I : member.MemEmail, Ae : member.Authentication, Ao : member.Authorization};
-    // ip, useragent, 
-    const refreshPayoad = {I : member.MemEmail, DT : this.customUtils.getUTCDate()};
-    const aToken = cEncrypt.encryptAes256(await this.jwtService.signAsync(payload));
-    const rToken = cEncrypt.encryptAes256(await this.jwtService.signAsync(refreshPayoad, {
-      secret : jwtConstants.accessSecret,
-      expiresIn : '2d'
-    }));
-
-    // 리프레시 토큰 디비 저장
-    const at = new AuthToken();
-    at.Token = rToken;
-    at.MemberId = member.MemberId;
-    at.IP = ip;
-    at.UserAgent = userAgent;
-    at.Origin = origin;
-    await this.createToken(at);
+    }    
 
     return {
-      accessToken : aToken,
-      refreshToken : rToken,
-      member : {
-        MemberId : member.MemberId,
-        MemEmail : member.MemEmail,
-        NickName : member.NickName
-      }
-    }    
+      ...member,
+      Password : null,
+      Authentication : null,
+      Authorization : null,
+    };    
     
   }
 
-  createToken(authToken : AuthToken) : Promise<AuthToken> {
-    let res;
-    if (!authToken.Token){
-      throw new HttpException({
-        errCode : 21,
-        error : "failed to save token"
-      }, HttpStatus.BAD_REQUEST);
-    }
-    res = this.aRepo.save(authToken);
-    return res;
-  }
+  
 
   async findAllAdmin() : Promise<Member[]> {
     console.log(`This action returns all member`);
@@ -182,7 +139,7 @@ export class MemberService {
   }
 
   async findOneByEmailAdmin(email: string) : Promise<Member> {
-    let res : Member = await this.mRepo.findOne({
+    let res = this.mRepo.findOne({
       where : {
         MemEmail : email,
         IsDeleted : 0

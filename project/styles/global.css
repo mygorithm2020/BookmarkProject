@@ -5,6 +5,7 @@
     box-sizing: border-box; /* 테두리를 너비에 포함 */
     /* background-color: #001011;
     color: white; */
+    
 }
 
 body {
@@ -17,7 +18,9 @@ body {
 a {
     text-decoration: none;
     cursor: pointer;
+    color: black;
 }
+
 
 ul {
     /* li의 깔끔한 정렬을 위해 기본마진, 패딩 제거 */
@@ -82,7 +85,6 @@ main {
 
 .bg-color-2 {
     background-color: #AAD7D9;
-
 }
 
 .bg-color-3 {
@@ -96,6 +98,10 @@ main {
 
 .bg-color-5 {
     background-color: aliceblue;
+}
+
+.bg-color-6 {
+    background-color: rgba(232, 234, 224, 0.363);
 }
 
 

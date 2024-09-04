@@ -1,10 +1,11 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { Roles } from './roles.decorator';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from 'src/member/entities/memberAuth.constant';
+import { jwtConstants, jwtConstantsAdmin } from 'src/member/entities/memberAuth.constant';
 import { Request } from 'express';
+import { HttpErrorCode } from 'src/publicComponents/ExceptionHandler';
 
 // @Injectable()
 // export class AuthGuard implements CanActivate {
@@ -38,7 +39,7 @@ export class RolesGuard implements CanActivate {
 
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class CustomAuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -46,7 +47,11 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
     console.log("token" + token);
     if (!token) {
-      throw new UnauthorizedException();
+      // throw new UnauthorizedException();
+      throw new HttpException({
+        errCode : HttpErrorCode.AuthOne,
+        error : "authorizaion is required in header"
+      }, HttpStatus.UNAUTHORIZED);
     }
     try {
       console.log("Sdsd");
@@ -56,13 +61,57 @@ export class AuthGuard implements CanActivate {
           secret: jwtConstants.accessSecret
         }
       );
-      console.log(JSON.stringify(payload));
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
       request['user'] = payload;
     } catch (err) {
       console.log(err);
-      throw new UnauthorizedException();
+      throw new HttpException({
+        errCode : HttpErrorCode.AuthTwo,
+        error : "token is expired"
+      }, HttpStatus.UNAUTHORIZED);
+    }
+    return true;
+  }
+
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
+  }
+}
+
+
+export class AdminAuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const token = this.extractTokenFromHeader(request);
+    console.log("token" + token);
+    if (!token) {
+      // throw new UnauthorizedException();
+      throw new HttpException({
+        errCode : HttpErrorCode.AuthOne,
+        error : "authorizaion is required in header"
+      }, HttpStatus.UNAUTHORIZED);
+    }
+    try {
+      const payload = await this.jwtService.verifyAsync(
+        token,
+        {
+          secret: jwtConstantsAdmin.accessSecret
+        }
+      );
+
+      // 💡 We're assigning the payload to the request object here
+      // so that we can access it in our route handlers
+      request['user'] = payload;
+    } catch (err) {
+      console.log(err);
+      throw new HttpException({
+        errCode : HttpErrorCode.AuthTwo,
+        error : "token is expired"
+      }, HttpStatus.UNAUTHORIZED);
     }
     return true;
   }

@@ -172,7 +172,7 @@ export class FileAdapter{
 }
 
 // 이건 의존성 주입 안하고 싱글톤 방법으로 놔둬 봄.....
-@Injectable()
+// @Injectable()
 export class CustomEncrypt {
   private static instance : CustomEncrypt;
   private constructor(){

@@ -2,18 +2,17 @@ import axios, { AxiosResponse } from "axios";
 import { lastValueFrom, map } from "rxjs";
 import { Site } from "src/site/entities/site.entity";
 import { HttpService } from '@nestjs/axios';
-import { HttpException, HttpStatus } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import * as iconv from "iconv-lite";
 import { parse as Parse } from 'node-html-parser';
 import { JSDOM } from 'jsdom'
 import exp from "constants";
 
-export class ApiClient{
-    
-    private readonly httpService: HttpService
 
-    constructor(){
-        this.httpService = new HttpService();  
+@Injectable()
+export class ApiClient{
+    constructor(private readonly httpService: HttpService){
+        console.log("new ApiClient");
     }    
 
 
@@ -24,7 +23,7 @@ export class ApiClient{
         // this.httpService.get<string>(reqUrl, {
         this.httpService.get(reqUrl, {
             maxRedirects : 3,
-            timeout : 2500,
+            timeout : 3000,
             headers : {
             Accept : "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
@@ -73,7 +72,7 @@ export class ApiClient{
             }, HttpStatus.BAD_REQUEST);
           }
     
-          // 타임아웃시 나중에 다시 시도 체크
+          // 타임아웃시 나중에 다시 시도 체크 => 여기를 바꿔야 하나.... 타임아웃이여도 일단 등록으로?
           if((err.code === "ECONNABORTED")) {
             throw new HttpException({
               errCode : 32,
@@ -120,12 +119,16 @@ export class ApiClient{
             
       
             let links = root.querySelectorAll("link");
+            // 사이즈 큰걸로
+            let tempSize = 0;
             for (let idx =0; idx < links.length; idx ++){
               if (links[idx].getAttribute("rel")){
                 const linkRel = links[idx].getAttribute("rel").toLowerCase();
                 if (linkRel === "shortcut icon" || linkRel === "icon"){
-                  res.FaviconImg = links[idx].getAttribute("href");
-                  break;
+                  if (tempSize === 0 || tempSize < parseInt(links[idx].getAttribute("sizes"))){
+                    res.FaviconImg = links[idx].getAttribute("href");    
+                    tempSize = parseInt(links[idx].getAttribute("sizes"));
+                  }                    
                 }
               }              
             }      

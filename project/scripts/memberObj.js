@@ -14,12 +14,19 @@ export class Member {
         // ...other configs,
         timeout: 3000,
         withCredentials: true, // 인증 정보를 포함하도록 설정
+        headers : {
+            // authorization : `bearer ${}`
+            
+        },
+        
     });
 
 
     // 이메일 인증번호 발송
-    sendEmailAuth(email){
-        const resData = this.axiosPost("auth/send/email", {Email : email});
+    async sendEmailAuth(email){
+        const resData = await this.axiosPost("auth/sendemail", 
+            {Email : email}
+        );
         if (resData.errCode == 21){
             alert("올바른 이메일을 입력해주세요");
         } else if (resData.errCode == 22){
@@ -27,32 +34,32 @@ export class Member {
         } else if (resData.errCode == 23){
             alert("동일한 이메일로 전송된 인증번호가 있습니다. 새로 요청하시려면 몇분 후에 시도해주세요");
         } 
-        return resData.Email;
+        return resData;
         // {
         //     "Email": "mygorithm2020@gmail.com"
         // }
     }
 
-    // 이메일 인증확인
-    emailAuthCheck(email, authCode){
-        const resData = this.axiosPatch("auth/check/email",
+    // 이메일 인증확인(5분 이내로)
+    async emailAuthCheck(email, authCode){
+        const resData = await this.axiosPatch("auth/checkemail",
             {
                 Email : email,
                 AuthCode : authCode,
             });
         if (resData.errCode == 11){
-            alert("인증번호를 확인해주세요");
+            alert("잘못된 인증번호입니다.");
         } 
-        return resData.Email;
+        return resData;
         // {
         //     "Email": "mygorithm2020@gmail.com"
         // }
     }
 
     // 이메일 중복 확인, 응답으로 이메일이 있으면 중복됨을 의미    
-    emailDuplecateCheck(email){
+    async emailDuplecateCheck(email){
         email = encodeURIComponent(email);
-        const resData = this.axiosGet(`member/duplicate?email=${email}`);
+        const resData = await this.axiosGet(`member/duplicate?email=${email}`);
         if (resData.errCode == 11){
             alert("이메일 인증요청부터 진행해주세요");
         } else if (resData.errCode == 12){
@@ -89,13 +96,35 @@ export class Member {
         
         return resData;
         // {
-        //     "email": "abc@gmail.com"
+        //     "MemEmail": "mygorithm2020@gmail.com"
         // }
     }
 
     // 로그인
-    login(member){
-        const resData = this.axiosPost("member/login", member);
+    async login(member){
+        const resData = await this.axiosPost("auth/login", member);
+        console.log(resData);
+        if (resData.errCode == 24){
+            alert("등록된 계정이 없습니다. 이메일과 비밀번호를 확인해주세요");
+        } else if (resData.errCode == 25){
+            alert("인증이 필요한 계정입니다");
+        } else if (resData.errCode == 26){
+            alert("차단된 계정입니다. 관리자에게 문의하세요");
+        }
+        return resData;
+        // {
+        //     "AccessToken": "6ITH2gF/QUBv6VICNdOB1nr+XVGuOwBIFN3IJZ3ihuZNMzdLAhvoxUbc5+tdv6BeoAJVh7oOtrJsJMkwk74lI2AtaURzeY6UZD9tILdcmS8Z2QBMXhjw82oI8WeN24w35/UHE8Qd0JKacrsTEk0wJtvRDzeEXBPecJaYo2t2nnTu3O/HaZaBMq+dDLHFU0SOMgVlFKET+pqzD5HTPtmqvkmj2lOukGv8HNMhXjYJJs5mTc0ySJRkjxMJaQ==",
+        //     "RefreshToken": "6ITH2gF/QUBv6VICNdOB1nr+XVGuOwBIFN3IJZ3ihuZNMzdLAhvoxUbc5+tdv6BeoAJVh7oOtrJsJMkwk74lI2AtaURzeY6UZD9tILdcmS8e1RBMXhzzzXQUzA6Q2aIV4PEAJfk014KacqsXXU0wPp/RISOKRjngaoWtp3Rbt1Kg38HtIJavPuSdMq3LeFbXOCpfLIEAx7ilK7/ofe6rui+E7Xu4oU+qEJsdFWU5dNcQfsAEF8FgpB4Wa2H9T7TBzLVEx01n59hGIM3RppO/UjI6QQ==",
+        //     "Member": {
+        //         "MemberId": "3cf1c866d24e4eafa4ff972ee8d2a7a1",
+        //         "NickName": "테스트0826"
+        //     }
+        // }
+    }
+
+    // 토큰 리프레쉬 + 로그인 확인용
+    refreshToken(){
+        const resData = this.axiosPost("auth/refresh");
         if (resData.errCode == 24){
             alert("등록된 계정이 없습니다. 이메일과 비밀번호를 확인해주세요");
         } else if (resData.errCode == 25){
@@ -115,41 +144,39 @@ export class Member {
         // }
     }
 
-    //
 
 
-
-    static async axiosPatch(path, body){
+    async axiosPatch(path, body){
         let data = await this.apiInstance.patch(path, body)
         .then((result) => {
             return result.data;   
         })
         .catch((error) => {
-            HandleBasicError(error);
+            this.HandleBasicError(error);
             return error.response.data;
         });
         return data;
     }
 
-    static async axiosPost(path, body){
-        let data = await this.apiInstance.post(path, body)
+    axiosPost(path, body){
+        let data = this.apiInstance.post(path, body)
         .then((result) => {
             return result.data;   
         })
         .catch((error) => {
-            HandleBasicError(error);
+            this.HandleBasicError(error);
             return error.response.data;
         });
         return data;
     }
 
-    static async axiosGet(path){
+    async axiosGet(path){
         let data = await this.apiInstance.get(path)
         .then((result) => {
             return result.data;   
         })
         .catch((error) => {
-            HandleBasicError(error);
+            this.HandleBasicError(error);
             return error.response.data;
         });
         return data;

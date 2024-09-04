@@ -101,7 +101,7 @@ async function setSitePage(){
     mainContent01El.insertAdjacentHTML("beforeend", 
         `<div id="search-box">
             <label>이름 또는 URL 검색</label>
-            <input type="text" placeholder="bookmark" required>                               
+            <input type="search" placeholder="bookmark" required>                               
         </div>
         <div>
             <button id="change-sequence">변경 오래된 순</button>
