@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Req, HttpException, HttpStatus, Res, UseFilters, ParseIntPipe, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Req, HttpException, HttpStatus, Res, UseFilters, ParseIntPipe, UseGuards, UseInterceptors, Query } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -7,6 +7,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
 import { CustomAuthGuard, RolesGuard } from 'src/middleware/auth.guard';
 import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
+import { ServerCache } from 'src/publicComponents/memoryCache';
 
 @ApiTags("category")
 @UseGuards(RolesGuard)
@@ -42,7 +43,7 @@ export class CategoryController {
 
 
   @Get()
-  findAll(@Req() req: Request, @Res({passthrough : true}) res : Response) {
+  async findAll(@Req() req: Request, @Res({passthrough : true}) res : Response) {
     // let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
     // console.log(ip);
     // console.log(req.headers);
@@ -50,7 +51,16 @@ export class CategoryController {
     // console.log(req.headers.cookie);
     // res.cookie("test", "test", {sameSite : "none", httpOnly : true});
     // res.end();
-    return this.categoryService.findAllPublic();
+    let result  = ServerCache.getCategorys();
+    
+    if (!result || result.length === 0){      
+      let newCategorys = await this.categoryService.findAllPublic();
+      ServerCache.setCategorys(newCategorys);
+      result = ServerCache.getCategorys();
+    }
+
+    // let data = await this.cRepo.find()
+    return result;
   }
 
   @Get("/admin")
@@ -105,10 +115,16 @@ export class CategoryController {
     // return this.categoryService.updateAdmin(id, updateCategoryDto);
   }
 
-  
+  @Delete('/admin')
+  removeAdmin(@Query('id') id: string) {
+    console.log(id);
+    return this.categoryService.remove(id);
+  }
 
   // @Delete(':id')
   remove(@Param('id') id: string) {
     return this.categoryService.remove(id);
   }
+
+  
 }

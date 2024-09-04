@@ -21,7 +21,7 @@ if (!site){
 // 카테고리 조회
 let cqdsd = new Category();
 Category.categories = await cqdsd.getCategoryAdmin();
-Category.categories = cqdsd.transFormCategories(Category.categories);
+Category.categories = cqdsd.transFormCategoriesLayerStructure(Category.categories);
 
 // 내용 표시
 mainContent01El.insertAdjacentHTML("beforeend", siteDetailtoHtmlAdmin(site, Category.categories));
@@ -218,8 +218,11 @@ function siteDetailtoHtmlAdmin(site, categories){
                         <td>카테고리</td>
                         <td>
                             <div>
-                            `
+                            `;
 
+            
+            res += "<ul id='category-box'>";
+              
             for (const category of categories){
               let isChecked = false;              
               if (site.Categories && site.Categories.length > 0){                
@@ -235,12 +238,34 @@ function siteDetailtoHtmlAdmin(site, categories){
               }
               
               res += `
+              <li class="site-detail-category-list">
               <input
                 type="checkbox"
                 name="category"
                 value="${category.CategoryId}" ${isChecked? "checked" : ""} />
-              <label for="subscribeNews">${category.NameKR}</label>`              
+              <label for="subscribeNews">${category.NameKR}</label>
+              `;
+              for (const subCa of category.childCategories){
+                let isChecked = false;
+                for (const siteCategory of site.Categories){                                    
+                  if (siteCategory.CategoryId === subCa.CategoryId){                                   
+                    isChecked = true;
+                    break;
+                  }
+                }
+                res +=`
+                <input
+                type="checkbox"
+                name="category"
+                value="${subCa.CategoryId}" ${isChecked? "checked" : ""} />
+                <label for="subscribeNews">${subCa.NameKR}</label>
+                `
+
+              }
+              
+              res += "</li>";
             }
+            res += "</ul>";
             res += `
                           </div>
                               

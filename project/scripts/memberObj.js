@@ -1,4 +1,5 @@
 import { ApiRequest } from "./apiRequest.js";
+import {ACCESSTOKEN, REFRESHTOKEN} from "./global.js";
 
 export class Member {
 
@@ -8,23 +9,21 @@ export class Member {
     Birth;
     Gender;
 
-
-    apiInstance = axios.create({
-        baseURL: ApiRequest.NEST_API_HOST + "/api",
-        // ...other configs,
-        timeout: 3000,
-        withCredentials: true, // 인증 정보를 포함하도록 설정
-        headers : {
-            // authorization : `bearer ${}`
+    // apiInstance = axios.create({
+    //     baseURL: ApiRequest.NEST_API_HOST + "/api",
+    //     // ...other configs,
+    //     timeout: 4000,
+    //     withCredentials: true, // 인증 정보를 포함하도록 설정
+    //     headers : {
+    //         authorization : `bearer ${ACCESSTOKEN}`
             
-        },
+    //     },
         
-    });
-
+    // });
 
     // 이메일 인증번호 발송
     async sendEmailAuth(email){
-        const resData = await this.axiosPost("auth/sendemail", 
+        const resData = await ApiRequest.axiosPost("auth/sendemail", 
             {Email : email}
         );
         if (resData.errCode == 21){
@@ -42,7 +41,7 @@ export class Member {
 
     // 이메일 인증확인(5분 이내로)
     async emailAuthCheck(email, authCode){
-        const resData = await this.axiosPatch("auth/checkemail",
+        const resData = await ApiRequest.axiosPatch("auth/checkemail",
             {
                 Email : email,
                 AuthCode : authCode,
@@ -59,7 +58,7 @@ export class Member {
     // 이메일 중복 확인, 응답으로 이메일이 있으면 중복됨을 의미    
     async emailDuplecateCheck(email){
         email = encodeURIComponent(email);
-        const resData = await this.axiosGet(`member/duplicate?email=${email}`);
+        const resData = await ApiRequest.axiosGet(`member/duplicate?email=${email}`);
         if (resData.errCode == 11){
             alert("이메일 인증요청부터 진행해주세요");
         } else if (resData.errCode == 12){
@@ -75,7 +74,7 @@ export class Member {
 
     // 회원가입
     signUp(member){
-        const resData = this.axiosPost("member/signup", member);
+        const resData = ApiRequest.axiosPost("member/signup", member);
         if (resData.errCode == 11){
             alert("인증번호를 확인해주세요");
         } else if (resData.errCode == 21){
@@ -102,7 +101,7 @@ export class Member {
 
     // 로그인
     async login(member){
-        const resData = await this.axiosPost("auth/login", member);
+        const resData = await ApiRequest.axiosPost("auth/login", member);
         console.log(resData);
         if (resData.errCode == 24){
             alert("등록된 계정이 없습니다. 이메일과 비밀번호를 확인해주세요");
@@ -122,16 +121,27 @@ export class Member {
         // }
     }
 
+    // 401에러 나오면 리프레시 시도하고, 그래도 안되면 재 로그인 필요
     // 토큰 리프레쉬 + 로그인 확인용
     refreshToken(){
-        const resData = this.axiosPost("auth/refresh");
+        const resData = ApiRequest.axiosPost("auth/refresh", null, {
+            authorization : `bearer ${REFRESHTOKEN}`            
+        });
         if (resData.errCode == 24){
             alert("등록된 계정이 없습니다. 이메일과 비밀번호를 확인해주세요");
         } else if (resData.errCode == 25){
             alert("인증이 필요한 계정입니다");
         } else if (resData.errCode == 26){
             alert("차단된 계정입니다. 관리자에게 문의하세요");
+        } else if (resData.ACCESSTOKEN){
+            localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify({
+              AccessToken : resData.AccessToken,
+              RefreshToken : resData.RefreshToken
+            }));
+            
+            localStorage.setItem(STORAGE_KEY_NICKNAME, resData.Member.NickName);
         }
+
         return resData;
         // {
         //     "accessToken": "6ITH2gF/QUBv6VICNdOB1nr+XVGuOwBIFN3IJZ3ihuZNMzdLAhvoxUbc5+tdv6BeoAJVh7oOtrJsJMkwk74lI2AtaURzeY6UZD9tILdcmS8Z2QBMXhjw82oI8WeN24w35/UHE8Qd0JKacrsTEk0wJtvRDzeEXBPecJaYo2t2nnTu3O/HaZaBMq+dDLHFU0SOMgVlFKET+pqzD5HTPtmqvkmj2lOukGv8HNMhXjYJJs5mTc0ySJRkjxMJaQ==",
@@ -144,55 +154,5 @@ export class Member {
         // }
     }
 
-
-
-    async axiosPatch(path, body){
-        let data = await this.apiInstance.patch(path, body)
-        .then((result) => {
-            return result.data;   
-        })
-        .catch((error) => {
-            this.HandleBasicError(error);
-            return error.response.data;
-        });
-        return data;
-    }
-
-    axiosPost(path, body){
-        let data = this.apiInstance.post(path, body)
-        .then((result) => {
-            return result.data;   
-        })
-        .catch((error) => {
-            this.HandleBasicError(error);
-            return error.response.data;
-        });
-        return data;
-    }
-
-    async axiosGet(path){
-        let data = await this.apiInstance.get(path)
-        .then((result) => {
-            return result.data;   
-        })
-        .catch((error) => {
-            this.HandleBasicError(error);
-            return error.response.data;
-        });
-        return data;
-    }
-
-    HandleBasicError(error){
-        console.log(error);
-        if (error.code === "ERR_NETWORK"){
-            // 현재 이용 불가능한 무언가 띄우기...
-            // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-            alert("현재 서버 점검 중으로 수정할 수 없습니다.");
-        } else if (error.response.data.errCode){
-            // 백엔드에서 미리 처리못한 에러 발생 문의 필요
-            if (error.response.data.errCode === 1){
-                alert("내부 오류가 발생했습니다.");
-            }
-        }
-    }
+    
 }

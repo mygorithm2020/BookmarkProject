@@ -49,29 +49,22 @@ export class CategoryService {
 
   // 자주 요청되며, 바뀌지 않으니 캐시해서 이용
   async findAllPublic() : Promise<Category[]> {
-    let result  = ServerCache.getCategorys();
-    
-    if (!result || result.length === 0){
-      
-      let newCategorys = await this.cRepo.find({
-        select : {
-          CategoryId : true,          
-          Name : true,
-          NameKR : true,
-          Layer : true,
-          Sequence : true,
-        },
-        where : {
-          IsDeleted : 0,
-          Status : 2
-        }
-      });
-      ServerCache.setCategorys(newCategorys);
-      result = ServerCache.getCategorys();
-    }
+    let newCategorys = await this.cRepo.find({
+      select : {
+        CategoryId : true,          
+        Name : true,
+        NameKR : true,
+        Layer : true,
+        Sequence : true,
+      },
+      where : {
+        IsDeleted : 0,
+        Status : 2
+      }
+    });
 
     // let data = await this.cRepo.find()
-    return result;
+    return newCategorys;
   }
 
   findOnePublic(id: string) : Promise<Category> {
@@ -106,8 +99,14 @@ export class CategoryService {
     console.log(`This action updates a #${id} category`);
     // 반환값이 뭐지...??
     // console.log(await this.cRepo.update(id, updateCategoryDto))
+
+    const updateRes = await this.cRepo.update(id, {...updateCategoryDto, UpdatedDate : this.customUtils.getUTCDate()});
+    // 캐시 내용 변경
+    if (updateRes.affected > 0){
+      ServerCache.setCategorys(await this.findAllPublic());
+    }
     
-    return await this.cRepo.update(id, {...updateCategoryDto, UpdatedDate : this.customUtils.getUTCDate()});
+    return updateRes;
   }
 
   async remove(id: string) {

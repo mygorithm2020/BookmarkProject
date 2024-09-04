@@ -1,7 +1,7 @@
 import { Category } from "./categoryObj.js";
 
 let curUrl = new URL(document.location.toString());
-let categoryId = curUrl.searchParams.get("key");
+const categoryId = curUrl.searchParams.get("key");
 
 let mainContent01El = document.getElementById("main_content01");
 
@@ -15,7 +15,7 @@ if (!data){
   window.location.href = "index.html?key=category";
 }
 
-mainContent01El.insertAdjacentHTML("beforeend", categoryToHtmlAdmin(data));
+mainContent01El.insertAdjacentHTML("afterbegin", categoryToHtmlAdmin(data));
 
 // 수정하기 버튼 클릭 이벤트 추가
 let categoryEdit = document.getElementById("category-edit-form");
@@ -49,6 +49,16 @@ categoryEdit.addEventListener("submit", async (target) => {
         alert("수정에 실패하였습니다.");
     }
 });
+
+// 삭제 버튼
+document.querySelector("#category-delete").addEventListener("click", async ()=>{
+    const res = await category.deleteCategoryAdmin(categoryId);
+    console.log(res);
+    if (res == ""){
+        alert("카테고리가 삭제 되었습니다.");
+        window.location.href = "/admin/?key=category";
+    }
+})
 
 // 하위 카테고리 추가 버튼
 let subCategory = document.getElementById("sub-category-add-box");
@@ -116,7 +126,9 @@ function categoryToHtmlAdmin(category){
         </ul>
         <input class="category-edit-btn" type="submit" value="수정">
         <input class="category-edit-btn" type="reset" value="초기화">
-    </form>`;
+    </form>
+    <button id="category-delete" type="button">삭제</button>
+    `;
 
     res +=`
     <h3>자식 카테고리 추가</h3>

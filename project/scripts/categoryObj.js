@@ -23,14 +23,19 @@ export class Category{
     API_HOST = ApiRequest.NEST_API_HOST + "/api";
     // API_HOST = "http://34.64.199.1:3000";
 
-    instance = axios.create({
-        baseURL: ApiRequest.NEST_API_HOST + "/api",
-        // ...other configs,
-        timeout: 3000,
-    });
+    // instance = axios.create({
+    //     baseURL: ApiRequest.NEST_API_HOST + "/api",
+    //     // ...other configs,
+    //     timeout: 4000,
+    //     withCredentials: true, // 인증 정보를 포함하도록 설정
+    //     headers : {
+    //         authorization : `bearer ${ACCESSTOKEN}`            
+    //     },
+        
+    // });
 
-    static async axiosPost(path, body){
-        let data = await this.instance.post(path, body)
+    async axiosDelete(path){
+        let data = await ApiRequest.instance.delete(path)
         .then((result) => {
             console.log(result); 
             return result.data;   
@@ -52,7 +57,30 @@ export class Category{
         return data;
     }
 
-    static async axiosGet(path){
+    async axiosPost(path, body){
+        let data = await ApiRequest.instance.post(path, body)
+        .then((result) => {
+            console.log(result); 
+            return result.data;   
+        })
+        .catch((error) => {
+            console.error(error);            
+            if (error.code === "ERR_NETWORK"){
+                // 현재 이용 불가능한 무언가 띄우기...
+                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+                alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+            } else if (error.response.data.errCode){
+                // 백엔드에서 미리 처리못한 에러 발생 문의 필요
+                if (error.response.data.errCode === 1){
+                    alert("내부 오류가 발생했습니다.");
+                }
+            }
+            return error.response.data;
+        });
+        return data;
+    }
+
+    async axiosGet(path){
         let data = await axios.get(path)
         .then((result) => {
             console.log(result); 
@@ -74,8 +102,6 @@ export class Category{
         });
         return data;
     }
-    
-    
 
     async addCategoryAdmin(category, errCallback){
         // 카테고리 불러오기
@@ -108,6 +134,11 @@ export class Category{
             return error.response.data;
         });
         return data;
+    }
+
+    deleteCategoryAdmin(categoryId){
+        let res = this.axiosDelete(`/category/admin?id=${categoryId}`);
+        return res;
     }
 
     async updateCategoryAdmin(category){
@@ -175,14 +206,11 @@ export class Category{
     getCategory(){
         const auth = 'qwdqwdqwdqd ' + "qwdqwdqwdwqdwdqwSD" + btoa('user:password');
         // 카테고리 불러오기
-        let data = this.instance.get("/category", {
+        let data = ApiRequest.instance.get("/category", {
             headers : {
-                Authorization: ApiRequest.HEADER_AUTH,
+                // Authorization: ApiRequest.HEADER_AUTH,
                 cookies : decodeURIComponent(document.cookie)
             },
-            withCredentials : true,
-            cookie : "ssss",
-            cookies : "Sssssss"
         })
         .then((result) => {
             console.log(result);
@@ -214,7 +242,7 @@ export class Category{
         }
         // 세팅
         for (const d of categories){    
-            if (d.Layer === 1){
+            if (d.Layer === 1 || !d.ParentId){
                 q.insertAdjacentHTML("beforeend", `<li><a href="./category.html?key=${d.Name}">${d.NameKR}</a></li>`);
             }            
         }

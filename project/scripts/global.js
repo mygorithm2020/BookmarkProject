@@ -10,6 +10,15 @@
 // document.cookie = "username3=John Doe; expires=Thu, 18 Dec 2024 12:00:00 UTC; path=/";
 
 // document.cookie = "username4=John Doe; expires=Thu, 18 Dec 2024 12:00:00 UTC; path=/; Secure";
+
+export const STORAGE_KEY_REMEBER_LOGIN = "login-info";
+export const STORAGE_KEY_NICKNAME = "nickname";
+export const STORAGE_KEY_TOKEN = "token";
+export const ACCESSTOKEN = JSON.parse(window.localStorage.getItem(STORAGE_KEY_TOKEN)).AccessToken;
+export const REFRESHTOKEN = JSON.parse(window.localStorage.getItem(STORAGE_KEY_TOKEN)).RefreshToken;
+
+
+
 const cName = "mId";
 if (!getCookie(cName)){
     const vId = crypto.randomUUID().replaceAll("-", "");
@@ -26,12 +35,11 @@ function getCookie(name){
     }
 }
 
-export const STORAGE_KEY_REMEBER_LOGIN = "login-info";
-export const STORAGE_KEY_NICKNAME = "nickname";
-export const STORAGE_KEY_TOKEN = "token";
+
 
 // 로그인 상태면 헤더 변경
-if (window.localStorage.getItem(STORAGE_KEY_NICKNAME)){
+// 리프레시 토큰이 유효기간 이전이면 됨
+if (window.localStorage.getItem(STORAGE_KEY_NICKNAME) && getExpiredDate() > Date.now()){
     console.log(document.querySelector("#header_nav>li:first-child"));
     document.querySelector("#header_nav>li:first-child").remove();
 
@@ -42,11 +50,10 @@ if (window.localStorage.getItem(STORAGE_KEY_NICKNAME)){
     );
 
     document.querySelector("#header_nav").insertAdjacentHTML("beforeend", `
-        <li>
-            
+        <li>            
             <a href="myPage.html">
                 <img src="../images/user.png"/>
-                ${window.localStorage.getItem(STORAGE_KEY_NICKNAME)}
+                ${window.localStorage.getItem(STORAGE_KEY_NICKNAME)? window.localStorage.getItem(STORAGE_KEY_NICKNAME).substring(0, 10) : "마이페이지"}
             </a>
         </li>  `
     );
@@ -58,5 +65,16 @@ if (window.localStorage.getItem(STORAGE_KEY_NICKNAME)){
             window.location.reload();
         }
     })
+    
+}
+
+// 리프레시 토큰의 만료일
+function getExpiredDate(){
+    let expiredDate = Date.now() / 1000;
+    if(window.localStorage.getItem(STORAGE_KEY_TOKEN)){
+        expiredDate = JSON.parse(atob(REFRESHTOKEN.split(".")[1])).exp;
+    }
+
+    return expiredDate;
     
 }
