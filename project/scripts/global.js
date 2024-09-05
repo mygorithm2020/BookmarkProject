@@ -11,6 +11,7 @@
 
 // document.cookie = "username4=John Doe; expires=Thu, 18 Dec 2024 12:00:00 UTC; path=/; Secure";
 
+export const SITE_TITLE = "BookMarker";
 export const STORAGE_KEY_REMEBER_LOGIN = "login-info";
 export const STORAGE_KEY_NICKNAME = "nickname";
 export const STORAGE_KEY_TOKEN = "token";

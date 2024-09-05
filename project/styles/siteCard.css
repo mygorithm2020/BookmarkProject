@@ -59,11 +59,13 @@
     padding: 10px;
 } */
 
+/* 지금 방문수 주석처리해서 임시로 top padding 추가*/
 .site-card-mid {
     width: 100%;
     height: 24%;
     padding: 8px;
     color: black;
+    padding-top: 20px;
 }
 
 .site-card-mid >div {

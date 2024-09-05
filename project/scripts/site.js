@@ -40,6 +40,7 @@ export class Site {
 
     // 숫자(뷰, 좋아요, 싫어요)
     // 1000 넘어가면 표기 변경 구현
+    // <li>방문수 ${siteList[i].Views}</li>
 
     static listToHtmlTemp(siteList){
         let res = "";
@@ -67,7 +68,7 @@ export class Site {
                             ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
                         </div>
                         <ul class="site-detail-box">
-                            <li>방문수 ${siteList[i].Views}</li>
+                            
                             
                                                          
                         </ul>

@@ -1,6 +1,7 @@
 import { Bookmark } from "./bookmark.js";
 import { Category } from "./categoryObj.js";
 import { Site } from "./site.js";
+import { SITE_TITLE} from "./global.js";
 
 console.log("category");
 (function(){
@@ -44,7 +45,7 @@ console.log("category");
     console.log(pageKey);
     
     const asd = document.querySelector("title");
-    asd.textContent += ` - ${pageKey}`;
+    asd.textContent = `${pageKey}` + " - " + SITE_TITLE;
 
     const siteMapTextEl = document.querySelector(".site-map-text");
     let spinner = document.querySelector(".loading-spinner");
