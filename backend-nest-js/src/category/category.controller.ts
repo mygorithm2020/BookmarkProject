@@ -5,7 +5,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
-import { CustomAuthGuard, RolesGuard } from 'src/middleware/auth.guard';
+import { AdminAuthGuard, CustomAuthGuard, RolesGuard } from 'src/middleware/auth.guard';
 import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 
@@ -35,9 +35,15 @@ export class CategoryController {
   }
 
   
-  @Post("/admin")  
+  @Post("/admin")
+  @UseGuards(AdminAuthGuard)  
   createAdmin(@Req() req: Request, @Body() createCategoryDto: Category) {
     
+    return this.categoryService.create(createCategoryDto);
+  }
+
+  @Post("/daemon")  
+  createDaemon(@Req() req: Request, @Body() createCategoryDto: Category) {
     return this.categoryService.create(createCategoryDto);
   }
 
@@ -64,6 +70,7 @@ export class CategoryController {
   }
 
   @Get("/admin")
+  @UseGuards(AdminAuthGuard)
   findAllAdmin(@Req() req: Request) {
     // res.cookie("test", "test");
     console.log(req.cookies);
@@ -73,6 +80,7 @@ export class CategoryController {
   }
 
   @Get('/admin/:id')
+  @UseGuards(AdminAuthGuard)
   findOneAdmin(@Param('id') id: string) {
     if (!id){
       throw new HttpException({
@@ -104,6 +112,7 @@ export class CategoryController {
   // }
 
   @Patch('/admin')
+  @UseGuards(AdminAuthGuard)
   async updateAdmin(@Body() category: Category) {
     let res = await this.categoryService.updateAdmin(category.CategoryId, category);
     return res.affected;
@@ -116,6 +125,7 @@ export class CategoryController {
   }
 
   @Delete('/admin')
+  @UseGuards(AdminAuthGuard)
   removeAdmin(@Query('id') id: string) {
     console.log(id);
     return this.categoryService.remove(id);

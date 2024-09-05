@@ -10,7 +10,6 @@ import { Category } from "./categoryObj.js";
     cqdsd.setExpandNavigationBox(Category.categories);
 
     let curUrl = new URL(document.location.toString());
-    console.log(curUrl.pathname);
     let pageKey = curUrl.searchParams.get("key");
     let navList = document.querySelectorAll("#nav_list_box li");
     for (const navLiEl of navList){

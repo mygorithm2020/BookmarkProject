@@ -74,10 +74,10 @@ export class ApiClient{
     
           // 타임아웃시 나중에 다시 시도 체크 => 여기를 바꿔야 하나.... 타임아웃이여도 일단 등록으로?
           if((err.code === "ECONNABORTED")) {
-            throw new HttpException({
-              errCode : 32,
-              error : "URL verification takes too long, please try again later"    
-            }, HttpStatus.BAD_REQUEST);
+            // throw new HttpException({
+            //   errCode : 32,
+            //   error : "URL verification takes too long, please try again later"    
+            // }, HttpStatus.BAD_REQUEST);
           }
         }
     

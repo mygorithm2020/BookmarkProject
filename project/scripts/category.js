@@ -3,10 +3,8 @@ import { Category } from "./categoryObj.js";
 import { Site } from "./site.js";
 import { SITE_TITLE} from "./global.js";
 
-console.log("category");
 (function(){
 
-    console.log(window.location);
     // console.log(window.location.search.substring(5));
 
     // let categoryObj = new Category();
@@ -40,9 +38,7 @@ console.log("category");
     // }, 500);
 
     let curUrl = new URL(document.location.toString());
-    console.log(curUrl.pathname);
     let pageKey = curUrl.searchParams.get("key");
-    console.log(pageKey);
     
     const asd = document.querySelector("title");
     asd.textContent = `${pageKey}` + " - " + SITE_TITLE;

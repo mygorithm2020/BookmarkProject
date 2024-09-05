@@ -108,4 +108,5 @@
 - 
 
 ### 추가 참고 내용(위 내용 외에 추가로 참고할만한 내용)
+- nestjs 미들웨어 순서 (middleware -> guard -> interceptor -> route -> interceptor), exception filter는 순서와 상관없이 전역
 

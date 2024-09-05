@@ -9,7 +9,7 @@ import { Response, Request } from 'express';
 import { CategoryService } from 'src/category/category.service';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
-import { CustomAuthGuard } from 'src/middleware/auth.guard';
+import { AdminAuthGuard, CustomAuthGuard } from 'src/middleware/auth.guard';
 
 @ApiTags("site")
 @Controller('site')
@@ -101,11 +101,13 @@ export class SiteController {
   }
 
   @Get('/admin/all')
+  @UseGuards(AdminAuthGuard)
   findAllAdmin() {
     return this.siteService.findAllAdmin();
   }
 
   @Get('/admin')
+  @UseGuards(AdminAuthGuard)
   findOneByAdmin(@Query('id') siteId: string) {
     console.log(siteId);
     return this.siteService.findOneByAdmin(siteId);
@@ -148,6 +150,7 @@ export class SiteController {
 
   // 전달받은 정보(칼럼)만 수정
   @Put("/admin")
+  @UseGuards(AdminAuthGuard)
   async updateSite(@Body() site: Site, @Ip() reqIp: string) {
     let result = {};
     let updateRes = await this.siteService.updateSiteAndCategorySiteAdmin(site);
@@ -165,6 +168,34 @@ export class SiteController {
     if (ServerCache.checkRestrictedViews(req.headers["user-agent"], req.ip, updateSiteDto.SiteId)){
        return 
     }
+    // 멤버별로 조회수 기록 로그형태
+
+    let res = await this.siteService.updateViews(updateSiteDto.SiteId);
+    if (res.affected > 0){
+      return {
+        SiteId : updateSiteDto.SiteId
+      };
+    }
+    return {};
+  }
+
+  // 좋아요 => 기존에 없으면 좋아요 추가 있으면 좋아요 삭제
+  @Patch('/good')
+  @UseGuards(CustomAuthGuard)
+  async updateGood(@Req() req: Request, @Body() updateSiteDto: Site) {    
+    let res = await this.siteService.updateViews(updateSiteDto.SiteId);
+    if (res.affected > 0){
+      return {
+        SiteId : updateSiteDto.SiteId
+      };
+    }
+    return {};
+  }
+
+  // 싫어요 => 기존에 없으면 좋아요 추가 있으면 좋아요 삭제
+  @Patch('/bad')
+  @UseGuards(CustomAuthGuard)
+  async updateBad(@Req() req: Request, @Body() updateSiteDto: Site) {    
     let res = await this.siteService.updateViews(updateSiteDto.SiteId);
     if (res.affected > 0){
       return {
@@ -177,6 +208,7 @@ export class SiteController {
   // put은 자원에 대한 정보 전체를 전달해줘야하고, 없으면 생성하는 의미를 갖고있음
   // 고로 일부만 수정하는 patch가 좀 더 맞는듯 함
   @Patch('/admin')
+  @UseGuards(AdminAuthGuard)
   async update(@Body() updateSiteDto: Site) {
     let res = await this.siteService.updateByAdmin(updateSiteDto);
     if (res.affected > 0){
@@ -188,6 +220,7 @@ export class SiteController {
   }
 
   @Delete('/admin/:id')
+  @UseGuards(AdminAuthGuard)
   remove(@Param('id') id: string) {
     return this.siteService.removeAdmin(id);
   }

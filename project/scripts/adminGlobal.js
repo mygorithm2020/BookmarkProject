@@ -1,6 +1,13 @@
-import {STORAGE_KEY_NICKNAME, STORAGE_KEY_TOKEN, ACCESSTOKEN, REFRESHTOKEN} from "./global.js";
+// import {STORAGE_KEY_NICKNAME, STORAGE_KEY_TOKEN, ACCESSTOKEN, REFRESHTOKEN, ISLOGIN} from "./global.js";
 
 
+export const STORAGE_KEY_REMEBER_LOGIN = "";
+export const STORAGE_KEY_NICKNAME = "nickname";
+export const ISLOGIN = window.localStorage.getItem(STORAGE_KEY_NICKNAME) //&& (getExpiredDate() > Date.now());
+
+if (!ISLOGIN && !window.location.href.includes("login")){
+    window.location.href = "login.html";
+}
 
 // // 로그인 페이지 빼고 전부 연결
 

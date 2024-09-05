@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable, NestMiddleware } from "@nestjs/common";
 import { Request, Response, NextFunction } from 'express';
+import { HttpErrorCode } from "src/publicComponents/ExceptionHandler";
 import { CustomUtils, FileAdapter } from "src/publicComponents/utils";
 
 @Injectable()
@@ -101,7 +102,7 @@ export class FirewallMiddleware implements NestMiddleware {
             next();
         } else {
             throw new HttpException({
-                code : 3,
+                code : HttpErrorCode.MiddleAuth,
                 message : "wrong approach",
             }, HttpStatus.UNAUTHORIZED);
         }

@@ -73,6 +73,68 @@
     cursor: pointer;
 }
 
+/* 버튼 박스 */
+
+#opacity-back{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.715);
+    z-index: 5;
+    transition: all 0.4s;
+
+}
+
+#recom-site-box {
+    background-color: beige;
+    width: 60%;
+    position: fixed;
+    top: 20%; 
+    left: 20%;   
+    padding: 20px;
+    border: 4px solid black;
+    border-radius: 10px;
+    box-shadow: 0px 40px 20px 10px rgba(0, 0, 0, 0.765);   
+    z-index: 10;
+    transition: all 0.4s;
+}
+
+#close-btn{
+    background-color: beige;
+    position: absolute;
+    right: 20px;
+    width: 50px;
+    height: 40px;
+    border: none;
+    margin: 10px;
+}
+
+#close-btn > img{
+    width: 100%;
+    height: 100%;
+}
+
+#form-box{
+    padding: 20px;
+    margin: 20px auto;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: space-around;
+}
+
+#form-box > input{
+    width: 90%;
+    margin-top: 30px;
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    box-shadow: 0px 0px 6px 6px rgba(128, 128, 128, 0.231);
+    
+}
 /* 메인 배너용 */
 #main_banner {
     max-width: 1280px;
@@ -152,3 +214,4 @@ footer {
     margin: 10px;
     gap: 10px;
 }
+

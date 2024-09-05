@@ -15,9 +15,9 @@
             <li>
                 <a href="login.html">로그인</a>
             </li>        
-            <!-- <li>
-                <button>사이트 추천하기</button>
-            </li> -->
+            <li>
+                <button id="recommend-site">사이트 추천하기</button>
+            </li>
             <li>
                 <a href="notice.html">공지사항</a>                
             </li>
@@ -28,3 +28,21 @@
         </ul>
     </div>
 </div>
+<div id="opacity-back" class="hidden">
+
+</div>
+<div id="recom-site-box" class="hidden">    
+    <button id="close-btn"><img src="../images/close.png"></button>
+    
+    <form id="form-box" >        
+        <h3>사이트 공유하기</h3>
+        <input type="url" placeholder="https://browseys.site/" name="url" required maxlength="300">
+        <input type="submit" value="추천" id="add-site-btn">
+    </form>
+    <p>
+        내가 알고있는 혹은 내가 만든 사이트를 다른사람들에게도 공유해보세요<br>
+        관리자가 유해성 확인 절차를 진행 후 다른 사이트들과 함께 확인 가능합니다.
+    </p>
+</div>
+
+<script type="module" src="../scripts/header.js"></script>

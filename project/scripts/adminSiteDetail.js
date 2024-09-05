@@ -38,12 +38,6 @@ siteEdit.addEventListener("submit", async (target) => {
   }
 
   //  여기서 값 추출하는 과정 추가 하고
-  // console.log(siteEdit);
-  // console.log(siteEdit.name.value);
-  // console.log(siteEdit.namekr.value);
-  // console.log(siteEdit.name.value);
-  // console.log(siteEdit.name.value);
-  // console.log(siteEdit.name.value);
   let nameValue = siteEdit.querySelector("input[name='nameKR']");
   console.log(nameValue);
   console.log(nameValue.value);

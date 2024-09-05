@@ -53,8 +53,7 @@ export class CustomAuthGuard implements CanActivate {
         error : "authorizaion is required in header"
       }, HttpStatus.UNAUTHORIZED);
     }
-    try {
-      console.log("Sdsd");
+    try {      
       const payload = await this.jwtService.verifyAsync(
         token,
         {
@@ -63,6 +62,7 @@ export class CustomAuthGuard implements CanActivate {
       );
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
+      console.log(payload);
       request['user'] = payload;
     } catch (err) {
       console.log(err);
@@ -102,6 +102,8 @@ export class AdminAuthGuard implements CanActivate {
           secret: jwtConstantsAdmin.accessSecret
         }
       );
+
+      // admin 검증 로직 추가
 
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers

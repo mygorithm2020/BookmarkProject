@@ -53,7 +53,6 @@ categoryEdit.addEventListener("submit", async (target) => {
 // 삭제 버튼
 document.querySelector("#category-delete").addEventListener("click", async ()=>{
     const res = await category.deleteCategoryAdmin(categoryId);
-    console.log(res);
     if (res == ""){
         alert("카테고리가 삭제 되었습니다.");
         window.location.href = "/admin/?key=category";
@@ -69,7 +68,6 @@ subCategory.addEventListener("submit", async (target) => {
     reqData.ParentId = categoryId;
     reqData.Name = subCategory.querySelector("input[name='sname']").value;
     reqData.NameKR = subCategory.querySelector("input[name='snameKR']").value;
-    console.log(reqData);
     if (!reqData.Name){
         alert("이름을 입력해주세요");
         return;

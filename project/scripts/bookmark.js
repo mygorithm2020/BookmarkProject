@@ -39,12 +39,10 @@ export class Bookmark {
     static addMyBookmark(siteId, name, url, image, description, views){
 
         this.myBookmarkList();
-        console.log(this.items);
 
         //  이미 있으면 리턴
         for (let i =0; i< this.items.length; i++){
             if (this.items[i].URL === url){
-                console.log("이미 존재");
                 return false;
             }
         }
@@ -96,9 +94,7 @@ export class Bookmark {
             }
         }               
         
-        console.log("그치만 진행");
         siteList.forEach((es) => {
-            console.log(es.Name);
             if (es.URL === keyValue){
                 let newSite = new Bookmark(
                     es.SiteId,

@@ -49,6 +49,7 @@ export class MysqlException {
 // 51 ~ 59 : 
 export enum HttpErrorCode {
     Unknown = 1,
+    MiddleAuth = 3,
     AuthOne = 6,
     AuthTwo = 7,
     Controller1 = 11,

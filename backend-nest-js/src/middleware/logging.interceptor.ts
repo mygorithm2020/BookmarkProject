@@ -12,10 +12,6 @@ export class LoggingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest();
     console.log("interceptor");
-    console.log(req.body);
-    console.log(req.cookie);
-    console.log(req.cookies);
-    console.log(req.headers);
 
     const key = this.cUtil.getUuId(10);
 

@@ -35,7 +35,7 @@ export class SiteService {
     private readonly apiClient : ApiClient,
     private dataSource: DataSource
   ){
-    console.log("new SiteService()");
+    console.log("new SiteService()");    
   }
 
   // 한번에 50개 정도
@@ -265,8 +265,8 @@ export class SiteService {
         }
       },
       order : orderOption,
-      skip : this.WEBPAGECNT * (page - 1),
-      take : this.WEBPAGECNT *  page,
+      // skip : this.WEBPAGECNT * (page - 1),
+      // take : this.WEBPAGECNT *  page,
     });
 
 

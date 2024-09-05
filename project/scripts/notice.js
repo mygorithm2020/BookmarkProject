@@ -1,8 +1,6 @@
-console.log("notice page");
 
 let params = new URL(document.location.toString()).searchParams;
 let key = params.get("key");
-console.log(key);
 
 let mainContent = document.getElementById("main_content01");
 if (key){

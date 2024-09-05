@@ -57,7 +57,7 @@ async function setCategoryPage(){
         }
         let res = await category.addCategoryAdmin(category);
         // console.log(res);
-        if (res.CategoryId){
+        if (res && res.CategoryId){
             location.reload();
         }
         spinner.classList.toggle("cover");

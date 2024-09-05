@@ -1,13 +1,7 @@
 import siteList from './data/site.json' with { type : "json"};
 
-console.log(siteList[0]);
-
-
-
 // 즉각호출패턴
 (function () {
-
-    console.log(window.location);
 
     let siteCardBoxEl = document.getElementById("site-card-box");
     let cardList = "";
@@ -57,7 +51,6 @@ console.log(siteList[0]);
     // 로컬스토리지에 장바구니 추가
     document.querySelectorAll(".add-my-bookmark").forEach((v) => {
         v.addEventListener("click", (e) => {
-            console.log(e.target.dataset.siteid);
             // 로그인 상태라면
             if (false){
 

@@ -21,6 +21,14 @@ a {
     color: black;
 }
 
+button:hover{
+    cursor: pointer;
+}
+
+input[type="submit"], input[type="button"]{
+    cursor: pointer;
+}
+
 
 ul {
     /* li의 깔끔한 정렬을 위해 기본마진, 패딩 제거 */

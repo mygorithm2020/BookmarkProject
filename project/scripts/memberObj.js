@@ -1,5 +1,5 @@
 import { ApiRequest } from "./apiRequest.js";
-import {ACCESSTOKEN, REFRESHTOKEN} from "./global.js";
+import {ACCESSTOKEN, REFRESHTOKEN, STORAGE_KEY_TOKEN, STORAGE_KEY_NICKNAME} from "./global.js";
 
 export class Member {
 
@@ -15,7 +15,7 @@ export class Member {
     //     timeout: 4000,
     //     withCredentials: true, // 인증 정보를 포함하도록 설정
     //     headers : {
-    //         authorization : `bearer ${ACCESSTOKEN}`
+    //         authorization : `Bearer ${ACCESSTOKEN}`
             
     //     },
         
@@ -123,24 +123,22 @@ export class Member {
 
     // 401에러 나오면 리프레시 시도하고, 그래도 안되면 재 로그인 필요
     // 토큰 리프레쉬 + 로그인 확인용
-    refreshToken(){
-        const resData = ApiRequest.axiosPost("auth/refresh", null, {
-            authorization : `bearer ${REFRESHTOKEN}`            
+    async refreshToken(){
+        const resData = await ApiRequest.axiosPost("auth/refresh", null, {
+            authorization : `Bearer ${REFRESHTOKEN}`            
         });
-        if (resData.errCode == 24){
-            alert("등록된 계정이 없습니다. 이메일과 비밀번호를 확인해주세요");
-        } else if (resData.errCode == 25){
-            alert("인증이 필요한 계정입니다");
-        } else if (resData.errCode == 26){
-            alert("차단된 계정입니다. 관리자에게 문의하세요");
-        } else if (resData.ACCESSTOKEN){
+
+        if (resData.ACCESSTOKEN){
             localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify({
               AccessToken : resData.AccessToken,
               RefreshToken : resData.RefreshToken
             }));
             
             localStorage.setItem(STORAGE_KEY_NICKNAME, resData.Member.NickName);
-        }
+        } else {
+            localStorage.removeItem(STORAGE_KEY_TOKEN);
+            localStorage.removeItem(STORAGE_KEY_NICKNAME);
+        }        
 
         return resData;
         // {

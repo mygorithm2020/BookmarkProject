@@ -88,8 +88,8 @@ export class ServerCache {
     
     // 조회수 조작을 막기 위해 같은 정보로 동일하게 오면 제한, 대신 메모리로 관리하므로 시간마다 값 초기화
     static checkRestrictedViews(reqUserAgent: string, reqIp : string, SiteId : string) : boolean {
-        // 10분마다 측정하자
-        const newStr : string = Math.trunc(new Date().getUTCMinutes() / 10) * 10  + reqUserAgent + reqIp + SiteId;
+        // 1시간마다 측정하자
+        const newStr : string = Math.trunc(new Date().getUTCHours())  + reqUserAgent + reqIp + SiteId;
         let res = false;
         if (!this.restrictedViews){
             this.restrictedViews = {

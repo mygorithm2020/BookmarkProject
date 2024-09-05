@@ -181,4 +181,4 @@ TV/방송
 // guid 생성 => 이미 존재
 // crypto.randomUUID()
 let newGuid = crypto.randomUUID().replace(/-/g, "");
-console.log(newGuid);
+

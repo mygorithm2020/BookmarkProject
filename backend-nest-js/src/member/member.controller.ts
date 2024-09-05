@@ -5,7 +5,7 @@ import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthenticationService } from 'src/authentication/authentication.service';
-import { CustomAuthGuard } from 'src/middleware/auth.guard';
+import { AdminAuthGuard, CustomAuthGuard } from 'src/middleware/auth.guard';
 import { Request } from 'express';
 
 @ApiTags("member")
@@ -44,7 +44,9 @@ export class MemberController {
     return result;
   }
 
+
   @Get("/admin")
+  @UseGuards(AdminAuthGuard)
   findAll() {
     let res = this.memberService.findAllAdmin();
     return res;

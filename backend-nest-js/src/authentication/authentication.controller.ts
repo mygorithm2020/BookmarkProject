@@ -76,8 +76,6 @@ export class AuthenticationController {
 
     // 리프레쉬 토큰 체크
     const tokenObj = await this.authService.findOneByTokenAdmin(refreshToken);
-    console.log(req.ip, req.headers['user-agent'], req.headers.origin);
-    console.log(tokenObj);
     if (!tokenObj || !tokenObj.Token || tokenObj.IP !== req.ip || tokenObj.UserAgent !== req.headers['user-agent'] || tokenObj.Origin != req.headers.origin){
       throw new HttpException({
         errCode : 11,

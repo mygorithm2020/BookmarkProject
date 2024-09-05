@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="수많은 웹사이트를 간단하게 공유하고 추천받는 사이트">
+    <title>BookMarker</title>
+    <!--  -->
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+
+    <!-- al 태그(모바일 접속시 자동 앱으로 연결) 테스트해보려고 넣어봄 소리바다에서 일단 가져옴-->
+    <meta property="al:ios:url" content="soribada30://">
+    <meta property="al:ios:app_store_id" content="346528006">
+    <meta property="al:ios:app_name" content="soribada">
+    <meta property="al:android:package" content="com.soribada.android">
+    <meta property="al:android:url" content="soribada30://">
+    <meta property="al:android:app_name" content="soribada">
+
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- html 연결용(react로 나중에 처리 가능) -->
+    <script
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+    crossorigin="anonymous">
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#header").load("header.html")
+            $("#footer").load("footer.html")
+            // $("nav").load("../pages/navigation.html")
+            /* id 지정을 통해서도 가능합니다. 
+            $("#header").load("header.html #navbar")
+            */       
+        });
+        
+    </script> 
+
+    <!-- axios 사용 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- 내부 css 파일 연결 -->
+    <!-- <link rel="stylesheet" href="../css/dev.css"> -->
+    <link rel="stylesheet" href="../styles/global.css">
+    <link rel="stylesheet" href="../styles/header.css">
+    <link rel="stylesheet" href="../styles/navigation.css">
+    <link rel="stylesheet" href="../styles/adminSiteCard.css">
+    <link rel="stylesheet" href="../styles/login.css">
+    
+    
+</head>
+<body>
+    <header id="header" class="bg-color-1">
+        
+
+    </header>
+    <nav class="layer1 bg-color-2">
+        <ul id="nav_list_box">
+            <li><a href="index.html?key=category">카테고리</a></li>
+            <li><a href="index.html?key=site">사이트</a></li>
+            <li><a href="index.html?key=member">회원</a></li>
+        </ul>
+        
+    </nav>        
+    <main class="layer1">
+        <section id="main_content01">
+            <form action="" method="post">
+              <!-- <div class="imgcontainer">
+                <img src="../images/login02.png" alt="Avatar" class="avatar">
+              </div> -->
+            
+              <div class="container">
+                <label for="uemail"><b>이메일 또는 아이디</b></label>
+                <input type="email" placeholder="example@google.com" name="uemail" required>
+            
+                <label for="psw"><b>비밀번호</b></label>
+                <input type="password" placeholder="Enter Password" name="psw" required>
+            
+                <button id="login-btn" type="submit">로그인</button>
+                <label>
+                  <input type="checkbox"  name="remember"> 아이디 저장
+                </label>
+              </div>             
+                
+            </form>
+            <div class="container" style="background-color:#f1f1f1">
+              <!-- <a href="signUp.html" class="cancelbtn">회원가입</a>
+              <a href="pwsearch.html" class="cancelbtn">비밀번호 찾기</a> -->
+              <!-- <button type="button" class="cancelbtn">회원가입</button> -->
+            </div>
+        </section>
+    </main>
+    <footer id="footer" class="bg-color-1"></footer>
+    <!-- js 파일들 추가 -->
+    <script src="../scripts/adminGlobal.js" type="module"></script>
+    <script src="../scripts/adminLogin.js" type="module"></script>
+</body>
+</html>

@@ -45,7 +45,6 @@ export class Site {
     static listToHtmlTemp(siteList){
         let res = "";
         if (!siteList || siteList.length === 0){
-            console.log("sdd");
             res = `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
             return res;
 
@@ -92,7 +91,6 @@ export class Site {
     static listToHtmlv2(siteList){
         let res = "";
         if (!siteList || siteList.length === 0){
-            console.log("sdd");
             res = `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
             return res;
 
@@ -145,7 +143,6 @@ export class Site {
 
         res += `<ul id="site-card-box" class="bg-color-3">`
         if (!siteList || siteList.length === 0){
-            console.log("sdd");
             res += `<div class="no-data-templet">등록된 사이트가 없습니다.</div>`;
 
         } else {
@@ -239,7 +236,6 @@ export class Site {
 
     // 개수 많아지면 페이지 추가
     static async getAllSitesAdmin(page){
-        console.log(this.API_HOST);
         // 모든 사이트 조회
         let data = await this.axiosGet(`${this.API_HOST}/site/admin/all`);        
         return data;
@@ -282,26 +278,24 @@ export class Site {
 
 
     static async getSiteByCategory(categoryId, page){
-        console.log(`categoryId : ${categoryId}`);
         let data = await this.axiosGet(`${this.API_HOST}/site/category?id=${categoryId}&page=${page}`);        
         return data;
     }
 
     static async getSiteById(siteId){
-        console.log(`categoryId : ${siteId}`);
         let data = await this.axiosGet(`${this.API_HOST}/site/admin?id=${siteId}`);
         return data;
     }
 
     //사이트 등록
-    static async addSiteAdmin(site){
-        console.log(site);
-        let data = await this.axiosPost(`${this.API_HOST}/site`, site);
+    static addSiteAdmin(site){
+        let data = ApiRequest.axiosPost("/site", site);
         return data;
     }
 
     //사이트 수정
     static async updateSiteAdmin(site){
+        
         let data = await this.axiosPut(`${this.API_HOST}/site/admin`, site);
         return data;        
     }

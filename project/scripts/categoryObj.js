@@ -29,7 +29,7 @@ export class Category{
     //     timeout: 4000,
     //     withCredentials: true, // 인증 정보를 포함하도록 설정
     //     headers : {
-    //         authorization : `bearer ${ACCESSTOKEN}`            
+    //         authorization : `Bearer ${ACCESSTOKEN}`            
     //     },
         
     // });
@@ -104,36 +104,46 @@ export class Category{
     }
 
     async addCategoryAdmin(category, errCallback){
-        // 카테고리 불러오기
-        let data = await axios.post(`${this.API_HOST}/category/admin`, category)
-        .then((result) => {
-            console.log(result); 
-            return result.data;   
-        })
-        .catch((error) => {
-            console.error(error);            
-            if (errCallback){
-                errCallback(error);
-            }else{
-                if (error.code === "ERR_NETWORK"){
-                    // 현재 이용 불가능한 무언가 띄우기...
-                    alert("현재 서버 점검 중으로 이용할 수 없습니다."); 
-                }else if (error.response.data.errCode){
-                    const code = error.response.data.errCode;
-                    if (code === 21){
-                        alert("이미 등록된 카테고리 이름입니다.");
-                    }else{
-                        alert("등록에 실패했습니다. 관리자에게 문의하세요");
-                    }
-
-                }else{
-                    alert("도중에 문제가 발생했습니다. 잠시 후 다시 이용해주세요");
-                }
+        let data = await ApiRequest.axiosPost("/category/admin", category, null);
+        if (data && data.errCode){
+            const code = data.errCode;
+            if (code === 21){
+                alert("이미 등록된 카테고리 이름입니다.");
             }
-            
-            return error.response.data;
-        });
+        }
         return data;
+
+
+        // 카테고리 불러오기
+        // let data = await axios.post(`${this.API_HOST}/category/admin`, category)
+        // .then((result) => {
+        //     console.log(result); 
+        //     return result.data;   
+        // })
+        // .catch((error) => {
+        //     console.error(error);            
+        //     if (errCallback){
+        //         errCallback(error);
+        //     }else{
+        //         if (error.code === "ERR_NETWORK"){
+        //             // 현재 이용 불가능한 무언가 띄우기...
+        //             alert("현재 서버 점검 중으로 이용할 수 없습니다."); 
+        //         }else if (error.response.data.errCode){
+        //             const code = error.response.data.errCode;
+        //             if (code === 21){
+        //                 alert("이미 등록된 카테고리 이름입니다.");
+        //             }else{
+        //                 alert("등록에 실패했습니다. 관리자에게 문의하세요");
+        //             }
+
+        //         }else{
+        //             alert("도중에 문제가 발생했습니다. 잠시 후 다시 이용해주세요");
+        //         }
+        //     }
+            
+        //     return error.response.data;
+        // });
+        // return data;
     }
 
     deleteCategoryAdmin(categoryId){
@@ -268,8 +278,7 @@ export class Category{
         
 
         // 카테고리 바 확장
-        document.getElementById("category-open").addEventListener("click", e => {
-            console.log("category-open click");            
+        document.getElementById("category-open").addEventListener("click", e => {        
             cate.classList.toggle("hidden");
             cate.classList.toggle("show");
             // cate.classList.toggle("cover");

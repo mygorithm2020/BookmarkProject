@@ -38,7 +38,7 @@ async function bootstrap() {
   // 쿠기 미들웨어 설정
   app.use(cookieParser());
 
-
+  
   //global middleware or config 설정 여기서는 function으로만 가능
   // app.use(midLogger);
 
