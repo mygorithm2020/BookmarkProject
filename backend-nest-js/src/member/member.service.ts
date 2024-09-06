@@ -31,9 +31,9 @@ export class MemberService {
         error : "same email already exist"
       }, HttpStatus.BAD_REQUEST);
     }   
-    console.log(memObj);
     this.constraint.generateMemObj(memObj);
     const newMem = this.mRepo.create(memObj);
+    console.log(newMem);
     let res = await this.mRepo.save(newMem);
     return res;    
   }
