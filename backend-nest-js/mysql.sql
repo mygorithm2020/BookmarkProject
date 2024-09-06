@@ -85,6 +85,8 @@ BEGIN
 END $$
 DELIMITER ;
 
+--　이　아래로　서버　등록　완료　-- 
+ 
 -- 인증 기록
 CREATE TABLE TA_Authentication (
   AuthId INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -132,7 +134,6 @@ CREATE TABLE TA_Member (
 CREATE INDEX IDX_Member_MemEmail ON TA_Member (MemEmail);
 -- ALTER TABLE TA_Member MODIFY COLUMN password VARCHAR(64) NOT NULL;
 -- ALTER TABLE TA_Member ADD CONSTRAINT CHECK (Gender IN ('M', 'F'));  -- null 은 상관 없음
-SHOW INDEX FROM TA_Member
 
 -- 카테고리
 CREATE TABLE TA_Category(
