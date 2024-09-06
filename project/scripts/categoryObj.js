@@ -147,97 +147,101 @@ export class Category{
     }
 
     deleteCategoryAdmin(categoryId){
-        let res = this.axiosDelete(`/category/admin?id=${categoryId}`);
+        let res = ApiRequest.axiosDelete(`/category/admin?id=${categoryId}`); // this.axiosDelete(`/category/admin?id=${categoryId}`);
         return res;
     }
 
     async updateCategoryAdmin(category){
+        let data = ApiRequest.axiosPatch("/category/admin", category);
         // 카테고리 불러오기
-        let data = await axios.patch(`${this.API_HOST}/category/admin`, category)
-        .then((result) => {
-            console.log(result); 
-            return result.data;   
-        })
-        .catch((error) => {
-            console.error(error);            
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")                
-            }
-            return error.response.data;
-        });
+        // let data = await axios.patch(`${this.API_HOST}/category/admin`, category)
+        // .then((result) => {
+        //     console.log(result); 
+        //     return result.data;   
+        // })
+        // .catch((error) => {
+        //     console.error(error);            
+        //     if (error.code === "ERR_NETWORK"){
+        //         // 현재 이용 불가능한 무언가 띄우기...
+        //         // alert("현재 서버 점검 중으로 이용할 수 없습니다.")                
+        //     }
+        //     return error.response.data;
+        // });
         return data;
     }
 
     // AJAX
     getCategoryAdmin(){
+        let data = ApiRequest.axiosGet("/category/admin");
         // 카테고리 불러오기
-        let data = axios.get(`${this.API_HOST}/category/admin`, { withCredentials: true })
-        .then((result) => {
-            console.log(result);
-            return result.data;
+        // let data = axios.get(`${this.API_HOST}/category/admin`, { withCredentials: true })
+        // .then((result) => {
+        //     console.log(result);
+        //     return result.data;
             
-        })
-        .catch((error) => {
-            console.error(error);
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
+        // })
+        // .catch((error) => {
+        //     console.error(error);
+        //     if (error.code === "ERR_NETWORK"){
+        //         // 현재 이용 불가능한 무언가 띄우기...
+        //         // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+        //         document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
 
-            }
-            return null;
-        });
+        //     }
+        //     return null;
+        // });
         
         return data;
     }
 
     getCategoryOneAdmin(categoryId){
+        let data = ApiRequest.axiosGet(`/category/admin/${categoryId}`);
         // 카테고리 불러오기
-        let data = axios.get(`${this.API_HOST}/category/admin/${categoryId}`)
-        .then((result) => {
-            console.log(result);
-            return result.data;            
-        })
-        .catch((error) => {
-            console.error(error);
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
+        // let data = axios.get(`${this.API_HOST}/category/admin/${categoryId}`)
+        // .then((result) => {
+        //     console.log(result);
+        //     return result.data;            
+        // })
+        // .catch((error) => {
+        //     console.error(error);
+        //     if (error.code === "ERR_NETWORK"){
+        //         // 현재 이용 불가능한 무언가 띄우기...
+        //         // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+        //         document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
 
-            }
-            return null;
-        });
+        //     }
+        //     return null;
+        // });
         
         return data;
     }
 
     getCategory(){
         const auth = 'qwdqwdqwdqd ' + "qwdqwdqwdwqdwdqwSD" + btoa('user:password');
+        let data = ApiRequest.axiosGet(`/category`);
         // 카테고리 불러오기
-        let data = ApiRequest.instance.get("/category", {
-            headers : {
-                // Authorization: ApiRequest.HEADER_AUTH,
-                cookies : decodeURIComponent(document.cookie)
-            },
-        })
-        .then((result) => {
-            console.log(result);
-            return result.data;
+        // let data = ApiRequest.instance.get("/category", {
+        //     headers : {
+        //         Authorization: `Bearer ${ACCESSTOKEN}`,
+        //         cookies : decodeURIComponent(document.cookie)
+        //     },
+        // })
+        // .then((result) => {
+        //     console.log(result);
+        //     return result.data;
             
-        })
-        .catch((error) => {
-            console.error(error);
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
-                // document.querySelector("main").insertAdjacentHTML("beforeend","<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>");
+        // })
+        // .catch((error) => {
+        //     console.error(error);
+        //     if (error.code === "ERR_NETWORK"){
+        //         // 현재 이용 불가능한 무언가 띄우기...
+        //         // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+        //         document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
+        //         // document.querySelector("main").insertAdjacentHTML("beforeend","<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>");
 
-            }
-            return null;
-        });
+        //     }
+        //     return null;
+        // });
         
         return data;
     }

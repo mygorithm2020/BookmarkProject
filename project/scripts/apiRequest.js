@@ -15,7 +15,8 @@ export class ApiRequest {
         timeout: 4000,
         withCredentials: true, // 인증 정보를 포함하도록 설정
         headers : {
-            authorization : `Bearer ${ACCESSTOKEN}`            
+            authorization : `Bearer ${ACCESSTOKEN}`,
+            cookies : decodeURIComponent(document.cookie)  
         },        
     });
 
@@ -185,6 +186,8 @@ export class ApiRequest {
             // 현재 이용 불가능한 무언가 띄우기...
             // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
             alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+        } else if (error.code === "ECONNABORTED"){
+            alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요");
         } else if (error.response.data.errCode){
             const eCode = error.response.data.errCode;
             // 백엔드에서 미리 처리못한 에러 발생 문의 필요

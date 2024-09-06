@@ -1,4 +1,5 @@
 import { ApiRequest } from "./apiRequest.js";
+import {ACCESSTOKEN} from "./global.js";
 
 export class Site {
 
@@ -278,12 +279,12 @@ export class Site {
 
 
     static async getSiteByCategory(categoryId, page){
-        let data = await this.axiosGet(`${this.API_HOST}/site/category?id=${categoryId}&page=${page}`);        
+        let data = await ApiRequest.axiosGet(`/site/category?id=${categoryId}&page=${page}`);  // this.axiosGet(`${this.API_HOST}/site/category?id=${categoryId}&page=${page}`);        
         return data;
     }
 
     static async getSiteById(siteId){
-        let data = await this.axiosGet(`${this.API_HOST}/site/admin?id=${siteId}`);
+        let data = await ApiRequest.axiosGet(`/site/admin?id=${siteId}`) // this.axiosGet(`${this.API_HOST}/site/admin?id=${siteId}`);
         return data;
     }
 
@@ -296,7 +297,7 @@ export class Site {
     //사이트 수정
     static async updateSiteAdmin(site){
         
-        let data = await this.axiosPut(`${this.API_HOST}/site/admin`, site);
+        let data = await ApiRequest.axiosPut("/site/admin", site); // this.axiosPut(`${this.API_HOST}/site/admin`, site);
         return data;        
     }
 
@@ -324,7 +325,11 @@ export class Site {
     }
 
     static async axiosGet(url){
-        let data = await axios.get(url)
+        let data = await axios.get(url,{
+            headers : {
+                authorization : `Bearer ${ACCESSTOKEN}`            
+            },
+        })
         .then((result) => {
             console.log(result);
             return result.data;   
