@@ -65,6 +65,7 @@ export class FirewallMiddleware implements NestMiddleware {
         "http://dothomeftp.dothome.co.kr",
         "https://mygorithm2020.mycafe24.com",
         "https://browseys.site",
+        "http://browseys.site",
     ]);
 
     private readonly permittedIP = new Set([

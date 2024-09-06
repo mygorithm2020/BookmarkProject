@@ -22,10 +22,12 @@ export const ISLOGIN = window.localStorage.getItem(STORAGE_KEY_NICKNAME) && getE
 
 
 
+
 const cName = "mId";
 if (!getCookie(cName)){
-    const vId = crypto.randomUUID().replaceAll("-", "");
-    document.cookie = `${encodeURIComponent(cName)}=${encodeURIComponent(vId)}; expires=Thu, 18 Dec 2030 12:00:00 UTC;`;
+    // https 에서만 사용 가능...
+    // const vId = window.crypto.randomUUID().replaceAll("-", "");
+    // document.cookie = `${encodeURIComponent(cName)}=${encodeURIComponent(vId)}; expires=Thu, 18 Dec 2030 12:00:00 UTC;`;
 }
 
 function getCookie(name){
