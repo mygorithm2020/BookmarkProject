@@ -118,19 +118,17 @@ export class ApiRequest {
                 data = ApiRequest.instance.post(path, body,
                     
                 )
-                .then((result) => {
-                    
+                .then((result) => {                    
                     return result.data;
                 })
-                .catch((error) => {
-                    
+                .catch((error) => {                    
                     this.HandleBasicError(error);
                     return error.response.data;
                 })
 
             } else {
                 this.HandleBasicError(error);
-                return error.response.data;
+                return error.response? error.response.data : error.response;
             }
         });
         return data;
@@ -164,15 +162,20 @@ export class ApiRequest {
 
     static async UnauthorizedHandler(error){
         let res = false;
-        if (error.response.data.errCode){            
-            if (error.response.data.errCode === 7){
-                let data = await new Member().refreshToken();
-                if (data && data.AccessToken){
-                    ApiRequest.instance.defaults.headers.common['authorization'] = `Bearer ${data.AccessToken}`;
-                    res = true;
-                }                
+        try {
+            if (error.response & error.response.data & error.response.data.errCode){            
+                if (error.response.data.errCode === 7){
+                    let data = await new Member().refreshToken();
+                    if (data && data.AccessToken){
+                        ApiRequest.instance.defaults.headers.common['authorization'] = `Bearer ${data.AccessToken}`;
+                        res = true;
+                    }                
+                }
             }
+        } catch {
+
         }
+        
         return res;
     }
 

@@ -22,6 +22,8 @@ if (loginStorage){
 let loginForm = document.querySelector("form");
 loginForm.addEventListener("submit", async (target) => {
   target.preventDefault();
+  const backCover = document.querySelector("#opacity-back");
+  backCover.classList.toggle("hidden");
   const mem = new Member();
   mem.MemEmail = emailInput.value;
   mem.Password = loginForm.querySelector("input[name=psw]").value;
@@ -44,6 +46,7 @@ loginForm.addEventListener("submit", async (target) => {
     localStorage.setItem(STORAGE_KEY_NICKNAME, resData.Member.NickName);
     redirectBack();
   }
+  backCover.classList.toggle("hidden");
 });
 
 // 이미 로그인 되어있는 경우 다른 페이지로

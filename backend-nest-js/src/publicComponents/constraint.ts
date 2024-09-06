@@ -140,9 +140,14 @@ export class Constraint {
   }
 
   async imageLinkToFileName(id : string, imgLink : string) : Promise<string>{
-    if (!imgLink || !imgLink.startsWith("http")){
+    if (!imgLink){
       throw new Error();
     }
+
+    if (!imgLink.startsWith("http")){
+      imgLink = "https:" + imgLink;
+    }
+
     let imgRes = await this.apiClient.getSiteResponse(imgLink);
     let extension = ".png"; //path.extname(imgLink)
     if (imgLink.includes(".jpg")){
@@ -211,10 +216,22 @@ export class Constraint {
       }
     }
 
+    if (site.Description && site.Description.length > 1000){
+      site.Description.slice(0, 1000);
+    }
+
+    if (site.Keywords && site.Keywords.length > 1000){
+      site.Keywords.slice(0, 1000);
+    }
+
     //  이미지 url 링크 보정
     if (site.OGImg && !site.OGImg.startsWith("//") && site.OGImg.startsWith("/")){ 
       site.OGImg = urlObj.origin + site.OGImg;
     }
+
+    if (site.OGDescription && site.OGDescription.length > 1000){
+      site.OGDescription.slice(0, 1000);
+    }    
     
     // 자동 표시 정보 등록용
     if (site.OGTitle){

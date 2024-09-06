@@ -35,14 +35,15 @@ if (ISLOGIN){
             </li>  `
         );
 
-        headerNav.insertAdjacentHTML("beforeend", `
-            <li>            
-                <a href="myPage.html">
-                    <img src="../images/user.png"/>
-                    ${window.localStorage.getItem(STORAGE_KEY_NICKNAME)? window.localStorage.getItem(STORAGE_KEY_NICKNAME).substring(0, 10) : "마이페이지"}
-                </a>
-            </li>  `
-        );
+        // 아직 마이페이지에 아무것도 없음...
+        // headerNav.insertAdjacentHTML("beforeend", `
+        //     <li>            
+        //         <a href="myPage.html">
+        //             <img src="../images/user.png"/>
+        //             ${window.localStorage.getItem(STORAGE_KEY_NICKNAME)? window.localStorage.getItem(STORAGE_KEY_NICKNAME).substring(0, 10) : "마이페이지"}
+        //         </a>
+        //     </li>  `
+        // );
 
     }
     if (document.querySelector("#logout")){

@@ -103,13 +103,16 @@ export class Member {
     async login(member){
         const resData = await ApiRequest.axiosPost("auth/login", member);
         console.log(resData);
-        if (resData.errCode == 24){
-            alert("등록된 계정이 없습니다. 이메일과 비밀번호를 확인해주세요");
-        } else if (resData.errCode == 25){
-            alert("인증이 필요한 계정입니다");
-        } else if (resData.errCode == 26){
-            alert("차단된 계정입니다. 관리자에게 문의하세요");
+        if (resData){
+            if (resData.errCode == 24){
+                alert("등록된 계정이 없습니다. 이메일과 비밀번호를 확인해주세요");
+            } else if (resData.errCode == 25){
+                alert("인증이 필요한 계정입니다");
+            } else if (resData.errCode == 26){
+                alert("차단된 계정입니다. 관리자에게 문의하세요");
+            }
         }
+        
         return resData;
         // {
         //     "AccessToken": "6ITH2gF/QUBv6VICNdOB1nr+XVGuOwBIFN3IJZ3ihuZNMzdLAhvoxUbc5+tdv6BeoAJVh7oOtrJsJMkwk74lI2AtaURzeY6UZD9tILdcmS8Z2QBMXhjw82oI8WeN24w35/UHE8Qd0JKacrsTEk0wJtvRDzeEXBPecJaYo2t2nnTu3O/HaZaBMq+dDLHFU0SOMgVlFKET+pqzD5HTPtmqvkmj2lOukGv8HNMhXjYJJs5mTc0ySJRkjxMJaQ==",
