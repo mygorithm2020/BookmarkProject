@@ -191,26 +191,33 @@ export class Site {
 
     
     static updateViews(siteId){
-        // 카테고리 불러오기
-        let data = axios.patch(`${this.API_HOST}/site/views`, {
+        let data = ApiRequest.axiosPatch("/site/views", {
             SiteId : siteId
-        },
-        {
-            headers: {
-                'Content-Type' : 'application/json'
-            }
+        });
+
+        // 카테고리 불러오기
+        // let data = axios.patch(`${this.API_HOST}/site/views`, {
+        //     SiteId : siteId
+        // },
+        // {
+        //     headers: {
+        //         'Content-Type' : 'application/json'
+        //     }
             
-        })
-        .then((result) => {
-            console.log(result);            
-        })
-        .catch((error) => {
-            console.error(error);
-        });        
+        // })
+        // .then((result) => {
+        //     console.log(result);            
+        // })
+        // .catch((error) => {
+        //     console.error(error);
+        // });        
     }
 
-    static cardEvent(){
-        
+    updateGood(memberId, siteId){
+
+    }
+
+    static cardEvent(){        
         //조회수 측정 효과 추가
         const cardLinks = document.querySelectorAll(".external_link");
         cardLinks.forEach((element) => {
@@ -236,24 +243,28 @@ export class Site {
 
     // 개수 많아지면 페이지 추가
     static async getAllSitesAdmin(page){
+        let data = ApiRequest.axiosGet("/site/admin/all");
         // 모든 사이트 조회
-        let data = await this.axiosGet(`${this.API_HOST}/site/admin/all`);        
+        // let data = await this.axiosGet(`${this.API_HOST}/site/admin/all`);        
         return data;
     }
 
     // 개수 많아지면 페이지 추가
     static async getAllSites(page){
+        let data = ApiRequest.axiosGet("/site");
 
         // 모든 사이트 조회
-        let data = await this.axiosGet(`${this.API_HOST}/site`);        
+        // let data = await this.axiosGet(`${this.API_HOST}/site`);        
         return data;
     }
 
     // 개수 많아지면 페이지 추가
     static async getRecommendedSite(page){
 
-        // 추천 사이트 조회
-        let data = await this.axiosGet(`${this.API_HOST}/site/recommend`, { withCredentials: true });
+        let data = ApiRequest.axiosGet("/site/recommend");
+
+        // let data = await this.axiosGet(`${this.API_HOST}/site/recommend`, { withCredentials: true });
+        // 추천 사이트 조회        
         // let data = await axios.get(`${this.API_HOST}/site/recommend`)
         // .then((result) => {
         //     console.log(result);
@@ -278,12 +289,14 @@ export class Site {
 
 
     static async getSiteByCategory(categoryId, page){
-        let data = await this.axiosGet(`${this.API_HOST}/site/category?id=${categoryId}&page=${page}`);        
+        let data = ApiRequest.axiosGet(`/site/category?id=${categoryId}&page=${page}`);
+        // let data = await this.axiosGet(`${this.API_HOST}/site/category?id=${categoryId}&page=${page}`);        
         return data;
     }
 
     static async getSiteById(siteId){
-        let data = await this.axiosGet(`${this.API_HOST}/site/admin?id=${siteId}`);
+        let data = ApiRequest.axiosGet(`/site/admin?id=${siteId}`);
+        // let data = await this.axiosGet(`${this.API_HOST}/site/admin?id=${siteId}`);
         return data;
     }
 
@@ -295,8 +308,9 @@ export class Site {
 
     //사이트 수정
     static async updateSiteAdmin(site){
+        let data = ApiRequest.axiosPut(`/site/admin`, site);
         
-        let data = await this.axiosPut(`${this.API_HOST}/site/admin`, site);
+        // let data = await this.axiosPut(`${this.API_HOST}/site/admin`, site);
         return data;        
     }
 

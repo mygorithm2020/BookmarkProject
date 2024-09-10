@@ -15,7 +15,7 @@ import { HttpModule } from '@nestjs/axios';
 import { MemberModule } from './member/member.module';
 import { Member } from './member/entities/member.entity';
 import { MysqlException } from './publicComponents/ExceptionHandler';
-import { CustomUtils, FileAdapter } from './publicComponents/utils';
+import { CustomEncrypt, CustomUtils, FileAdapter } from './publicComponents/utils';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { FirewallMiddleware, LoggerMiddleware } from './middleware/logger.middleware';
 import { CategoryController } from './category/category.controller';

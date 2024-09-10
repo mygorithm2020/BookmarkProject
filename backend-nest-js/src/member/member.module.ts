@@ -9,7 +9,7 @@ import { ApiClient } from 'src/publicComponents/apiClient';
 import { AuthenticationService } from 'src/authentication/authentication.service';
 import { Authentication } from 'src/authentication/entities/authentication.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './entities/memberAuth.constant';
+import { jwtConstants } from '../authentication/entities/Auth.constant';
 import { AuthToken } from 'src/authentication/entities/authtoken.entity';
 import { AppModule } from 'src/app.module';
 import { HttpModule } from '@nestjs/axios';

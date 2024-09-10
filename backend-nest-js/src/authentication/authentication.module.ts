@@ -10,7 +10,7 @@ import { MemberModule } from 'src/member/member.module';
 import { AuthToken } from './entities/authtoken.entity';
 import { AppModule } from 'src/app.module';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from 'src/member/entities/memberAuth.constant';
+import { jwtConstants } from 'src/authentication/entities/Auth.constant';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
@@ -21,7 +21,7 @@ import { HttpModule } from '@nestjs/axios';
     JwtModule.register({
       global: true,
       secret: jwtConstants.accessSecret,
-      signOptions: { expiresIn: '10m' },
+      signOptions: { expiresIn: jwtConstants.accessExpiresIn },
     }),
     MemberModule, HttpModule   
     

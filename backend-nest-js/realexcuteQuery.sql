@@ -24,6 +24,7 @@ show tables;
 select * from TA_member
 select * from TA_Authentication
 
+
 select * from ta_site where siteid = '62fe83ca0943461e9e28491ee6260965'
 select * from ta_site where isDeleted = 0 and status = 2;
 select * from ta_site order by status;

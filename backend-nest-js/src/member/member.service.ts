@@ -9,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 import { Constraint } from 'src/publicComponents/constraint';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from './entities/memberAuth.constant';
+import { jwtConstants } from '../authentication/entities/Auth.constant';
 
 @Injectable()
 export class MemberService {

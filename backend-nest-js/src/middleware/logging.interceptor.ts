@@ -1,12 +1,14 @@
 import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, NestInterceptor } from "@nestjs/common";
 import { Response } from "express";
 import { catchError, Observable, tap } from "rxjs";
-import { CustomUtils, FileAdapter } from "src/publicComponents/utils";
+import { CustomEncrypt, CustomUtils, FileAdapter } from "src/publicComponents/utils";
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
+  private readonly cEncrypt : CustomEncrypt
 
   constructor(private readonly cUtil : CustomUtils, private readonly fAdapter : FileAdapter){
+    this.cEncrypt = CustomEncrypt.getInstance();
   }
   
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
@@ -26,6 +28,7 @@ export class LoggingInterceptor implements NestInterceptor {
       reqIP : req.ip,
       orgin : req.headers["origin"],
       userAgent : req.headers["user-agent"],
+      member : req.user? req.user.V : null
 
     };
     const logData = JSON.stringify(log);

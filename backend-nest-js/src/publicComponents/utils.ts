@@ -209,6 +209,9 @@ export class CustomEncrypt {
 
   // 양방향 암호화
   encryptAes256(origin : string, aesKey? : string, aesIV? : string) : string{
+    if (!origin){
+      return "";
+    }
     const password = 'customKey is mine';
 
     // The key length is dependent on the algorithm.
@@ -223,6 +226,9 @@ export class CustomEncrypt {
   }
 
   decryptAes256(encryptedText : string) : string{
+    if (!encryptedText){
+      return "";
+    }
     let encryptedBuf = Buffer.from(encryptedText, "base64");
     const decipher = createDecipheriv('aes-256-ctr', Buffer.from(CustomEncrypt.AESKEY, "base64"), Buffer.from(CustomEncrypt.AESIV, "base64"));
     const decryptedText = Buffer.concat([
