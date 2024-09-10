@@ -40,8 +40,7 @@ import { SITE_TITLE} from "./global.js";
     let curUrl = new URL(document.location.toString());
     let pageKey = curUrl.searchParams.get("key");
     
-    const asd = document.querySelector("title");
-    asd.textContent = `${pageKey}` + " - " + SITE_TITLE;
+    const asd = document.querySelector("title");    
 
     const siteMapTextEl = document.querySelector(".site-map-text");
     let spinner = document.querySelector(".loading-spinner");
@@ -50,10 +49,12 @@ import { SITE_TITLE} from "./global.js";
         numOfInterval++;
         let targetCategoryId = "";
         if (Category.categories && Category.categories.length > 0){
+            const searchForm = document.querySelector("#site-search-form");            
             for(const category of Category.categories){
                 if (category.Name === pageKey || category.NameKR === pageKey){
                     targetCategoryId = category.CategoryId;
                     // siteMapTextEl.innerHTML = category.NameKR;   
+                    asd.textContent = `${category.NameKR? category.NameKR : category.Name}` + " - " + SITE_TITLE;
                     break;
                 }        
             }
@@ -67,7 +68,9 @@ import { SITE_TITLE} from "./global.js";
             // getSiteByCategory(targetCategoryId, 1);
             let mainContent01El = document.getElementById("main_content01");
             let sList = await Site.getSiteByCategory(targetCategoryId, 1);
-            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlTemp(sList));
+            console.log(sList);
+            // 나중에는 총 개수 추가하기
+            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlTemp(sList[0]));
             // 카드 이벤트 효과 추가
             Site.cardEvent();
             

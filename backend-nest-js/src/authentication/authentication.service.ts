@@ -10,7 +10,7 @@ import { ApiClient } from 'src/publicComponents/apiClient';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 import { Member } from 'src/member/entities/member.entity';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from 'src/member/entities/memberAuth.constant';
+import { jwtConstants } from 'src/authentication/entities/Auth.constant';
 import { AuthToken } from './entities/authtoken.entity';
 
 @Injectable()
@@ -99,7 +99,7 @@ export class AuthenticationService {
       AccessToken : await this.createAccessToken(member),
       RefreshToken : await this.createRefreshToken(member.MemberId, ip, userAgent, origin),
     }        
-  }
+  } 
 
   async createAccessToken(member : Member) : Promise<string>{
 
@@ -119,7 +119,7 @@ export class AuthenticationService {
     const refreshPayload = {DT : this.customUtils.getUTCDate()};
     const rToken = await this.jwtService.signAsync(refreshPayload, {
       secret : jwtConstants.refreshSecret,
-      expiresIn : '1d'
+      expiresIn : jwtConstants.refreshExpiresIn
     });
 
     // 리프레시 토큰 디비 저장
@@ -157,7 +157,7 @@ export class AuthenticationService {
 
     // 그렇다면 리프레쉬 토큰은 언제 업데이트?
     // 데이터 저장 되어 있으니 생성기준 얼마 안남았으면 재 생성 해주자
-    if (this.customUtils.getUTCDate().getTime() - tokenObj.CreateDate.getTime() > 80000000){
+    if (this.customUtils.getUTCDate().getTime() - tokenObj.CreateDate.getTime() > 64800000){
       rToken = await this.createRefreshToken(member.MemberId, tokenObj.IP, tokenObj.UserAgent, tokenObj.Origin);
     }    
 

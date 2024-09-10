@@ -11,13 +11,11 @@
 }
 
 #header_left {
-    
     display: flex;
     justify-content: left;
 }
 
 #header_mid {
-    
     display: flex;
     justify-content: center;
 }
@@ -42,11 +40,11 @@
 #header_nav>li {
     display: inline-block;
     margin: 6px;
-    padding: 6px;
+    padding: 2px;
     padding-left: 10px;
     padding-right: 10px;
-    border-radius: 6px;
-    border-bottom: 1px solid black;
+    border-radius: 4px;
+    border-bottom: 2px solid black;
 }
 
 #header_nav>li img {

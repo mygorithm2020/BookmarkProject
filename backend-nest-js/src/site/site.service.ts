@@ -3,7 +3,7 @@ import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Site } from './entities/site.entity';
-import { DataSource, FindOptionsOrder, Repository, UpdateResult } from 'typeorm';
+import { DataSource, FindOptionsOrder, FindOptionsSelect, In, Like, Repository, UpdateResult } from 'typeorm';
 import {v4 as uuidV4} from 'uuid'
 import { URL } from 'url';
 import { EMPTY, catchError, firstValueFrom, lastValueFrom, map } from 'rxjs';
@@ -106,6 +106,38 @@ export class SiteService {
     
   }
 
+  async createDaemon(site: Site) : Promise<Site> {
+    if (!site.URL){
+      throw new HttpException({
+        errCode : 23,
+        error : "url value is required"
+
+      }, HttpStatus.BAD_REQUEST);
+
+    }    
+        
+    let urlObj = this.constraint.getUrlObj(site.URL);
+    const tartgetUrl = this.constraint.correctionUrl(urlObj);
+
+    // 기존에 있는지 확인
+    let previous = await this.findOneByUrlAdmin(tartgetUrl, false);
+    if (previous){
+      throw new HttpException({
+        errCode : 22,
+        error : "the url is already exist"
+      }, HttpStatus.BAD_REQUEST);
+    } 
+    let siteModel : Site = new Site();    
+    await this.constraint.generateSite(siteModel, urlObj);      
+    // console.log(siteModel);
+    //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
+
+    // 데이터 삽입
+    const newSite = this.sRepo.create(siteModel);
+    return await this.sRepo.save(newSite);
+    
+  }
+
   async createCategorySite(siteId : string, categories : string[]) : Promise<number>{
     "insert into TA_ReCategorySite values (categories, siteId, ...)";
     const queryRun = this.csRepo.queryRunner;
@@ -150,11 +182,43 @@ export class SiteService {
     
   }
 
-  async findAllAdmin(page? : number) : Promise<Site[]> {
+  async findAllAdmin(page? : number, orderBy? : string, orderDesc? : boolean) : Promise<Site[]> {
     console.log("This action returns all site");
+
+    if (page && page <= 0){
+      page = 1
+    }
+
+    // 정렬 옵션
+    let orderOption : FindOptionsOrder<Site> = {}
+    orderDesc = orderDesc == null ? true : orderDesc;
+    switch(orderBy){
+      case "views":
+        orderOption = {
+          Views : orderDesc? "DESC" : "ASC"
+        }
+        break;
+      case "good":
+        orderOption = {
+          Good : orderDesc? "DESC" : "ASC"
+        }
+        break;
+      case "createDate":
+        orderOption = {
+          CreatedDate : orderDesc? "DESC" : "ASC"
+        }
+        break;
+      default:
+        orderOption = {
+          UpdatedDate : orderDesc? "DESC" : "ASC"
+        }
+    }
+    
+
     if(!page){
       page = 1;
     }
+
     return await this.sRepo.find({
       where : {
         IsDeleted : 0
@@ -162,12 +226,23 @@ export class SiteService {
       relations : {
         Categories : true
       },
-      order : {
-        CreatedDate : "DESC"
-      },
+      order : orderOption,
       // skip : this.WEBPAGECNT * (page - 1),
       // take : this.WEBPAGECNT *  page,       
     });
+  }
+
+  private readonly PublicSelectOption = {
+    SiteId : true,
+    URL : true,
+    Name : true,
+    NameKR : true,
+    Img : true,
+    SiteDescription : true,
+    Views : true,
+    Good : true,
+    Bad : true,
+    CreatedDate : true
   }
 
   async findAllPublic(page? : number) : Promise<Site[]> {
@@ -176,18 +251,9 @@ export class SiteService {
       page = 1;
     }
     return await this.sRepo.find({
-      select : {
-        SiteId : true,
-        URL : true,
-        Name : true,
-        NameKR : true,
-        SiteDescription : true,
-        Views : true,
-        Good : true,
-        Bad : true,
-        CreatedDate : true
-      },
+      select : this.PublicSelectOption,
       where : {
+         
         IsDeleted : 0,
         Status : 2
       },      
@@ -199,7 +265,41 @@ export class SiteService {
     });
   }
 
-  async findByCategoryPublic(categoryId : string, page? : number, orderBy? : string, orderDesc? : boolean) : Promise<Site[]> {
+  findAllBySearchPublic(word : string){
+    let data = this.sRepo.findAndCount({
+      select : this.PublicSelectOption,
+      where : [
+        { IsDeleted : 0, Status : 2, URL : Like(`%${word}%`)},
+        { IsDeleted : 0, Status : 2, Name : Like(`%${word}%`)},
+        { IsDeleted : 0, Status : 2, NameKR : Like(`%${word}%`)},
+        { IsDeleted : 0, Status : 2, SiteDescription : Like(`%${word}%`)},
+        { IsDeleted : 0, Status : 2, Description : Like(`%${word}%`)},
+        { IsDeleted : 0, Status : 2, Keywords : Like(`%${word}%`)},
+        { IsDeleted : 0, Status : 2, OGDescription : Like(`%${word}%`)},
+        { IsDeleted : 0, Status : 2, 
+          Categories : {
+            IsDeleted : 0,
+            Status : 2,
+            Name : Like(`%${word}%`)
+          }
+        },
+        { IsDeleted : 0, Status : 2, 
+          Categories : {
+            IsDeleted : 0,
+            Status : 2,
+            NameKR : Like(`%${word}%`)
+          }
+        },
+      ],
+      order : {
+        UpdatedDate : "DESC"
+      },
+      // take : 1
+    });
+    return data;
+  }
+
+  async findByCategoryPublic(categoryId : string, page? : number, orderBy? : string, orderDesc? : boolean) : Promise<[Site[], number]> {
     console.log(`This action returns site in ${categoryId} category`);
     console.log(`categoryId : ${categoryId}, page : ${page}`);
     page = page? page : 1;
@@ -224,12 +324,7 @@ export class SiteService {
         orderOption = {
           Views : orderDesc? "DESC" : "ASC"
         }
-        break;
-      case "recommend":
-        orderOption = {
-          Views : orderDesc? "DESC" : "ASC"
-        }
-        break;
+        break;      
       case "good":
         orderOption = {
           Good : orderDesc? "DESC" : "ASC"
@@ -240,7 +335,7 @@ export class SiteService {
           CreatedDate : orderDesc? "DESC" : "ASC"
         }
         break;
-      default:
+      default: //여기가 추천케이스 알고리즘 구현 필요
         orderOption = {
           Views : orderDesc? "DESC" : "ASC"
         }
@@ -248,7 +343,7 @@ export class SiteService {
 
     //  여기에서 카테고리 조인 뺴고, inner 조인으로 만들기 => queryBuilder 사용
     // 근데 쿼리보면 left join인데 왜 값은 inner join 처럼 나오지,,,,,,,?????
-    let temp = await this.sRepo.find({
+    let temp = await this.sRepo.findAndCount({
       select : {
         Categories : {
           CategoryId : true
@@ -288,7 +383,7 @@ export class SiteService {
 
     // const res = this.getRecommendSite();
     let result = ServerCache.getRecommendSites();
-    if (!result){
+    if (!result || result.length == 0){
       const reLoadSites : Site[] = await this.sRepo.query(
         `(select * from TA_Site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 25)
         UNION
@@ -297,6 +392,8 @@ export class SiteService {
         (select * from TA_Site where isDeleted = 0 and status = 2 order by Bad ASC LIMIT 25)
         UNION
         (select * from TA_Site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 25)
+        UNION
+        (select * from TA_Site where isDeleted = 0 and status = 2 order by UpdatedDate DESC LIMIT 25)
         order by rand()`        
       );
       ServerCache.setRecommendSites(reLoadSites);
@@ -411,6 +508,99 @@ export class SiteService {
 
       }, HttpStatus.BAD_REQUEST);
     }
+    return await this.sRepo.update({
+      SiteId : updateSite.SiteId,
+    }, {
+      Name : updateSite.Name,
+      NameKR : updateSite.NameKR,
+      IPAddress : updateSite.IPAddress,
+      Img : updateSite.Img,
+      SiteDescription : updateSite.SiteDescription,
+      AppLinkAndroid : updateSite.AppLinkAndroid,
+      AppLinkIOS : updateSite.AppLinkIOS,
+      MemberId : updateSite.MemberId,
+      Status : updateSite.Status,
+      Title : updateSite.Title,
+      FaviconImg : updateSite.FaviconImg,
+      Description : updateSite.Description,
+      Keywords : updateSite.Keywords,
+      OGTitle : updateSite.OGTitle,
+      OGSiteName : updateSite.OGSiteName,
+      OGImg : updateSite.OGImg,
+      OGDescription : updateSite.OGDescription,
+      OGURL : updateSite.OGURL,
+      UpdatedDate : this.customUtils.getUTCDate(),
+    });
+  }
+
+  async updateDaemon(updateSite: Site) : Promise<UpdateResult> {
+    // 상태는 2, 3, 4 가 아닌이상은 6으로 변경
+    if (updateSite.Status != 2 && updateSite.Status != 3 && updateSite.Status != 4){
+      updateSite.Status = 6;
+    }
+
+    // 기본적으로 파일로부터 얻는 정보가 들어있을테니..... 나머지는 보정필요
+    if (updateSite.FaviconImg){
+      //  이미지 url 링크 보정
+      if (updateSite.FaviconImg.startsWith("//")){
+        updateSite.FaviconImg = "https:" + updateSite.FaviconImg;
+      } else if (updateSite.FaviconImg.startsWith("/")){
+        updateSite.FaviconImg = updateSite.URL + updateSite.FaviconImg;
+      } else {
+          // 모르겠네 또 어떤 케이스가...
+      }
+    }
+
+    if (updateSite.Description && updateSite.Description.length > 1000){
+      updateSite.Description.slice(0, 1000);
+    }
+
+    if (updateSite.Keywords && updateSite.Keywords.length > 1000){
+      updateSite.Keywords.slice(0, 1000);
+    }
+
+    //  이미지 url 링크 보정
+    if (updateSite.OGImg && !updateSite.OGImg.startsWith("//") && updateSite.OGImg.startsWith("/")){ 
+      updateSite.OGImg = updateSite.URL + updateSite.OGImg;
+    }
+
+    if (updateSite.OGDescription && updateSite.OGDescription.length > 1000){
+      updateSite.OGDescription.slice(0, 1000);
+    }    
+    
+    if (!updateSite.Name){
+      if (updateSite.OGTitle){
+        updateSite.Name = updateSite.OGTitle.trim();
+      } else if (updateSite.Title){
+        updateSite.Name = updateSite.Title.trim();
+      }  
+    }
+     
+    if (!updateSite.Img){
+      if (updateSite.OGImg){
+        updateSite.Img = updateSite.OGImg;
+      } else if (updateSite.FaviconImg){
+        updateSite.Img = updateSite.FaviconImg;
+      }
+    }
+
+    // 이미지 값이 존재하면 해당 링크 파일 다운 받아서 저장하고 값으로 저장
+    if (updateSite.Img){
+      try {
+        updateSite.Img = await this.constraint.imageLinkToFileName(updateSite.SiteId, updateSite.Img);
+      } catch {
+        updateSite.Img = null;
+      }      
+    }
+
+    if (!updateSite.SiteDescription){
+      if (updateSite.OGDescription){
+        updateSite.SiteDescription = updateSite.OGDescription;
+      } else if (updateSite.Description){
+        updateSite.SiteDescription = updateSite.Description;
+      }
+    }    
+
     return await this.sRepo.update({
       SiteId : updateSite.SiteId,
     }, {

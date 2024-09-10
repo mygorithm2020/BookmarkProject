@@ -17,7 +17,6 @@ function getExpiredDate(){
     
 }
 
-console.log(ISLOGIN);
 // 로그인 상태면 헤더 변경
 if (ISLOGIN){
     

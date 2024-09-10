@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { Roles } from './roles.decorator';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants, jwtConstantsAdmin } from 'src/member/entities/memberAuth.constant';
+import { jwtConstants, jwtConstantsAdmin } from 'src/authentication/entities/Auth.constant';
 import { Request } from 'express';
 import { HttpErrorCode } from 'src/publicComponents/ExceptionHandler';
 
@@ -80,7 +80,7 @@ export class CustomAuthGuard implements CanActivate {
   }
 }
 
-
+@Injectable()
 export class AdminAuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
 

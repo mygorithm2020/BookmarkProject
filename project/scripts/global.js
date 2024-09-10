@@ -83,7 +83,7 @@ window.onload = function(){
 
 
 // 리프레시 토큰의 만료일
-function getExpiredDate(){
+export function getExpiredDate(){
     let expiredDate = Date.now() / 1000;
     if(window.localStorage.getItem(STORAGE_KEY_TOKEN)){
         

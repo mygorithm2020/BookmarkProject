@@ -54,14 +54,15 @@ export class ApiRequest {
     }
 
     static axiosDelete(path){
+        path = encodeURI(path);
         let data = ApiRequest.instance.delete(path)
         .then((result) => {
             return result.data;   
         })
-        .catch((error) => {
+        .catch(async (error) => {
             console.log(error);
             // 인증 문제면 토큰 재 발행 후 다시 시도
-            if (this.UnauthorizedHandler(error)){
+            if (await this.UnauthorizedHandler(error)){
                 data = ApiRequest.instance.delete(path)
                 .then((result) => {
                     return result.data;
@@ -79,15 +80,43 @@ export class ApiRequest {
         return data;
     }
 
-    static axiosPatch(path, body){
+    static axiosPut(path, body){
+        path = encodeURI(path);
         let data = ApiRequest.instance.patch(path, body)
         .then((result) => {
             return result.data;   
         })
-        .catch((error) => {
+        .catch(async (error) => {
             console.log(error);
             // 인증 문제면 토큰 재 발행 후 다시 시도
-            if (this.UnauthorizedHandler(error)){
+            if (await this.UnauthorizedHandler(error)){
+                data = ApiRequest.instance.patch(path, body)
+                .then((result) => {
+                    return result.data;
+                })
+                .catch((error) => {
+                    this.HandleBasicError(error);
+                    return error.response.data;
+                })
+
+            } else {
+                this.HandleBasicError(error);
+                return error.response.data;
+            }
+        });
+        return data;
+    }
+
+    static axiosPatch(path, body){
+        path = encodeURI(path);
+        let data = ApiRequest.instance.patch(path, body)
+        .then((result) => {
+            return result.data;   
+        })
+        .catch(async (error) => {
+            console.log(error);
+            // 인증 문제면 토큰 재 발행 후 다시 시도
+            if (await this.UnauthorizedHandler(error)){
                 data = ApiRequest.instance.patch(path, body)
                 .then((result) => {
                     return result.data;
@@ -106,6 +135,7 @@ export class ApiRequest {
     }
 
     static axiosPost(path, body, headerObj){
+        path = encodeURI(path);
         let data = ApiRequest.instance.post(path, body
         )
         .then((result) => {
@@ -136,14 +166,15 @@ export class ApiRequest {
     }
 
     static axiosGet(path){
+        path = encodeURI(path);
         let data = ApiRequest.instance.get(path)
         .then((result) => {
             return result.data;   
         })
-        .catch((error) => {
+        .catch(async (error) => {
             console.log(error);
             // 인증 문제면 토큰 재 발행 후 다시 시도
-            if (this.UnauthorizedHandler(error)){
+            if (await this.UnauthorizedHandler(error)){
                 data = ApiRequest.instance.get(path)
                 .then((result) => {
                     return result.data;
@@ -163,15 +194,17 @@ export class ApiRequest {
 
     static async UnauthorizedHandler(error){
         let res = false;
+        
+        
         try {
-            if (error.response & error.response.data & error.response.data.errCode){            
-                if (error.response.data.errCode === 7){
-                    let data = await new Member().refreshToken();
-                    if (data && data.AccessToken){
-                        ApiRequest.instance.defaults.headers.common['authorization'] = `Bearer ${data.AccessToken}`;
-                        res = true;
-                    }                
-                }
+            
+            if (error.response && error.response.data && error.response.data.errCode === 7){                            
+                console.log("refresh");                
+                let data = await new Member().refreshToken();
+                if (data && data.AccessToken){
+                    ApiRequest.instance.defaults.headers.common['authorization'] = `Bearer ${data.AccessToken}`;
+                    res = true;
+                }     
             }
         } catch {
 

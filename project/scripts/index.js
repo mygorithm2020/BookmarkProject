@@ -1,12 +1,12 @@
 import { Site } from "./site.js";
-console.log(encodeURIComponent("https://www.hanbit.co.kr/src/10473"));
-console.log(btoa("https://www.hanbit.co.kr/src/10473"));
-const bd = window.btoa("https://www.hanbit.co.kr/src/10473");
-console.log(bd);
-console.log(window.atob(bd));
-console.log(navigator.userAgent);
-console.log(decodeURIComponent(document.cookie));
-console.log("open index");
+// console.log(encodeURIComponent("https://www.hanbit.co.kr/src/10473"));
+// console.log(btoa("https://www.hanbit.co.kr/src/10473"));
+// const bd = window.btoa("https://www.hanbit.co.kr/src/10473");
+// console.log(bd);
+// console.log(window.atob(bd));
+// console.log(navigator.userAgent);
+// console.log(decodeURIComponent(document.cookie));
+// console.log("open index");
 
 
 fetch('https://api.ipify.org?format=json')
@@ -32,7 +32,6 @@ mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlTemp(sites));
 Site.cardEvent();
 
 let spinner = document.querySelector(".loading-spinner");
-console.log(spinner);
 spinner.classList.toggle("cover");
 
 

@@ -153,7 +153,6 @@ export class Category{
 
     async updateCategoryAdmin(category){
         let data = ApiRequest.axiosPatch("/category/admin", category);
-        // 카테고리 불러오기
         // let data = await axios.patch(`${this.API_HOST}/category/admin`, category)
         // .then((result) => {
         //     console.log(result); 
@@ -238,7 +237,6 @@ export class Category{
         //         // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
         //         document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
         //         // document.querySelector("main").insertAdjacentHTML("beforeend","<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>");
-
         //     }
         //     return null;
         // });

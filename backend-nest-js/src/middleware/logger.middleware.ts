@@ -104,7 +104,7 @@ export class FirewallMiddleware implements NestMiddleware {
         } else {
             throw new HttpException({
                 code : HttpErrorCode.MiddleAuth,
-                message : "wrong approach",
+                message : "restricted",
             }, HttpStatus.UNAUTHORIZED);
         }
         

@@ -191,12 +191,12 @@ function siteDetailtoHtmlAdmin(site, categories){
                       <td>상태</td>
                       <td>
                         <select name="status">
-                            <option value="1" ${site.Status == 1 ? "selected" : ""} disabled>등록</option>
-                            <option value="2" ${site.Status == 2 ? "selected" : ""} >표시</option>
-                            <option value="3" ${site.Status == 3 ? "selected" : ""} >보류</option>
-                            <option value="4" ${site.Status == 4 ? "selected" : ""} >숨기기</option>
-                            <option value="5" ${site.Status == 5 ? "selected" : ""} disabled>자동 등록 중 에러</option>
-                            <option value="6" ${site.Status == 6 ? "selected" : ""} disabled>자동 등록 완료</option>
+                            <option value="1" ${site.Status == 1 ? "selected" : ""} disabled>${Site.siteStatus[site.Status]}</option>
+                            <option value="2" ${site.Status == 2 ? "selected" : ""} >${Site.siteStatus[site.Status]}</option>
+                            <option value="3" ${site.Status == 3 ? "selected" : ""} >${Site.siteStatus[site.Status]}</option>
+                            <option value="4" ${site.Status == 4 ? "selected" : ""} >${Site.siteStatus[site.Status]}</option>
+                            <option value="5" ${site.Status == 5 ? "selected" : ""} disabled>${Site.siteStatus[site.Status]}</option>
+                            <option value="6" ${site.Status == 6 ? "selected" : ""} disabled>${Site.siteStatus[site.Status]}</option>
                         </select>
                       </td>
                     </tr>

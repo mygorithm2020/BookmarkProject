@@ -49,7 +49,6 @@ export class ServerCache {
                 return null;
             }
 
-
         return this.recommendSites.sites;   
     }
     
