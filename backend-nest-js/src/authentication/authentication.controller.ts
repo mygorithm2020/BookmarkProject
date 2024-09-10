@@ -7,8 +7,10 @@ import { Member } from 'src/member/entities/member.entity';
 import { MemberService } from 'src/member/member.service';
 import { Request } from 'express';
 import { AuthToken } from './entities/authtoken.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags("auth")
 export class AuthenticationController {
   constructor(
     private readonly authService: AuthenticationService,

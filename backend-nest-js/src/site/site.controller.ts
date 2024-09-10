@@ -34,10 +34,18 @@ export class SiteController {
     // 관리자면 통과, 로그인 했으면 통과
 
     let res = this.siteService.create(createSiteDto);
-    console.log(res);
-    
+    console.log(res);    
     return res;
   }
+
+  @Post('/daemon')
+  @UseGuards(AdminAuthGuard)
+  createDaemon(@Body() createSiteDto: Site) {
+    let res = this.siteService.createDaemon(createSiteDto);
+    console.log(res);
+    return res;
+  }
+  
 
   @Post("/test")
   createTest(@Body() createSiteDto: Site, @Ip() reqIp: string) {
@@ -92,6 +100,16 @@ export class SiteController {
     return result;
   }
 
+  @Get("/search")
+  findSitesByWord(@Query("key") word : string){
+    // 서비스 호출 등의 기능만 수행
+    console.log(word);
+    word = decodeURIComponent(word);
+    let res = this.siteService.findAllBySearchPublic(word);
+    // 리턴 형태 만들기 json으로
+    return res;
+  }
+
   // url base64인코딩해서 보내기
   @Get("/url/:base64url")
   findOneByUrl(@Param('base64url') url : string) {
@@ -111,6 +129,12 @@ export class SiteController {
   findOneByAdmin(@Query('id') siteId: string) {
     console.log(siteId);
     return this.siteService.findOneByAdmin(siteId);
+  }
+
+  @Get('/daemon')
+  // @UseGuards(AdminAuthGuard)
+  findAllDaemon(@Query("page") page : number, @Query("order") order : string, @Query("sort") orderDesc : boolean) {
+    return this.siteService.findAllAdmin(page, null, false);
   }
 
   @Get(':id')
@@ -219,9 +243,22 @@ export class SiteController {
     return {};
   }
 
+  @Patch('/daemon')
+  @UseGuards(AdminAuthGuard)
+  async updateDaemon(@Body() updateSiteDto: Site) {
+    let res = await this.siteService.updateByAdmin(updateSiteDto);
+    if (res.affected > 0){
+      return {
+        SiteId : updateSiteDto.SiteId
+      };
+    }
+    return {};
+  }
+
   @Delete('/admin/:id')
   @UseGuards(AdminAuthGuard)
   remove(@Param('id') id: string) {
     return this.siteService.removeAdmin(id);
   }
+  
 }

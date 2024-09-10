@@ -1,6 +1,5 @@
-console.log("navi");
-
 import { Category } from "./categoryObj.js";
+import { Site } from "./site.js";
 
 (async function (){
     let cqdsd = new Category();
@@ -18,6 +17,21 @@ import { Category } from "./categoryObj.js";
             break;
         }
     }
+
+    // 검색 기능 추가
+    const searchForm = document.querySelector("#site-search-form");
+    searchForm.addEventListener("submit", async (target)=>{
+        target.preventDefault();
+
+
+        const word = searchForm.querySelector("input[name=word]").value;
+        if(!word || word.trim() == ""){
+            return;
+        }
+
+        window.location.href = `./search.html?key=${encodeURI(word)}`;
+    })
+    
     
 
     window.addEventListener("scroll", scrollEvent);
@@ -27,7 +41,7 @@ import { Category } from "./categoryObj.js";
     function scrollEvent(event){
         // 전체 크기에서 비율로 계산하자
         const STANDARD = window.innerHeight/6;
-        console.log(window.innerWidth, window.innerHeight);
+        // console.log(window.innerWidth, window.innerHeight);
         // const STANDARD = 30;
         
         if(window.scrollY > STANDARD){
@@ -45,8 +59,6 @@ import { Category } from "./categoryObj.js";
         //   header.classList.remove("hide")
         //   goTop.classList.remove("show")
         }
-        
-        
         
         lastScrollY = window.scrollY;
         

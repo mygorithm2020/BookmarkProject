@@ -1,33 +1,31 @@
 import { ApiRequest } from "./apiRequest.js";
 
 export class Site {
-
     // static API_HOST = "http://220.72.179.212:3000";
     static API_HOST = ApiRequest.NEST_API_HOST + "/api";
     static IMG_HOST = ApiRequest.NEST_API_HOST + "/images";
 
     static siteStatus = {
-        1 : "기본 등록",
-        2 : "표시 중",
-        3 : "심사 대기",
-        4 : "숨기기(차단)",
-        5 : "자동 등록 중 실패",
+        1 : "등록",
+        2 : "공개",
+        3 : "보류",
+        4 : "비공개",
+        5 : "자동 등록 실패",
         6 : "자동 등록 성공",
-        7 : "",
+        7 : "자동 등록 보류",
     }
 
     constructor(siteInfo){
-        // this.SiteId = siteInfo.SiteId;
-        // this.Name = siteInfo.Name;
-        // this.URL = siteInfo.URL;
-        // this.Image = siteInfo.Image;
-        // this.Description = siteInfo.Description;
-        // this.Keyword = siteInfo.Keyword;
-        // this.Views = siteInfo.Views;
-        // this.Like = siteInfo.Like;
-        // this.CreatedDt = siteInfo.CreatedDt;
-        // this.UpdatedDt = siteInfo.UpdatedDt;
-        
+        this.SiteId = siteInfo.SiteId;
+        this.Name = siteInfo.Name;
+        this.URL = siteInfo.URL;
+        this.Image = siteInfo.Image;
+        this.Description = siteInfo.Description;
+        this.Keyword = siteInfo.Keyword;
+        this.Views = siteInfo.Views;
+        this.Like = siteInfo.Like;
+        this.CreatedDt = siteInfo.CreatedDt;
+        this.UpdatedDt = siteInfo.UpdatedDt;        
     }
 
     static shuffle(array) {
@@ -69,6 +67,48 @@ export class Site {
                         <ul class="site-detail-box">
                             
                             
+                                                         
+                        </ul>
+                    </div>
+                    <p class="site-card-bottom bg-color-5">
+                        ${siteList[i].SiteDescription? siteList[i].SiteDescription : ""}   
+                    </p>                         
+                </a>     
+                  
+            </li>`;
+        }
+                        
+        res += `
+        </ul>`
+
+        return res;
+    }
+
+    static listToHtmlForSearch(siteList){
+        let res = "";
+        if (!siteList || siteList.length === 0){
+            res = `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
+            return res;
+
+        }
+
+        res += `<ul id="site-card-box">`
+        for (let i = 0 ; i < siteList.length; i++){
+            // if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
+            //     siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
+            // }
+            res += `
+            <li class="site-card">
+                <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
+                    <div class="site-card-top ">                    
+                        <img class="site-card-img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ?Site.IMG_HOST + "/" + siteList[i].SiteId + "/" + siteList[i].Img : siteList[i].Img}" alt="no images">
+                        
+                    </div>
+                    <div class="site-card-mid bg-color-5">
+                        <div>
+                            ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
+                        </div>
+                        <ul class="site-detail-box">
                                                          
                         </ul>
                     </div>
@@ -262,28 +302,6 @@ export class Site {
     static async getRecommendedSite(page){
 
         let data = ApiRequest.axiosGet("/site/recommend");
-
-        // let data = await this.axiosGet(`${this.API_HOST}/site/recommend`, { withCredentials: true });
-        // 추천 사이트 조회        
-        // let data = await axios.get(`${this.API_HOST}/site/recommend`)
-        // .then((result) => {
-        //     console.log(result);
-        //     Site.shuffle(result.data);
-        //     return result.data;
-        //     mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlv2(result.data));            
-        //     Site.cardEvent();
-        // })
-        // .catch((error) => {
-        //     console.error(error);
-        //     if (error.code === "ERR_NETWORK"){
-        //         // 현재 이용 불가능한 무언가 띄우기...
-        //         // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-        //         document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
-        //         // document.querySelector("main").insertAdjacentHTML("beforeend","<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>");
-    
-        //     }
-        //     return null;            
-        // });
         return data;
     }
 
@@ -296,6 +314,13 @@ export class Site {
 
     static async getSiteById(siteId){
         let data = ApiRequest.axiosGet(`/site/admin?id=${siteId}`);
+        // let data = await this.axiosGet(`${this.API_HOST}/site/admin?id=${siteId}`);
+        return data;
+    }
+
+    // 사이트 검색
+    static async getSiteBySearchWord(word){
+        let data = ApiRequest.axiosGet(`/site/search?key=${word}`);
         // let data = await this.axiosGet(`${this.API_HOST}/site/admin?id=${siteId}`);
         return data;
     }

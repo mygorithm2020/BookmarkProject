@@ -53,6 +53,7 @@ export class ApiRequest {
     }
 
     static axiosDelete(path){
+        path = encodeURI(path);
         let data = ApiRequest.instance.delete(path)
         .then((result) => {
             return result.data;   
@@ -78,7 +79,35 @@ export class ApiRequest {
         return data;
     }
 
+    static axiosPut(path, body){
+        path = encodeURI(path);
+        let data = ApiRequest.instance.patch(path, body)
+        .then((result) => {
+            return result.data;   
+        })
+        .catch(async (error) => {
+            console.log(error);
+            // 인증 문제면 토큰 재 발행 후 다시 시도
+            if (await this.UnauthorizedHandler(error)){
+                data = ApiRequest.instance.patch(path, body)
+                .then((result) => {
+                    return result.data;
+                })
+                .catch((error) => {
+                    this.HandleBasicError(error);
+                    return error.response.data;
+                })
+
+            } else {
+                this.HandleBasicError(error);
+                return error.response.data;
+            }
+        });
+        return data;
+    }
+
     static axiosPatch(path, body){
+        path = encodeURI(path);
         let data = ApiRequest.instance.patch(path, body)
         .then((result) => {
             return result.data;   
@@ -105,6 +134,7 @@ export class ApiRequest {
     }
 
     static axiosPost(path, body, headerObj){
+        path = encodeURI(path);
         let data = ApiRequest.instance.post(path, body
         )
         .then((result) => {
@@ -135,6 +165,7 @@ export class ApiRequest {
     }
 
     static axiosGet(path){
+        path = encodeURI(path);
         let data = ApiRequest.instance.get(path)
         .then((result) => {
             return result.data;   

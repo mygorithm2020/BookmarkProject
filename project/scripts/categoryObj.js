@@ -227,10 +227,8 @@ export class Category{
                 cookies : decodeURIComponent(document.cookie)
             },
         })
-        .then((result) => {
-            console.log(result);
-            return result.data;
-            
+        .then((result) => {            
+            return result.data;            
         })
         .catch((error) => {
             console.error(error);

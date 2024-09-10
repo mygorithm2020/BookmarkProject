@@ -204,7 +204,7 @@ export class Constraint {
           // 모르겠네 또 어떤 케이스가...
       }
 
-    } else if (site.Status != 5) {
+    } else if (site.Status == 6) {
       // 이거 존재하는지 확인
       // 파비콘 없으면 기본 url에 /favicon.ico 로 보정
       try{
