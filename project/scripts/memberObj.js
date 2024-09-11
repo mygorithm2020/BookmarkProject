@@ -127,21 +127,41 @@ export class Member {
     // 401에러 나오면 리프레시 시도하고, 그래도 안되면 재 로그인 필요
     // 토큰 리프레쉬 + 로그인 확인용
     async refreshToken(){
-        const resData = await ApiRequest.axiosPost("auth/refresh", null, {
-            authorization : `Bearer ${REFRESHTOKEN}`            
-        });
-
-        if (resData.ACCESSTOKEN){
-            localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify({
-              AccessToken : resData.AccessToken,
-              RefreshToken : resData.RefreshToken
-            }));
-            
-            localStorage.setItem(STORAGE_KEY_NICKNAME, resData.Member.NickName);
-        } else {
+        console.log("token");
+        const resData = ApiRequest.instance.post("auth/refresh", null, {
+            headers : {
+                authorization : `Bearer ${REFRESHTOKEN}`            
+            }            
+        })
+        .then((res) => {
+            if (res.data && res.data.AccessToken){
+                localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify({
+                    AccessToken : res.data.AccessToken,
+                    RefreshToken : res.data.RefreshToken
+                }));
+                localStorage.setItem(STORAGE_KEY_NICKNAME, res.data.Member.NickName);
+            }else {
+                localStorage.removeItem(STORAGE_KEY_TOKEN);
+                localStorage.removeItem(STORAGE_KEY_NICKNAME);
+            }
+            return res.data;
+        })
+        .catch((err) => {
             localStorage.removeItem(STORAGE_KEY_TOKEN);
             localStorage.removeItem(STORAGE_KEY_NICKNAME);
-        }        
+        });
+
+        // if (resData && resData.ACCESSTOKEN){
+        //     localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify({
+        //       AccessToken : resData.AccessToken,
+        //       RefreshToken : resData.RefreshToken
+        //     }));
+            
+        //     localStorage.setItem(STORAGE_KEY_NICKNAME, resData.Member.NickName);
+        // } else {
+        //     localStorage.removeItem(STORAGE_KEY_TOKEN);
+        //     localStorage.removeItem(STORAGE_KEY_NICKNAME);
+        // }        
 
         return resData;
         // {

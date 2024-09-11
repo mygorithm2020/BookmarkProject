@@ -14,7 +14,7 @@ const loginStorage = window.localStorage.getItem(STORAGE_KEY_REMEBER_LOGIN);
 
 if (loginStorage){
   const loginInfo = JSON.parse(loginStorage);
-  emailInput.value = loginInfo.E;
+  emailInput.value = atob(loginInfo.E);
   document.querySelector("input[name=remember]").checked = true;
 }
 
@@ -29,7 +29,7 @@ loginForm.addEventListener("submit", async (target) => {
     // 이메일 저장하고 저장한다는 사실 저장하고
     window.localStorage.setItem(STORAGE_KEY_REMEBER_LOGIN, JSON.stringify({
       remember : true,
-      E : mem.MemEmail
+      E : btoa(mem.MemEmail)
     }));
   } else {
     window.localStorage.removeItem(STORAGE_KEY_REMEBER_LOGIN);

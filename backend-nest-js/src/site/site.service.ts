@@ -654,8 +654,8 @@ export class SiteService {
     // 트랜잭션으로 묶기
     const queryRunner = this.dataSource.createQueryRunner();
 
-    const newUpdateSite = queryRunner.manager.create(Site, updateSite);
-    console.log(newUpdateSite);
+    updateSite = queryRunner.manager.create(Site, updateSite);
+    console.log(updateSite);
     
     // establish real database connection using our new query runner
     // await queryRunner.connect();

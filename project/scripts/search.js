@@ -13,7 +13,7 @@ spinner.classList.toggle("cover");
 if (data && data[1] >0){
     mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForSearch(data[0]));
 } else {
-    mainContent01El.insertAdjacentHTML("beforeend", "<h2>검색 결과 등록된 사이트가 없습니다</h2>");
+    mainContent01El.insertAdjacentHTML("beforeend", "<h2>검색어에 해당하는 사이트가 없습니다</h2>");
 }
 const searchForm = document.querySelector("#site-search-form");
 searchForm.querySelector("input[name=word]").value = pageKey;

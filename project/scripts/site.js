@@ -16,16 +16,32 @@ export class Site {
     }
 
     constructor(siteInfo){
-        this.SiteId = siteInfo.SiteId;
-        this.Name = siteInfo.Name;
-        this.URL = siteInfo.URL;
-        this.Image = siteInfo.Image;
-        this.Description = siteInfo.Description;
-        this.Keyword = siteInfo.Keyword;
-        this.Views = siteInfo.Views;
-        this.Like = siteInfo.Like;
-        this.CreatedDt = siteInfo.CreatedDt;
-        this.UpdatedDt = siteInfo.UpdatedDt;        
+        this.SiteId;
+        this.URL;        
+        this.Name;        
+        this.NameKR;        
+        this.IPAddress;        
+        this.Img;        
+        this.SiteDescription;        
+        this.AppLinkAndroid;        
+        this.AppLinkIOS;
+        this.Views;        
+        this.Good;        
+        this.Bad;        
+        this.MemberId;        
+        this.Status;
+        this.Title;
+        this.FaviconImg;
+        this.Description;
+        this.Keywords;
+        this.OGTitle;
+        this.OGSiteName;        
+        this.OGImg;
+        this.OGDescription;
+        this.OGURL; 
+        this.IsDeleted;
+        this.CreatedDate;
+        this.UpdatedDate;        
     }
 
     static shuffle(array) {
@@ -328,6 +344,7 @@ export class Site {
     //사이트 등록
     static addSiteAdmin(site){
         let data = ApiRequest.axiosPost("/site", site);
+        
         return data;
     }
 

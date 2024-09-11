@@ -18,14 +18,8 @@ function getExpiredDate(){
 }
 
 // 로그인 상태면 헤더 변경
+const headerNav = document.querySelector("#header_nav");
 if (ISLOGIN){
-    
-    if (document.querySelector("#header_nav>li:first-child")){
-        console.log("Sdsdsds");
-        document.querySelector("#header_nav>li:first-child").remove();
-    }
-    
-    const headerNav = document.querySelector("#header_nav");
 
     if (headerNav){
         headerNav.insertAdjacentHTML("afterbegin", `
@@ -55,6 +49,12 @@ if (ISLOGIN){
         })
     }   
     
+} else {
+    headerNav.insertAdjacentHTML("afterbegin", `
+        <li>
+            <a href="login.html">로그인</a>
+        </li>  `
+    );    
 }
 
 
@@ -62,6 +62,7 @@ const recomSite = document.querySelector("#recommend-site");
 const backCover = document.querySelector("#opacity-back");
 const recSiteBox = document.querySelector("#recom-site-box");
 const formBox = document.querySelector("#form-box");
+const reUrlEl = formBox.querySelector("input[name=url]");
 
 // 모달 열기
 recomSite.addEventListener("click", async ()=>{
@@ -105,7 +106,7 @@ formBox.addEventListener("submit", async (target)=>{
     const btn = formBox.querySelector("#add-site-btn");
     btn.disabled = true;
 
-    const url = formBox.querySelector("input[name=url]").value;
+    const url = reUrlEl.value;
     if(!url || url.trim() == ""){
         alert("올바른 url을 입력하세요!");
         btn.disabled = false;
@@ -114,24 +115,28 @@ formBox.addEventListener("submit", async (target)=>{
     const site = new Site();
     site.URL = url
     let res = await Site.addSiteAdmin(site);
-    if (res.SiteId){
-        alert("사이트가 새로 등록되었습니다.");
-        // 등록 창 닫기
-        OpenOrCloseModal();
-    }else if (res.errCode){
-        if (res.errCode === 22){
-            alert("이미 등록된 사이트 입니다.");
-        } else if (res.errCode === 32){
-            alert("입력한 url이 정확한지 확인 후 다시 시도해주세요.");
-        } else if (res.errCode > 10){
-            alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요!");
+    if (res){
+        if (res.SiteId){
+            alert(`${url} 사이트가 새로 등록되었습니다`);
+            // 등록 창 닫기
+            OpenOrCloseModal();
+        }else if (res.errCode){
+            if (res.errCode === 22){
+                alert("이미 등록된 사이트 입니다.");
+            } else if (res.errCode === 32){
+                alert("입력한 url이 정확한지 확인 후 다시 시도해주세요.");
+            } else if (res.errCode > 10){
+                alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요!");
+            }        
         }
-        btn.disabled = false;
-    }
+
+    }    
+    btn.disabled = false;
 })
 
 function OpenOrCloseModal(){
     backCover.classList.toggle("hidden");
     recSiteBox.classList.toggle("hidden");
+    reUrlEl.value = "";
 }
 

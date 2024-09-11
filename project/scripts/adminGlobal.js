@@ -5,8 +5,6 @@ export const STORAGE_KEY_REMEBER_LOGIN = "";
 export const STORAGE_KEY_NICKNAME = "nickname";
 export const ISLOGIN = window.localStorage.getItem(STORAGE_KEY_NICKNAME) && (getExpiredDate() > Date.now() / 1000);
 
-console.log(getExpiredDate(), Date.now() / 1000);
-
 if (!ISLOGIN && !window.location.href.includes("login")){
     window.location.href = "login.html";
 }

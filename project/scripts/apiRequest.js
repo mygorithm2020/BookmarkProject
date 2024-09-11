@@ -61,42 +61,53 @@ export class ApiRequest {
         .catch(async (error) => {
             console.log(error);
             // 인증 문제면 토큰 재 발행 후 다시 시도
-            if (await this.UnauthorizedHandler(error)){
-                data = ApiRequest.instance.delete(path)
+            if (await this.UnauthorizedHandler(error)){                
+                console.log("again");
+                let againData = ApiRequest.instance.delete(path)
                 .then((result) => {
+                    console.log(result);
                     return result.data;
                 })
-                .catch((error) => {
+                .catch((error) => {     
+                    console.log(error);               
                     this.HandleBasicError(error);
                     return error.response.data;
                 })
+                return againData;
 
             } else {
                 this.HandleBasicError(error);
                 return error.response.data;
             }
         });
+        console.log(data);
         return data;
     }
 
     static axiosPut(path, body){
         path = encodeURI(path);
-        let data = ApiRequest.instance.patch(path, body)
+        let data = ApiRequest.instance.put(path, body)
         .then((result) => {
             return result.data;   
         })
         .catch(async (error) => {
             console.log(error);
             // 인증 문제면 토큰 재 발행 후 다시 시도
-            if (await this.UnauthorizedHandler(error)){
-                data = ApiRequest.instance.patch(path, body)
+            if (await this.UnauthorizedHandler(error)){                
+                console.log("again");
+                let againData = ApiRequest.instance.put(path, body,
+                    
+                )
                 .then((result) => {
+                    console.log(result);
                     return result.data;
                 })
-                .catch((error) => {
+                .catch((error) => {     
+                    console.log(error);               
                     this.HandleBasicError(error);
                     return error.response.data;
                 })
+                return againData;
 
             } else {
                 this.HandleBasicError(error);
@@ -115,15 +126,21 @@ export class ApiRequest {
         .catch(async (error) => {
             console.log(error);
             // 인증 문제면 토큰 재 발행 후 다시 시도
-            if (await this.UnauthorizedHandler(error)){
-                data = ApiRequest.instance.patch(path, body)
+            if (await this.UnauthorizedHandler(error)){                
+                console.log("again");
+                let againData = ApiRequest.instance.patch(path, body,
+                    
+                )
                 .then((result) => {
+                    console.log(result);
                     return result.data;
                 })
-                .catch((error) => {
+                .catch((error) => {     
+                    console.log(error);               
                     this.HandleBasicError(error);
                     return error.response.data;
                 })
+                return againData;
 
             } else {
                 this.HandleBasicError(error);
@@ -143,22 +160,25 @@ export class ApiRequest {
         .catch(async (error) => {
             console.log(error);
             // 인증 문제면 토큰 재 발행 후 다시 시도
-            if (await this.UnauthorizedHandler(error)){
-                
-                data = ApiRequest.instance.post(path, body,
+            if (await this.UnauthorizedHandler(error)){                
+                console.log("again");
+                let againData = ApiRequest.instance.post(path, body,
                     
                 )
-                .then((result) => {                    
+                .then((result) => {
+                    console.log(result);
                     return result.data;
                 })
-                .catch((error) => {                    
+                .catch((error) => {     
+                    console.log(error);               
                     this.HandleBasicError(error);
                     return error.response.data;
                 })
+                return againData;
 
             } else {
                 this.HandleBasicError(error);
-                return error.response? error.response.data : error.response;
+                return error.response.data;
             }
         });
         return data;
@@ -173,47 +193,59 @@ export class ApiRequest {
         .catch(async (error) => {
             console.log(error);
             // 인증 문제면 토큰 재 발행 후 다시 시도
-            if (await this.UnauthorizedHandler(error)){
-                data = ApiRequest.instance.get(path)
+            if (await this.UnauthorizedHandler(error)){                
+                console.log("again");
+                let againData = ApiRequest.instance.get(path)
                 .then((result) => {
+                    console.log(result);
                     return result.data;
                 })
-                .catch((error) => {
+                .catch((error) => {     
+                    console.log(error);               
                     this.HandleBasicError(error);
                     return error.response.data;
                 })
+                return againData;
 
             } else {
                 this.HandleBasicError(error);
                 return error.response.data;
-            }            
+            }
         });
         return data;
     }
 
+    static oneTime = true;
+
     static async UnauthorizedHandler(error){
         let res = false;
-        
-        
         try {
-            
-            if (error.response && error.response.data && error.response.data.errCode === 7){                            
+            if (error.response && error.response.data && error.response.data.errCode === 7){  
+                // oneTime = false;                          
                 console.log("refresh");                
                 let data = await new Member().refreshToken();
+                console.log(data);
                 if (data && data.AccessToken){
-                    ApiRequest.instance.defaults.headers.common['authorization'] = `Bearer ${data.AccessToken}`;
+                    ApiRequest.instance.defaults.headers['authorization'] = `Bearer ${data.AccessToken}`;
+                    
                     res = true;
                 }     
             }
-        } catch {
-
+        } catch (err) {
+            console.log(err);
         }
-        
+        console.log(res);
         return res;
     }
 
+    static isGoing = false;
+
     //모든 api 전체 공통 에러 처리
     static HandleBasicError(error){
+        if (ApiRequest.isGoing){
+            return;
+        }
+        ApiRequest.isGoing = true        
         if (error.code === "ERR_NETWORK"){
             // 현재 이용 불가능한 무언가 띄우기...
             // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
@@ -240,6 +272,7 @@ export class ApiRequest {
                     
             }            
         }
+        ApiRequest.isGoing = false;
     }
 }
 
