@@ -133,6 +133,12 @@
     box-shadow: 0px 0px 6px 6px rgba(128, 128, 128, 0.231);
     
 }
+
+#add-site-warning {
+    color: rgba(255, 0, 0, 0.82);
+    font-size: 1rem;
+}
+
 /* 메인 배너용 */
 #main_banner {
     max-width: 1280px;

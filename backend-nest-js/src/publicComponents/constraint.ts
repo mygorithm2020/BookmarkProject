@@ -184,29 +184,22 @@ export class Constraint {
     category.IsDeleted = 0;
   }
 
-  // 사이트 객체 데이터 보정
+  // 사이트 객체 데이터 생성
   async generateSite(site : Site, urlObj : URL){
 
-    site.SiteId = this.cUtils.get32UuId();
-    site.URL = this.correctionUrl(urlObj);
+    if (!site.SiteId){
+      site.SiteId = this.cUtils.get32UuId();
+    }
+
+    if (!site.URL){
+      site.URL = this.correctionUrl(urlObj);
+    }
     
     if(!site.Status){
       site.Status = 1;
     }
 
-    if (site.FaviconImg){
-      //  이미지 url 링크 보정
-      if (site.FaviconImg.startsWith("//")){
-
-      } else if (site.FaviconImg.startsWith("/")){
-          site.FaviconImg = urlObj.origin + site.FaviconImg;
-      } else {
-          // 모르겠네 또 어떤 케이스가...
-      }
-
-    } else if (site.Status == 6) {
-      // 이거 존재하는지 확인
-      // 파비콘 없으면 기본 url에 /favicon.ico 로 보정
+    if (!site.FaviconImg){
       try{
           await this.apiClient.getSiteResponse(urlObj.origin + "/favicon.ico");
           site.FaviconImg = urlObj.origin + "/favicon.ico";
@@ -214,37 +207,10 @@ export class Constraint {
       } catch (err) {
            
       }
-    }
 
-    if (site.Description && site.Description.length > 1000){
-      site.Description.slice(0, 1000);
-    }
-
-    if (site.Keywords && site.Keywords.length > 1000){
-      site.Keywords.slice(0, 1000);
-    }
-
-    //  이미지 url 링크 보정
-    if (site.OGImg && !site.OGImg.startsWith("//") && site.OGImg.startsWith("/")){ 
-      site.OGImg = urlObj.origin + site.OGImg;
-    }
-
-    if (site.OGDescription && site.OGDescription.length > 1000){
-      site.OGDescription.slice(0, 1000);
-    }    
-    
-    // 자동 표시 정보 등록용
-    if (site.OGTitle){
-      site.Name = site.OGTitle.trim();
-    } else if (site.Title){
-      site.Name = site.Title.trim();
     }   
 
-    if (site.OGImg){
-      site.Img = site.OGImg;
-    } else if (site.FaviconImg){
-      site.Img = site.FaviconImg;
-    }
+    this.correctionSite(site);
 
     // 이미지 값이 존재하면 해당 링크 파일 다운 받아서 저장하고 값으로 저장
     if (site.Img){
@@ -254,11 +220,70 @@ export class Constraint {
         site.Img = null;
       }      
     }
-
-    if (site.OGDescription){
-      site.SiteDescription = site.OGDescription
-    } else if (site.Description){
-      site.SiteDescription = site.Description
-    }
   }    
+
+  // 정보 보정
+  async correctionSite(uSite: Site){
+    // 기본적으로 파일로부터 얻는 정보가 들어있을테니..... 나머지는 보정필요
+    if (uSite.FaviconImg){
+      //  이미지 url 링크 보정
+      if (uSite.FaviconImg.startsWith("//")){
+        uSite.FaviconImg = "https:" + uSite.FaviconImg;
+      } else if (uSite.FaviconImg.startsWith("/")){
+        uSite.FaviconImg = uSite.URL + uSite.FaviconImg;
+      } else {
+          // 모르겠네 또 어떤 케이스가...
+      }
+    }
+
+    if (uSite.Description && uSite.Description.length > 1000){
+      uSite.Description = uSite.Description.slice(0, 1000);
+    }
+
+    if (uSite.Keywords && uSite.Keywords.length > 1000){
+      uSite.Keywords = uSite.Keywords.slice(0, 1000);
+    }
+
+    //  이미지 url 링크 보정
+    if (uSite.OGImg && !uSite.OGImg.startsWith("//") && uSite.OGImg.startsWith("/")){ 
+      uSite.OGImg = uSite.URL + uSite.OGImg;
+    }
+
+    if (uSite.OGDescription && uSite.OGDescription.length > 1000){
+      uSite.OGDescription = uSite.OGDescription.slice(0, 1000);
+    }    
+    
+    if (!uSite.Name){
+      if (uSite.OGTitle){
+        uSite.Name = uSite.OGTitle.trim();
+      } else if (uSite.Title){
+        uSite.Name = uSite.Title.trim();
+      }  
+    }
+     
+    if (!uSite.Img){
+      if (uSite.OGImg){
+        uSite.Img = uSite.OGImg;
+      } else if (uSite.FaviconImg){
+        uSite.Img = uSite.FaviconImg;
+      }
+    }
+
+    // 이미지 값이 존재하면 해당 링크 파일 다운 받아서 저장하고 값으로 저장
+    if (uSite.Img){
+      try {
+        uSite.Img = await this.imageLinkToFileName(uSite.SiteId, uSite.Img);
+      } catch {
+        uSite.Img = null;
+      }      
+    }
+
+    if (!uSite.SiteDescription){
+      if (uSite.OGDescription){
+        uSite.SiteDescription = uSite.OGDescription;
+      } else if (uSite.Description){
+        uSite.SiteDescription = uSite.Description;
+      }
+    }
+  }
 }

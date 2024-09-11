@@ -1,6 +1,7 @@
-import axios from 'axios';
+// import axios from 'axios';
+const axios = require("axios");
 
-export class ApiRequest{
+class ApiRequest{
 
     static SERVER_API_HOST = "http://localhost:3000";
 
@@ -29,7 +30,7 @@ export class ApiRequest{
 
     static axiosPut(path, body){
         path = encodeURI(path);
-        let data = ApiRequest.instance.patch(path, body)
+        let data = ApiRequest.instance.put(path, body)
         .then((result) => {
             return result.data;   
         })
@@ -80,3 +81,5 @@ export class ApiRequest{
     }
 
 }
+
+exports.ApiRequest = ApiRequest;

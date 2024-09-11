@@ -37,13 +37,13 @@ select * from ta_site order by views;
 
 select * from ta_category;
 select * from ta_recategorysite;
-
-select * from ta_site where Siteid = '2990ae2ad6404710b351c67110c11beb'
 select * from ta_site where img = 'favicon.ico'
 update ta_site set img = null where img = ''
 
+DELETE from ta_AuthToken WHERE TokenId = 51
 select * from ta_member
-
+select * from ta_AuthToken where Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJWIjoiOXQvRWtGa2FUMUJINzJvaUZNR2wxUVNsSkdLQU9ETVVHN0RpZkxtcjJweGFGVjlJUWd2OTR5QzN6T3NXNTVaSG9nd2IiLCJpYXQiOjE3MjYwMTg0NDQsImV4cCI6MTcyNjAxODUwNH0.QKRxYtWYAuAVDMm0TKpZjrQwjw0SDkfvzWi0VUAzrsg'
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJEVCI6IjIwMjQtMDktMTFUMDE6MzQ6MDQuMDAwWiIsImlhdCI6MTcyNjAxODQ0NCwiZXhwIjoxNzI2MDkwNDQ0fQ.Dn9ioc7xch5aNH9F_LLQq1Q6WBWyq0msX7Or1IiPhl0
 select * from ta_site where siteId = '0bda754655344afaaf216fd5bceb74c1'
 
 SELECT * FROM TA_CATEGORY order by createddate desc where status = 2;

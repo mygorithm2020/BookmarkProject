@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>스마트치안 빅데이터 플랫폼</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="title" content="스마트치안 빅데이터 플랫폼">
+<meta name="description" content="스마트치안 빅데이터 플랫폼은 경찰·공공·민간이 협업하여 맞춤형 빅데이터 서비스를 제공하는 플랫폼입니다.">
+<meta id="_csrf" name="_csrf" content="143aba37-bdf5-483d-86b9-9c742affaed7" />
+<meta id="_csrf_header" name="_csrf_header" content="X-CSRF-TOKEN" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon">
+
+<!-- Facebook Meta Tags -->
+<meta name="og:url" content="https://www.bigdata-policing.kr">
+<meta name="og:type" content="website">
+<meta name="og:title" content="스마트 치안 빅데이터 플랫폼">
+<meta name="og:description" content="스마트치안 빅데이터 플랫폼은 경찰·공공·민간이 협업하여 맞춤형 빅데이터 서비스를 제공하는 플랫폼입니다.">
+<meta name="og:image" content="https://bigdata-policing.kr/resource/templete/policy/img/common/logo_pc-ft.png">
+
+<!-- Twitter Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:domain" content="">
+<meta name="twitter:url" content="https://www.bigdata-policing.kr">
+<meta name="twitter:title" content="스마트 치안 빅데이터 플랫폼">
+<meta name="twitter:description" content="스마트치안 빅데이터 플랫폼은 경찰·공공·민간이 협업하여 맞춤형 빅데이터 서비스를 제공하는 플랫폼입니다.">
+<meta name="twitter:image" content="https://bigdata-policing.kr/resource/templete/policy/img/common/logo_pc-ft.png">
+
+<!-- TODO: library -->
+<script src="/assets/user/js/lib/jquery.min.js"></script>
+<script src="/assets/user/js/lib/swiper-bundle.js"></script>
+<script src="/assets/user/js/lib/jquery-ui.js"></script>
+<script src="/assets/user/js/lib/masonry.pkgd.js"></script>
+<link rel="stylesheet" href="/assets/user/css/lib/swiper-bundle.css">
+<script src="/assets/user/js/lib/loadingoverlay.min.js"></script>
+<!-- TODO: import -->
+<link rel="stylesheet" href="/assets/user/css/style.css">
+<link rel="stylesheet" href="/assets/user/css/custom_style.css">
+<link rel="stylesheet" href="/assets/user/css/lib/jquery-ui.css">
+<link rel="stylesheet" href="/assets/user/css/style.css">
+<script src="/assets/user/js/scripts.js"></script>
+
+<!-- 에디터 스타일 -->
+<link rel="stylesheet" type="text/css" href="/assets/main/plugins/ckeditor5/styles.css">
+<!-- 파일 업로드 스타일 -->
+<link href="/assets/main/plugins/jquery-file-upload/jquery-file-upload.css" rel="stylesheet">
+<!-- 태그 입력 라이브러리 -->
+<link rel="stylesheet" href="/assets/main/plugins/Tags-Input-Autocomplete/jquery.tagsinput-revisited.min.css" />
+<!--  카카오톡 공유  -->
+<script src="/assets/user/js/kakao.min.js"></script>
+
+
+<!-- 웹소켓 -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+<script>
+	var global_csrf = {};
+	global_csrf["headerName"] = "X-CSRF-TOKEN";
+	global_csrf["token"] = "143aba37-bdf5-483d-86b9-9c742affaed7";
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics *sh* -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GQJXCMQLQN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GQJXCMQLQN');
+</script>
+	
+<!-- Global site tag (gtag.js) - Google Analytics *경찰청*-->
+<script async src="<a href="https://www.googletagmanager.com/gtag/js?id=G-Q1J0T5DKYN">https://www.googletagmanager.com/gtag/js?id=G-Q1J0T5DKYN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q1J0T5DKYN');
+</script>
+<!--  네이버 애널리틱스  -->
+<script type="text/javascript" src="//wcs.naver.net/wcslog.js"></script>
+<script type="text/javascript">
+if(!wcs_add) var wcs_add = {};
+wcs_add["wa"] = "68cb88814ccf90";
+if(window.wcs) {
+  wcs_do();
+}
+</script><style></style></head>
+
+<body>
+	<div class="viewport">
+		<div class="skip-navigation">
+			<ul>
+				<li><a class="skip-cnt" href="#container">본문 바로가기</a></li>
+				<li><a class="skip-gnb" href="#globalNav">주메뉴 바로가기</a></li>
+			</ul>
+		</div>
+
+
+		<header class="header">
+			<div class="header-top">
+				<div class="app-inner">
+					<div class="header-top-item t_logo">
+						<div class="cell">
+							<h1 class="global-logo logo">
+								<a href="/">스마트치안 빅데이터</a>
+							</h1>
+						</div>
+					</div>
+
+
+
+					<div class="header-top-item search">
+						<div class="cell">
+							<div class="global-search">
+								<form name="frmSearchAll" action="/search" method="get">
+									<input type="hidden" name="searchType" value="all"/>
+									<label for="keyword_top"></label>
+									<input type="text" id="keyword_top" name="keyword" value="" title="검색" placeholder="검색어를 입력해 주세요.">
+									
+									<button type="submit" class="ico search">검색</button>
+								</form>
+							</div>
+						</div>
+					</div>
+
+
+<!--
+					<div class="header-top-item t_rank">
+						<div class="cell">
+							<div class="global-rank">
+								<div class="rank-item">
+									<div class="rank-rolling">
+	                                	<ul class="rank-rolling-ul">
+	                                		<li>
+											 			<a href="/search?searchType=all&keyword=보이스피싱" class="rank-item-link"> 
+											 				<span class="num">1</span>
+															<div class="keyword">보이스피싱</div>
+														</a>
+											 		</li>
+												<li>
+											 			<a href="/search?searchType=all&keyword=빅데이터" class="rank-item-link"> 
+											 				<span class="num">2</span>
+															<div class="keyword">빅데이터</div>
+														</a>
+											 		</li>
+												<li>
+											 			<a href="/search?searchType=all&keyword=보안" class="rank-item-link"> 
+											 				<span class="num">3</span>
+															<div class="keyword">보안</div>
+														</a>
+											 		</li>
+												<li>
+											 			<a href="/search?searchType=all&keyword=스마트치안" class="rank-item-link"> 
+											 				<span class="num">4</span>
+															<div class="keyword">스마트치안</div>
+														</a>
+											 		</li>
+												<li>
+											 			<a href="/search?searchType=all&keyword=수원시" class="rank-item-link"> 
+											 				<span class="num">5</span>
+															<div class="keyword">수원시</div>
+														</a>
+											 		</li>
+												<li>
+											 			<a href="/search?searchType=all&keyword=빅데이터마켓" class="rank-item-link"> 
+											 				<span class="num">6</span>
+															<div class="keyword">빅데이터마켓</div>
+														</a>
+											 		</li>
+												<li>
+											 			<a href="/search?searchType=all&keyword=범죄통계원표 " class="rank-item-link"> 
+											 				<span class="num">7</span>
+															<div class="keyword">범죄통계원표 </div>
+														</a>
+											 		</li>
+												<li>
+											 			<a href="/search?searchType=all&keyword=원표" class="rank-item-link"> 
+											 				<span class="num">8</span>
+															<div class="keyword">원표</div>
+														</a>
+											 		</li>
+												<li>
+											 			<a href="/search?searchType=all&keyword=우리동네안심지도" class="rank-item-link"> 
+											 				<span class="num">9</span>
+															<div class="keyword">우리동네안심지도</div>
+														</a>
+											 		</li>
+												<li>
+											 			<a href="/search?searchType=all&keyword=사건사고 예방" class="rank-item-link"> 
+											 				<span class="num">10</span>
+															<div class="keyword">사건사고 예방</div>
+														</a>
+											 		</li>
+												</ul>
+	                                </div>
+									
+									
+									<a href="javascript:;" class="rank-list-open">더보기</a>
+										
+									<div class="rank-list">
+										<div class="rank-list-tit">
+											인기 검색어<span>현재 시간 기준</span>
+										</div>
+										<ul id="rank-list-ul">
+											<li><a href="/search?searchType=all&keyword=보이스피싱"> <span class="num">1</span>
+														<div class="keyword">
+															보이스피싱</div>
+												</a></li>
+											<li><a href="/search?searchType=all&keyword=빅데이터"> <span class="num">2</span>
+														<div class="keyword">
+															빅데이터</div>
+												</a></li>
+											<li><a href="/search?searchType=all&keyword=보안"> <span class="num">3</span>
+														<div class="keyword">
+															보안</div>
+												</a></li>
+											<li><a href="/search?searchType=all&keyword=스마트치안"> <span class="num">4</span>
+														<div class="keyword">
+															스마트치안</div>
+												</a></li>
+											<li><a href="/search?searchType=all&keyword=수원시"> <span class="num">5</span>
+														<div class="keyword">
+															수원시</div>
+												</a></li>
+											<li><a href="/search?searchType=all&keyword=빅데이터마켓"> <span class="num">6</span>
+														<div class="keyword">
+															빅데이터마켓</div>
+												</a></li>
+											<li><a href="/search?searchType=all&keyword=범죄통계원표 "> <span class="num">7</span>
+														<div class="keyword">
+															범죄통계원표 </div>
+												</a></li>
+											<li><a href="/search?searchType=all&keyword=원표"> <span class="num">8</span>
+														<div class="keyword">
+															원표</div>
+												</a></li>
+											<li><a href="/search?searchType=all&keyword=우리동네안심지도"> <span class="num">9</span>
+														<div class="keyword">
+															우리동네안심지도</div>
+												</a></li>
+											<li><a href="/search?searchType=all&keyword=사건사고 예방"> <span class="num">10</span>
+														<div class="keyword">
+															사건사고 예방</div>
+												</a></li>
+											</ul>
+										<a href="javascript:;" class="ico close">닫기</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					-->
+					<div class="header-top-item t_gnb">
+						<div class="cell">
+							<div class="global-menu open">
+								<a href="#" class="ico gnb">메뉴 전체 보기</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+
+<div class="header-btm">
+				<div class="app-inner">
+					<nav id="globalNav" class="gnb">
+						<ul>
+							<li class="">
+										<a href="/product/" target="_self" class="gnb-link">빅데이터마켓</a>
+											<div class="gnb-sub">
+													<div class="app-inner">
+														<ul>
+														<li class="">
+															<a href="/product/list" target="_self">데이터 검색</a>	
+																</li>
+															<li class="">
+															<a href="/customData/list" target="_self">맞춤 데이터 신청</a>	
+																</li>
+															<li class="">
+															<a href="/page/openapi" target="_self">오픈 API</a>	
+																</li>
+															<li class="">
+															<a href="/otherPlatform/list" target="_self">데이터지도 연계</a>	
+																</li>
+															</ul>
+													</div>
+												</div>
+											</li>
+									<li class="">
+										<a href="#report" target="_self" class="gnb-link">분석/시각화</a>
+											<div class="gnb-sub">
+													<div class="app-inner">
+														<ul>
+														<li class="">
+															<a href="/report/list" target="_self">분석/연구보고서</a>	
+																</li>
+															<li class="">
+															<a href="/contest" target="_self">공모전</a>	
+																</li>
+															<li class="">
+															<a href="/dataAnalysis" target="_self">분석/시각화 신청</a>	
+																</li>
+															<li class="data_graphic_str" style="border-left: 1px solid #ccc;">데이터시각화</li><li class="">
+															<a href="/about/bix5" target="_self">BIX5</a>	
+																</li>
+															</ul>
+													</div>
+												</div>
+											</li>
+									<li class="">
+										<a href="#innovSrv" target="_self" class="gnb-link">혁신서비스</a>
+											<div class="gnb-sub">
+													<div class="app-inner">
+														<ul>
+														<li class="">
+															<a href="/about/innovSrv1" target="_self">우리동네안심지도</a>	
+																</li>
+															<li class="">
+															<a href="/about/innovSrv3" target="_self">112신고예측</a>	
+																</li>
+															<li class="">
+															<a href="/about/mypol" target="_self">마이폴</a>	
+																</li>
+															<li class="">
+															<a href="/about/innovSrv2" target="_self">종합안전서비스</a>	
+																</li>
+															<li class="">
+															<a href="/about/stopfishing" target="_self">스탑피싱</a>	
+																</li>
+															<li class="">
+															<a href="/about/smartmonitor" target="_self">스마트치안 안전지도</a>	
+																</li>
+															<li class="">
+															<a href="/about/antiNroom" target="_self">안티N번방</a>	
+																</li>
+															<li class="">
+															<a href="/about/cleanweb" target="_self">클린웹</a>	
+																</li>
+															<li class="">
+															<a href="/about/localsafety" target="_self">지역안전서비스</a>	
+																</li>
+															</ul>
+													</div>
+												</div>
+											</li>
+									<li class="">
+										<a href="#community" target="_self" class="gnb-link">커뮤니티</a>
+											<div class="gnb-sub">
+													<div class="app-inner">
+														<ul>
+														<li class="">
+															<a href="/board/experience" target="_self">활용사례</a>	
+																</li>
+															<li class="">
+															<a href="/board/files" target="_self">자료실</a>	
+																</li>
+															<li class="">
+															<a href="/popular/rank" target="_self">기간별 인기 키워드 검색</a>	
+																</li>
+															<li class="">
+															<a href="/board/developer" target="_self">개발자 커뮤니티</a>	
+																</li>
+															<li class="">
+															<a href="/board/b_contest" target="_self">경진대회</a>	
+																</li>
+															<li class="">
+															<a href="/board/smartpolicingnetwork" target="_self">스마트치안 네트워크</a>	
+																</li>
+															</ul>
+													</div>
+												</div>
+											</li>
+									<li class="">
+										<a href="#smartpolicing" target="_self" class="gnb-link">스마트치안</a>
+											<div class="gnb-sub">
+													<div class="app-inner">
+														<ul>
+														<li class="">
+															<a href="/page/about" target="_self">플랫폼 소개</a>	
+																</li>
+															<li class="">
+															<a href="/board/governance_news" target="_self">거버넌스 소식</a>	
+																</li>
+															<li class="">
+															<a href="/board/police24" target="_self">스마트치안24시</a>	
+																</li>
+															</ul><ul><li class="data_graphic_str">스마트치안</li><li class="">
+															<a href="/board/notice" target="_self">공지사항</a>	
+																</li>
+															<li class="">
+															<a href="/event_board/event" target="_self">이벤트</a>	
+																</li>
+															<li class="">
+															<a href="/board/faq" target="_self">FAQ</a>	
+																</li>
+															<li class="">
+															<a href="/board/qna" target="_self">Q&amp;A</a>	
+																</li>
+															<li class="">
+															<a href="/survey" target="_self">설문</a>	
+																</li>
+															<li class="">
+															<a href="/board/data_network" target="_self">데이터네트워크</a>	
+																</li>
+															<li class="">
+															<a href="/expert" target="_self">인재풀</a>	
+																</li>
+															<li class="">
+															<a href="/board/digital_crime_data" target="_self">디지털 범죄 의심 데이터 공유</a>	
+																</li>
+															</ul>
+													</div>
+												</div>
+											</li>
+									<!--  						
+							
+							-->
+												
+							</ul>
+
+					</nav>
+
+					<nav class="snb">
+						<ul>
+								<li class="login"><a href="/login">로그인</a></li>
+								<li class="register"><a href="/signup">회원가입</a></li>
+							</ul>
+						</nav>
+				</div>
+			</div>
+		</header>
+
+
+		<div class="sitemap">
+			<div class="header">
+				<div class="header-top">
+					<div class="app-inner">
+						<div class="header-top-item">
+							<div class="cell">
+								<h1 class="global-logo logo">
+									<a href="/">스마트치안 빅데이터</a>
+								</h1>
+							</div>
+						</div>
+
+						<div class="header-top-item">
+							<div class="cell">
+								<div class="global-menu close">
+									<a href="#" class="ico close">메뉴 전체 보기</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<nav class="sitemap-gnb">
+				<ul>
+				<li class="">
+							<a href="/product/" target="_self" class="gnb-link">빅데이터마켓</a>
+								<div class="gnb-sub">
+										<div class="app-inner">
+											<ul>
+											<li class="">
+													<a href="/product/list" target="_self">데이터 검색</a>
+													</li>
+												<li class="">
+													<a href="/customData/list" target="_self">맞춤 데이터 신청</a>
+													</li>
+												<li class="">
+													<a href="/page/openapi" target="_self">오픈 API</a>
+													</li>
+												<li class="">
+													<a href="/otherPlatform/list" target="_self">데이터지도 연계</a>
+													</li>
+												</ul>
+										</div>
+									</div>
+								</li>
+						<li class="">
+							<a href="#report" target="_self" class="gnb-link">분석/시각화</a>
+								<div class="gnb-sub">
+										<div class="app-inner">
+											<ul>
+											<li class="">
+													<a href="/report/list" target="_self">분석/연구보고서</a>
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													</li>
+												<li class="data_graphic_str" style="border-left: 1px solid #ccc;">데이터시각화</li><li class="">
+													<a href="/about/bix5" target="_self">BIX5</a>
+													</li>
+												</ul>
+										</div>
+									</div>
+								</li>
+						<li class="">
+							<a href="#innovSrv" target="_self" class="gnb-link">혁신서비스</a>
+								<div class="gnb-sub">
+										<div class="app-inner">
+											<ul>
+											<li class="">
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													<a href="/about/innovSrv2" target="_self">종합안전서비스</a>
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													</li>
+												</ul>
+										</div>
+									</div>
+								</li>
+						<li class="">
+							<a href="#community" target="_self" class="gnb-link">커뮤니티</a>
+								<div class="gnb-sub">
+										<div class="app-inner">
+											<ul>
+											<li class="">
+													<a href="/board/experience" target="_self">활용사례</a>
+													</li>
+												<li class="">
+													<a href="/board/files" target="_self">자료실</a>
+													</li>
+												<li class="">
+													<a href="/popular/rank" target="_self">기간별 인기 키워드 검색</a>
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													</li>
+												</ul>
+										</div>
+									</div>
+								</li>
+						<li class="">
+							<a href="#smartpolicing" target="_self" class="gnb-link">스마트치안</a>
+								<div class="gnb-sub">
+										<div class="app-inner">
+											<ul>
+											<li class="">
+													<a href="/page/about" target="_self">플랫폼 소개</a>
+													</li>
+												<li class="">
+													<a href="/board/governance_news" target="_self">거버넌스 소식</a>
+													</li>
+												<li class="">
+													<a href="/board/police24" target="_self">스마트치안24시</a>
+													</li>
+												</ul><ul><li class="data_graphic_str">스마트치안</li><li class="">
+													<a href="/board/notice" target="_self">공지사항</a>
+													</li>
+												<li class="">
+													<a href="/event_board/event" target="_self">이벤트</a>
+													</li>
+												<li class="">
+													<a href="/board/faq" target="_self">FAQ</a>
+													</li>
+												<li class="">
+													<a href="/board/qna" target="_self">Q&amp;A</a>
+													</li>
+												<li class="">
+													<a href="/survey" target="_self">설문</a>
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													</li>
+												<li class="">
+													</li>
+												</ul>
+										</div>
+									</div>
+								</li>
+						</ul>
+
+			</nav>
+		</div>
+
+		<nav class="gnb-mobile">
+			<ul class="row">
+				<li class="column"><a href="#" class="menu">메뉴</a></li>
+				<li class="column"><a href="javascript:alert('로그인 후 이용하실 수 있습니다.');location.href='/login';" class="group">그룹</a></li>
+				<li class="column"><a href="/" class="home">홈</a></li>
+				<li class="column"><a href="javascript:alert('로그인 후 이용하실 수 있습니다.');location.href='/login';" class="mypage">마이페이지</a></li>
+				<li class="column"><a href="javascript:alert('로그인 후 이용하실 수 있습니다.');location.href='/login';" class="alram">알림<!-- <span class="num">4</span> --></a></li>
+				</ul>
+		</nav>
+
+		<div class="sitemap-mobile">
+			<div class="sitemap-mobile-head">
+				<nav class="sitemap-mobile-snb">
+					<ul>
+							<li class="login"><a href="/login">로그인</a></li>
+							<li class="register"><a href="/signup">회원가입</a></li>
+						</ul>
+					</nav>
+				<a href="#" class="ico close">닫기</a>
+			</div>
+
+			<nav class="sitemap-mobile-gnb">
+				<ul>
+					<li class="">
+							<a href="/product/" target="_self" class="gnb-link">빅데이터마켓</a>
+								<div class="gnb-sub">
+										<div class="app-inner">
+											<div class="gnb-headline">빅데이터마켓</div>
+											<ul>
+											<li class="">
+													<a href="/product/list" target="_self">데이터 검색</a>
+													</li>
+												<li class="">
+													<a href="/customData/list" target="_self">맞춤 데이터 신청</a>
+													</li>
+												<li class="">
+													<a href="/page/openapi" target="_self">오픈 API</a>
+													</li>
+												<li class="">
+													<a href="/otherPlatform/list" target="_self">데이터지도 연계</a>
+													</li>
+												</ul>
+										</div>
+									</div>
+								</li>
+						<li class="">
+							<a href="#report" target="_self" class="gnb-link">분석/시각화</a>
+								<div class="gnb-sub">
+										<div class="app-inner">
+											<div class="gnb-headline">분석/시각화</div>
+											<ul>
+											<li class="">
+													<a href="/report/list" target="_self">분석/연구보고서</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">공모전</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">분석/시각화 신청</a>
+													</li>
+												<li class="data_graphic_str" style="border-left: 1px solid #ccc;">데이터시각화</li><li class="">
+													<a href="/about/bix5" target="_self">BIX5</a>
+													</li>
+												</ul>
+										</div>
+									</div>
+								</li>
+						<li class="">
+							<a href="#innovSrv" target="_self" class="gnb-link">혁신서비스</a>
+								<div class="gnb-sub">
+										<div class="app-inner">
+											<div class="gnb-headline">혁신서비스</div>
+											<ul>
+											<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">우리동네안심지도</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">112신고예측</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">마이폴</a>
+													</li>
+												<li class="">
+													<a href="/about/innovSrv2" target="_self">종합안전서비스</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">스탑피싱</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">스마트치안 안전지도</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">안티N번방</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">클린웹</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">지역안전서비스</a>
+													</li>
+												</ul>
+										</div>
+									</div>
+								</li>
+						<li class="">
+							<a href="#community" target="_self" class="gnb-link">커뮤니티</a>
+								<div class="gnb-sub">
+										<div class="app-inner">
+											<div class="gnb-headline">커뮤니티</div>
+											<ul>
+											<li class="">
+													<a href="/board/experience" target="_self">활용사례</a>
+													</li>
+												<li class="">
+													<a href="/board/files" target="_self">자료실</a>
+													</li>
+												<li class="">
+													<a href="/popular/rank" target="_self">기간별 인기 키워드 검색</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">개발자 커뮤니티</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">경진대회</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">스마트치안 네트워크</a>
+													</li>
+												</ul>
+										</div>
+									</div>
+								</li>
+						<li class="">
+							<a href="#smartpolicing" target="_self" class="gnb-link">스마트치안</a>
+								<div class="gnb-sub">
+										<div class="app-inner">
+											<div class="gnb-headline">스마트치안</div>
+											<ul>
+											<li class="">
+													<a href="/page/about" target="_self">플랫폼 소개</a>
+													</li>
+												<li class="">
+													<a href="/board/governance_news" target="_self">거버넌스 소식</a>
+													</li>
+												<li class="">
+													<a href="/board/police24" target="_self">스마트치안24시</a>
+													</li>
+												</ul><ul><li class="data_graphic_str">스마트치안</li><li class="">
+													<a href="/board/notice" target="_self">공지사항</a>
+													</li>
+												<li class="">
+													<a href="/event_board/event" target="_self">이벤트</a>
+													</li>
+												<li class="">
+													<a href="/board/faq" target="_self">FAQ</a>
+													</li>
+												<li class="">
+													<a href="/board/qna" target="_self">Q&amp;A</a>
+													</li>
+												<li class="">
+													<a href="/survey" target="_self">설문</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">데이터네트워크</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">인재풀</a>
+													</li>
+												<li class="">
+													<a href="javascript:alert('준비중이거나 메뉴 접근 권한이 없습니다.');">디지털 범죄 의심 데이터 공유</a>
+													</li>
+												</ul>
+										</div>
+									</div>
+								</li>
+						</ul>
+
+			</nav>
+		</div>
+		
+		<script>		    
+		    var replaceId  = /[^\w\sㄱ-힣]|[\_]/g;
+		    
+		    $(document).ready(function(){
+		        
+		        $("#keyword_top").on("focusout", function() {
+		            var x = $(this).val();
+		            if (x.length > 0) {
+		                if (x.match(replaceId)) {
+		                   x = x.replace(replaceId, "");
+		                }
+		                $(this).val(x);
+		            }
+		        }).on("keyup", function() {
+		            $(this).val($(this).val().replace(replaceId, ""));
+		
+		        });
+		
+		    });
+		 
+		</script>
+			
+
+		<!--  투명 배경 관련 처리  -->
+		<div id="container_bg" class=""></div>
+		<script>
+			$("#globalNav").hover(function(){
+				$("#container_bg").addClass("on");			
+			}, function(){
+				$("#container_bg").removeClass();
+			});
+		</script>
+		<!-- 
+		<script type="text/javascript">
+			var socket = null;
+			$(document).ready(function(){
+				//if(false){
+					connectWs();
+				//}
+			});
+			
+			
+			//소켓
+			function connectWs(){
+				console.log("tttttt")
+				var ws = new SockJS("/ws");
+				socket = ws;
+			
+				ws.onopen = function() {
+			 		console.log('open');
+			 	};
+			
+				ws.onmessage = function(event) {
+					console.log("onmessage"+event.data);
+					// 리턴부분
+					
+					let $socketAlert = $('.footer_text');
+					$socketAlert.html(event.data)
+					$socketAlert.css('display', 'block');
+					
+					setTimeout(function(){
+						$socketAlert.css('display','none');
+						
+					}, 5000);
+				};
+			
+				ws.onclose = function() {
+				    console.log('close');
+			 	};
+
+			};
+</script>
+ --><style>
+/* 안내 메시지 스타일 */
+.btn_back {
+	padding: 6px 8px 6px 9px;
+    border-radius: 18px;
+    border: solid 1px #c4cce4;
+    background-color: #fff;
+    color: #888888;
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+.text-center{
+	text-align:center;
+}
+.desc-text {
+    font-size: 1.6rem;
+    color: #888888;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: box;
+    margin-top: 1px;
+    max-height: 84px;
+    min-height: 84px;
+    overflow: hidden;
+    vertical-align: top;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    word-break: break-word;
+    margin-bottom: 18px;
+}
+.box-card-alert {
+	min-height: 242px;
+	cursor:default;
+}
+.box-card-wrap-alert {
+	padding: 70px 10px;
+    margin: 0 auto;
+}
+</style>
+
+<section class="app-section" id="container">
+<div class="app-inner">
+	<div class="box-card-wrap box-card-wrap-alert">
+		<div class="box-card box-card-alert">
+			<div class="box-head">
+				<div class="box-card-tit text-center">안내 메시지</div>
+				<p class="desc-text text-center">잘못된 값을 입력하였거나, 접근 권한이 없을 수 있습니다.<br>잠시 후 다시 시도해주세요.</p>
+			</div>
+			<div class="box-body">
+				<ul class="list-info">
+					<button class="btn_back" onclick="history.back();">돌아가기</button>&nbsp;&nbsp;&nbsp;<button class="btn_back" onclick="self.location = '/';">홈으로</button>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+</section>
+
+<style type="text/css">
+	p.footer_text,
+	p.footer_text a {
+		color: #666666;
+		font-size: 1.6rem;
+		line-height: 30px;
+	}
+	</style>
+	
+	<footer class="footer">
+	    <div class="footer-top">
+	        <div class="app-inner">
+	            <nav class="fnb">
+	                <ul>
+	                    <li><a href="/terms/view?idx=1"><b>개인정보처리방침</b></a> <a href="/page/privacy-infographic"><b>인포그래픽</b></a></li>
+						<li><a href="/terms/view?idx=5">이용약관</a></li>
+	                    <li><a href="/terms/view?idx=2">저작권 정책</a></li>
+	                    <li><a href="/page/email-reject">이메일무단수집거부</a></li>
+	                </ul>
+	            </nav>
+	
+	            <div class="family-site">
+	                <div class="like-select">
+	                    <a href="#" class="like-select-link">관련 사이트</a>
+	                    <ul>
+	                        <li><a href="https://psi.go.kr/" target="_blank" title="치안정책연구소">치안정책연구소</a></li>
+	                        <li><a href="https://www.police.go.kr/" target="_blank" title="경찰청">경찰청</a></li>
+	                        <li><a href="https://www.msit.go.kr/" target="_blank" title="과학기술정보통신부">과학기술정보통신부</a></li>
+	                        <li><a href="https://www.nia.or.kr/" target="_blank" title="한국지능정보사회진흥원">한국지능정보사회진흥원</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="footer-btm">
+	        <div class="app-inner">
+	            <!-- <div class="logo">
+	                <a href="/">스마트치안 빅데이터</a>
+	            </div> -->
+
+				<style>
+					.footer .info { margin-left:0px !important; width:100%;}
+					.footer .info_left { float:left;width:70%; }
+					.footer .info_right { float:right;width:30%; }
+					.footer .partner {  float:left;margin-top:25px; }
+					@media (max-width: 750px) {
+						.footer .info_left { float:left;width:100%; }
+						.footer .info_right { float:left;width:100%; margin-top:25px; }
+					}
+				</style>
+
+	            <div class="info">
+					<div class="info_left">
+						<p class="footer_text"><b>주식회사폴에이산업</b></p>
+						<p class="footer_text">서울특별시 마포구 마포대로 78 (도화동), 지하 1층.</p>
+						<p class="footer_text">대표이사 : 임성덕 | 사업자등록번호 : 105-87-87619 | 통신판매업 : 2015-서울마포-1027</p>
+						<p class="footer_text">Tel : 02-3273-3300 | FAX : 02-3273-3308 | E-mail : 32733@naver.com</p>
+						<p class="footer_text"> ※ 결제 관련 문의는 당사로 해 주시고, 데이터 및 서비스 문의는 Q&A 게시판에 문의주시기 바랍니다.</p>
+					</div>
+					<!-- 
+					<div class="info_right">
+						<img src="/assets/user/images/logo-police-mark.png" alt="경찰청 로고 마크" title="경찰청 로고 마크"  style="height:120px;">
+					</div>
+					
+					<div class="info_left" style="width: 70%">
+						<p class="footer_text">스마트 치안 빅데이터 플랫폼은 판매중계자이며 판매의 당사자가 아닙니다. 따라서 상품·거래정보 및 거래에 대하여 책임을 지지 않습니다.</p>
+					</div>
+					-->
+	            </div>
+	
+	            <div class="partner">
+	                <ul>
+	                    <li><a href="https://www.police.go.kr/" target="_blank"><img src="/assets/user/images/logo-police.png" alt="경찰청 로고" title="경찰청 로고"  style="height:50px;"></a></li>
+	                    <li><a href="https://www.msit.go.kr/" target="_blank"><img src="/assets/user/images/logo-msit.png" alt="과학기술정보통신부 로고" title="과학기술정보통신부 로고" style="height:50px;"></a></li>
+	                    <li><a href="https://www.nia.or.kr/" target="_blank"><img src="/assets/user/images/logo-nia.png" alt="NIA 한국지능정보사회진흥원 로고" title="NIA 한국지능정보사회진흥원 로고" style="height:50px;"></a></li>
+	                </ul>
+	            </div>
+	        </div>
+	    </div>
+	</footer>	
+</div>
+
+<script>
+	
+	$(document).ready(function(){
+	    headerRankRolling();
+	});
+
+	function headerRankRolling(){
+	    $(".rank-rolling").each(function(){
+	        var height =  $(this).height();
+	        var num = $(this).find('li').length;
+	        var max = height * num;
+	        var move = 0;
+	        var list = $(this).find('.rank-rolling-ul');
+	        var item = $(this).find('li');
+
+	        function textRolling(){
+	            move += height;
+	            list.animate({"top":-move},600,function(){
+	                if( move >= max ){
+	                    $(this).css("top",0);
+	                    move = 0;
+	                };
+	            });
+	        };
+	        textRollingOff = setInterval(textRolling,2000);
+	        list.append(item.first().clone());
+
+	        // $(".rolling_stop").click(function(){
+	        //     clearInterval(textRollingOff);
+	        // });
+	        // $(".rolling_start").click(function(){
+	        //     textRollingOff = setInterval(textRolling,1000);
+	        // });
+	    });
+	}
+</script>
+
+<script src="/assets/main/plugins/ckeditor5/ckeditor.js"></script>
+<script src="/assets/main/plugins/ckeditor5/translations/ko.js"></script>
+<script src="/assets/main/plugins/ckeditor5/uploadadapter.js"></script>
+<script src="/assets/main/plugins/ckeditor5/load.js"></script><script src="/assets/main/plugins/Tags-Input-Autocomplete/jquery.tagsinput-revisited.min.js"></script>
+<script src="/assets/main/plugins/jquery-file-upload/jquery-file-upload.js"></script>
+<script src="/assets/main/plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="/assets/main/plugins/jquery-validation/additional-methods.min.js"></script>
+<script src="/assets/main/plugins/jquery-validation/localization/messages_ko.min.js"></script>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="/assets/main/js/daumpost.js"></script>
+<script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=3a98ikq2bx&submodules=panorama"></script>
+<script src="/assets/main/plugins/moment/moment.min.js"></script>
+<script src="/assets/main/plugins/moment/locale/ko.js"></script>
+<script src="/assets/main/plugins/inputmask/min/jquery.inputmask.bundle.min.js"></script>
+<script type="text/javascript" src="/assets/js/pages/signup_integration.js" />
+<script>console.log("test");</script></body>
+</html>

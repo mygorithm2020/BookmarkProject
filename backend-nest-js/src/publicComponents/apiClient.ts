@@ -125,9 +125,10 @@ export class ApiClient{
               if (links[idx].getAttribute("rel")){
                 const linkRel = links[idx].getAttribute("rel").toLowerCase();
                 if (linkRel === "shortcut icon" || linkRel === "icon"){
-                  if (tempSize === 0 || tempSize < parseInt(links[idx].getAttribute("sizes"))){
+                  const size = links[idx].getAttribute("sizes")? parseInt(links[idx].getAttribute("sizes")) : 0;
+                  if (tempSize === 0 || tempSize < size){
                     res.FaviconImg = links[idx].getAttribute("href");    
-                    tempSize = parseInt(links[idx].getAttribute("sizes"));
+                    tempSize = size;
                   }                    
                 }
               }              

@@ -534,73 +534,22 @@ export class SiteService {
   }
 
   async updateDaemon(updateSite: Site) : Promise<UpdateResult> {
+    if (!updateSite.SiteId){
+      throw new HttpException({
+        errCode : 21,
+        error : "SiteId is required"
+
+      }, HttpStatus.BAD_REQUEST);
+    }
+
     // 상태는 2, 3, 4 가 아닌이상은 6으로 변경
     if (updateSite.Status != 2 && updateSite.Status != 3 && updateSite.Status != 4){
       updateSite.Status = 6;
     }
 
-    // 기본적으로 파일로부터 얻는 정보가 들어있을테니..... 나머지는 보정필요
-    if (updateSite.FaviconImg){
-      //  이미지 url 링크 보정
-      if (updateSite.FaviconImg.startsWith("//")){
-        updateSite.FaviconImg = "https:" + updateSite.FaviconImg;
-      } else if (updateSite.FaviconImg.startsWith("/")){
-        updateSite.FaviconImg = updateSite.URL + updateSite.FaviconImg;
-      } else {
-          // 모르겠네 또 어떤 케이스가...
-      }
-    }
-
-    if (updateSite.Description && updateSite.Description.length > 1000){
-      updateSite.Description.slice(0, 1000);
-    }
-
-    if (updateSite.Keywords && updateSite.Keywords.length > 1000){
-      updateSite.Keywords.slice(0, 1000);
-    }
-
-    //  이미지 url 링크 보정
-    if (updateSite.OGImg && !updateSite.OGImg.startsWith("//") && updateSite.OGImg.startsWith("/")){ 
-      updateSite.OGImg = updateSite.URL + updateSite.OGImg;
-    }
-
-    if (updateSite.OGDescription && updateSite.OGDescription.length > 1000){
-      updateSite.OGDescription.slice(0, 1000);
-    }    
+    this.constraint.correctionSite(updateSite);
     
-    if (!updateSite.Name){
-      if (updateSite.OGTitle){
-        updateSite.Name = updateSite.OGTitle.trim();
-      } else if (updateSite.Title){
-        updateSite.Name = updateSite.Title.trim();
-      }  
-    }
-     
-    if (!updateSite.Img){
-      if (updateSite.OGImg){
-        updateSite.Img = updateSite.OGImg;
-      } else if (updateSite.FaviconImg){
-        updateSite.Img = updateSite.FaviconImg;
-      }
-    }
-
-    // 이미지 값이 존재하면 해당 링크 파일 다운 받아서 저장하고 값으로 저장
-    if (updateSite.Img){
-      try {
-        updateSite.Img = await this.constraint.imageLinkToFileName(updateSite.SiteId, updateSite.Img);
-      } catch {
-        updateSite.Img = null;
-      }      
-    }
-
-    if (!updateSite.SiteDescription){
-      if (updateSite.OGDescription){
-        updateSite.SiteDescription = updateSite.OGDescription;
-      } else if (updateSite.Description){
-        updateSite.SiteDescription = updateSite.Description;
-      }
-    }    
-
+    console.log(updateSite);
     return await this.sRepo.update({
       SiteId : updateSite.SiteId,
     }, {
