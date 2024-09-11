@@ -157,7 +157,7 @@ export class AuthenticationService {
 
     // 그렇다면 리프레쉬 토큰은 언제 업데이트?
     // 데이터 저장 되어 있으니 생성기준 얼마 안남았으면 재 생성 해주자
-    if (this.customUtils.getUTCDate().getTime() - tokenObj.CreateDate.getTime() > 64800000){
+    if (this.customUtils.getUTCDate().getTime() - tokenObj.CreateDate.getTime() > jwtConstants.reIssueRefreshTokenTime){
       rToken = await this.createRefreshToken(member.MemberId, tokenObj.IP, tokenObj.UserAgent, tokenObj.Origin);
     }    
 

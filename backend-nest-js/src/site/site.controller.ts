@@ -39,7 +39,7 @@ export class SiteController {
   }
 
   @Post('/daemon')
-  @UseGuards(AdminAuthGuard)
+  // @UseGuards(AdminAuthGuard)
   createDaemon(@Body() createSiteDto: Site) {
     let res = this.siteService.createDaemon(createSiteDto);
     console.log(res);
@@ -244,9 +244,10 @@ export class SiteController {
   }
 
   @Patch('/daemon')
-  @UseGuards(AdminAuthGuard)
+  // @UseGuards(AdminAuthGuard)
   async updateDaemon(@Body() updateSiteDto: Site) {
-    let res = await this.siteService.updateByAdmin(updateSiteDto);
+    console.log(updateSiteDto);
+    let res = await this.siteService.updateDaemon(updateSiteDto);
     if (res.affected > 0){
       return {
         SiteId : updateSiteDto.SiteId

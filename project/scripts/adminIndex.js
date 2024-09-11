@@ -100,6 +100,11 @@ async function setSitePage(){
         </form>
         `);
     
+    const updateDesc = "최근 변경 순";
+    const updateAsc = "변경 오래된 순";
+    const createDesc = "최근 생성 순";
+    const createAsc = "생성 오래된 순";
+
 
     mainContent01El.insertAdjacentHTML("beforeend", 
         `<div id="search-box">
@@ -107,7 +112,11 @@ async function setSitePage(){
             <input type="search" placeholder="bookmark" required>                               
         </div>
         <div>
-            <button id="change-sequence">변경 오래된 순</button>
+            <button class="change-sequence">${updateDesc}</button>
+            <button class="change-sequence">${updateAsc}</button>
+            <button class="change-sequence">${createDesc}</button>
+            <button class="change-sequence">${createAsc}</button>
+            <span id="sort-value">${updateDesc}</span>
         </div>`
     );
 
@@ -181,44 +190,75 @@ async function setSitePage(){
     });
 
     // 정렬기준 변경기능
-    const changeEl = document.getElementById("change-sequence");
-    changeEl.addEventListener("click", ()=> {
-        if (changeEl.textContent === "변경 오래된 순"){
-            changeEl.textContent = "최근 등록 순";
-            sites.sort(function(a, b){
-                if (a.UpdatedDate > b.UpdatedDate){
-                    return 1;
-                }
-                if (a.UpdatedDate === b.UpdatedDate){
-                    return 0;
-                }
-                if (a.UpdatedDate < b.UpdatedDate){
-                    return -1;        
-                }
-            });
-            
-        } else {
-            changeEl.textContent = "변경 오래된 순";
-            sites.sort(function(a, b){
-                if (a.CreatedDate < b.CreatedDate){
-                    return 1;
-                }
-                if (a.CreatedDate === b.CreatedDate){
-                    return 0;
-                }
-                if (a.CreatedDate > b.CreatedDate){
-                    return -1;        
-                }
-            });            
-        }
-        let siteList = mainContent01El.querySelector("#site-card-box");
-        if (siteList){
-            siteList.remove();
-        }
-        searchEl.value = "";
-        mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));
-    })
-    
+    const changeEl = document.querySelectorAll(".change-sequence");
+    const showEl = document.querySelector("#sort-value");
+    for (const cEl of changeEl){
+        cEl.addEventListener("click", ()=> {
+            showEl.textContent = cEl.textContent;
+            if (cEl.textContent === updateDesc){ 
+                sites.sort(function(a, b){
+                    if (a.UpdatedDate < b.UpdatedDate){
+                        return 1;
+                    }
+                    if (a.UpdatedDate === b.UpdatedDate){
+                        return 0;
+                    }
+                    if (a.UpdatedDate > b.UpdatedDate){
+                        return -1;        
+                    }
+                });           
+                
+                
+            } else if (cEl.textContent === updateAsc){
+                sites.sort(function(a, b){
+                    if (a.UpdatedDate > b.UpdatedDate){
+                        return 1;
+                    }
+                    if (a.UpdatedDate === b.UpdatedDate){
+                        return 0;
+                    }
+                    if (a.UpdatedDate < b.UpdatedDate){
+                        return -1;        
+                    }
+                });
+
+            } else if (cEl.textContent === createDesc){
+                sites.sort(function(a, b){
+                    if (a.CreatedDate < b.CreatedDate){
+                        return 1;
+                    }
+                    if (a.CreatedDate === b.CreatedDate){
+                        return 0;
+                    }
+                    if (a.CreatedDate > b.CreatedDate){
+                        return -1;        
+                    }
+                }); 
+
+            } else if (cEl.textContent === createAsc){
+                sites.sort(function(a, b){
+                    if (a.CreatedDate > b.CreatedDate){
+                        return 1;
+                    }
+                    if (a.CreatedDate === b.CreatedDate){
+                        return 0;
+                    }
+                    if (a.CreatedDate < b.CreatedDate){
+                        return -1;        
+                    }
+                }); 
+
+            } 
+
+            let siteList = mainContent01El.querySelector("#site-card-box");
+            if (siteList){
+                siteList.remove();
+            }
+            searchEl.value = "";
+            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));
+        })
+
+    }
 
     spinner.classList.toggle("cover");
 }

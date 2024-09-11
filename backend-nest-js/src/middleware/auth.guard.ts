@@ -87,7 +87,7 @@ export class AdminAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    console.log("token" + token);
+    console.log("token" + token);    
     if (!token) {
       // throw new UnauthorizedException();
       throw new HttpException({
@@ -95,6 +95,7 @@ export class AdminAuthGuard implements CanActivate {
         error : "authorizaion is required in header"
       }, HttpStatus.UNAUTHORIZED);
     }
+    // return true;
     try {
       const payload = await this.jwtService.verifyAsync(
         token,
