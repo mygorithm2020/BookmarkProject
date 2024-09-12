@@ -10,13 +10,19 @@ import { Site } from "./site.js";
 
     let curUrl = new URL(document.location.toString());
     let pageKey = curUrl.searchParams.get("key");
-    let navList = document.querySelectorAll("#nav_list_box li");
-    for (const navLiEl of navList){
-        if (navLiEl.innerHTML.includes(pageKey)){
-            navLiEl.classList.add("selected");
-            break;
-        }
+    let navList = document.querySelector(`#nav_list_box>li[id="${pageKey}"]`);
+    if (navList){
+        navList.firstElementChild.classList.add("selected");
+        console.log(navList);
     }
+    
+    // for (const navLiEl of navList){
+        
+    //     if (navLiEl.innerHTML.includes(pageKey)){
+    //         navLiEl.firstElementChild.classList.add("selected");
+    //         break;
+    //     }
+    // }
 
     // 검색 기능 추가
     const searchForm = document.querySelector("#site-search-form");
@@ -29,7 +35,7 @@ import { Site } from "./site.js";
             return;
         }
 
-        window.location.href = `./search.html?key=${encodeURI(word)}`;
+        window.location.href = `./search.html?q=${encodeURI(word)}`;
     })
     
     
@@ -37,14 +43,19 @@ import { Site } from "./site.js";
     window.addEventListener("scroll", scrollEvent);
     let navBox = document.querySelector("nav");
     let lastScrollY = 0;
+    const fixLocate = navBox.offsetTop;
 
     function scrollEvent(event){
         // 전체 크기에서 비율로 계산하자
         const STANDARD = window.innerHeight/6;
         // console.log(window.innerWidth, window.innerHeight);
         // const STANDARD = 30;
+
+        // console.log(navBox.offsetTop);
         
-        if(window.scrollY > STANDARD){
+        if(window.scrollY > fixLocate){
+            // console.log(window.scrollY);
+            // navBox.classList.add("fixed-nav");
             if(window.scrollY > lastScrollY){
             // 현재 스크롤 위치가 이전 위치보다 클때 (내려가는 중)
                 navBox.classList.remove("fixed-nav");

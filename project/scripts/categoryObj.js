@@ -245,7 +245,7 @@ export class Category{
     }
 
 
-    async setNavigationBox(categories){
+    setNavigationBox(categories){
         let q = document.getElementById("nav_list_box");
         
         if (!categories || categories.length === 0){
@@ -255,13 +255,13 @@ export class Category{
         // 세팅
         for (const d of categories){    
             if (d.Layer === 1 || !d.ParentId){
-                q.insertAdjacentHTML("beforeend", `<li><a href="./category.html?key=${d.Name}">${d.NameKR}</a></li>`);
+                q.insertAdjacentHTML("beforeend", `<li id="${d.Name}"><a href="./category.html?key=${d.Name}">${d.NameKR}</a></li>`);
             }            
         }
     }
 
     //카테고리 확장 버튼 클릭시 목록 리스트 구현
-    async setExpandNavigationBox(categories){
+    setExpandNavigationBox(categories){
         const subCategoryBox = document.getElementById("subcategory-box");
         const cate = document.getElementById("category-box-expand");
         let subCate = "";
@@ -325,7 +325,7 @@ export class Category{
                 res.push(cateIdx);
                 
                 for (const cateJdx of categories){
-                    if (cateJdx.Layer === 2 && cateJdx.ParentId === cateIdx.CategoryId){
+                    if (cateJdx.ParentId === cateIdx.CategoryId){
                         res.push(cateJdx);
                     }                
                 }

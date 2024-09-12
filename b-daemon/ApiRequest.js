@@ -3,8 +3,8 @@ const axios = require("axios");
 
 class ApiRequest{
 
-    static SERVER_API_HOST = "http://localhost:3000";
-    // static NEST_API_HOST = "http://paretostream.shop:3000";
+    // static SERVER_API_HOST = "http://localhost:3000";
+    static SERVER_API_HOST = "http://paretostream.shop:3000";
 
     static instance = axios.create({
         baseURL: ApiRequest.SERVER_API_HOST + "/api",

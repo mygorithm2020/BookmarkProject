@@ -70,8 +70,19 @@ export class SiteService {
       }, HttpStatus.BAD_REQUEST);
 
     }    
-        
-    let urlObj = this.constraint.getUrlObj(site.URL);
+
+    let urlObj : URL;
+    try {
+      urlObj = this.constraint.getUrlObj(site.URL);
+
+    } catch {
+      throw new HttpException({
+        errCode : 24,
+        error : "invalid URL"
+
+      }, HttpStatus.BAD_REQUEST);
+    }
+    
     const tartgetUrl = this.constraint.correctionUrl(urlObj);
 
     // 기존에 있는지 확인
@@ -97,12 +108,14 @@ export class SiteService {
     }
     await this.constraint.generateSite(siteModel, urlObj);      
     // console.log(siteModel);
-    //https 로 실패할 경우 http로 시도할 것인가 말것인가...........
+    //https 로 실패할 경우 http로 시도할 것인가 말것인가...........   
 
     // 데이터 삽입
     const newSite = this.sRepo.create(siteModel);
     console.log(newSite);
     return await this.sRepo.save(newSite);
+    // return null;
+    
     
   }
 
@@ -116,8 +129,26 @@ export class SiteService {
 
     }    
         
-    let urlObj = this.constraint.getUrlObj(site.URL);
+    let urlObj : URL;
+    try {
+      urlObj = this.constraint.getUrlObj(site.URL);
+
+    } catch {
+      throw new HttpException({
+        errCode : 25,
+        error : "invalid URL"
+
+      }, HttpStatus.BAD_REQUEST);
+    }
     const tartgetUrl = this.constraint.correctionUrl(urlObj);
+
+    // 너무 잡다한게 많다 좀 거르자
+    if (tartgetUrl.split(".").length > 3 || tartgetUrl.includes("login") || tartgetUrl.includes("signup") || tartgetUrl.includes("test")){
+      throw new HttpException({
+        errCode : 24,
+        error : "this url can not be created"
+      }, HttpStatus.BAD_REQUEST);
+    }
 
     // 기존에 있는지 확인
     let previous = await this.findOneByUrlAdmin(tartgetUrl, false);
@@ -127,6 +158,20 @@ export class SiteService {
         error : "the url is already exist"
       }, HttpStatus.BAD_REQUEST);
     } 
+
+    // 존재하는 사이트인지만 확인    
+    try {
+      await this.apiClient.getSiteResponse(tartgetUrl);
+    } catch (err) {      
+      // 404만 걸러내자
+      if((err.code === "ENOTFOUND") || (err.response && err.response.status && err.response.status === HttpStatus.NOT_FOUND)) {
+        throw new HttpException({
+          errCode : 21,
+          error : "url is wrong, can not find the site"    
+        }, HttpStatus.BAD_REQUEST);
+      }
+    }
+
     let siteModel : Site = new Site();    
     await this.constraint.generateSite(siteModel, urlObj);      
     // console.log(siteModel);
@@ -183,11 +228,6 @@ export class SiteService {
   }
 
   async findAllAdmin(page? : number, orderBy? : string, orderDesc? : boolean) : Promise<Site[]> {
-    console.log("This action returns all site");
-
-    if (page && page <= 0){
-      page = 1
-    }
 
     // 정렬 옵션
     let orderOption : FindOptionsOrder<Site> = {}
@@ -215,7 +255,7 @@ export class SiteService {
     }
     
 
-    if(!page){
+    if(!page || page <=0){
       page = 1;
     }
 
@@ -439,7 +479,15 @@ export class SiteService {
 
   // 외부용
   async findOneByUrlPublic(url: string) : Promise<Site> {
-    url = this.constraint.correctionUrl(this.constraint.getUrlObj(url));
+    try {
+      url = this.constraint.correctionUrl(this.constraint.getUrlObj(url));
+    } catch {
+      throw new HttpException({
+        errCode : 21,
+        error : "invalid URL"
+
+      }, HttpStatus.BAD_REQUEST);
+    }    
     console.log(`This action returns a by #${url} site`);
     let res : Site = await this.sRepo.findOne({
       select : {
@@ -463,7 +511,16 @@ export class SiteService {
   }
 
   async findOneByUrlAdmin(url: string, isDeleted? : boolean) : Promise<Site> {
-    url = this.constraint.correctionUrl(this.constraint.getUrlObj(url));
+    try {
+      url = this.constraint.correctionUrl(this.constraint.getUrlObj(url));
+
+    } catch {
+      throw new HttpException({
+        errCode : 21,
+        error : "invalid URL"
+      }, HttpStatus.BAD_REQUEST);
+    }
+    
     console.log(`This action returns a by #${url} site`);
     let res : Site = await this.sRepo.findOne({
       where : {
@@ -547,9 +604,7 @@ export class SiteService {
       updateSite.Status = 6;
     }
 
-    this.constraint.correctionSite(updateSite);
-    
-    console.log(updateSite);
+    await this.constraint.correctionSite(updateSite);
     return await this.sRepo.update({
       SiteId : updateSite.SiteId,
     }, {

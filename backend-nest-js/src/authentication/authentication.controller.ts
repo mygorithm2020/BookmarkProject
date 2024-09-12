@@ -69,8 +69,14 @@ export class AuthenticationController {
     return result;
   }
 
+  
+  @Get()
+  findAll() {
+    return this.authService.findAll();
+  }
+
   // 토큰 리프레쉬 + 현재 로그인 상태 확인용
-  @Post("/refresh")
+  @Get("/refresh")
   async refreshAccToken(@Req() req : Request) {
     let result = {};
     const [type, tempToken] = req.headers.authorization?.split(' ') ?? [];
@@ -105,12 +111,6 @@ export class AuthenticationController {
       }
     }
     return result;
-  }
-  
-
-  @Get()
-  findAll() {
-    return this.authService.findAll();
   }
 
   @Get(':id')

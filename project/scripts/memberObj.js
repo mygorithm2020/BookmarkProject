@@ -128,7 +128,7 @@ export class Member {
     // 토큰 리프레쉬 + 로그인 확인용
     async refreshToken(){
         console.log("token");
-        const resData = ApiRequest.instance.post("auth/refresh", null, {
+        const resData = ApiRequest.instance.get("auth/refresh", {
             headers : {
                 authorization : `Bearer ${REFRESHTOKEN}`            
             }            
