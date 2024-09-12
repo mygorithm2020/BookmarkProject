@@ -49,7 +49,7 @@ export class ApiClient{
 
     }
     
-    async setSiteParse(reqUrl): Promise<Site> {
+    async setSiteParse(reqUrl : string): Promise<Site> {
         let res : Site = new Site();
         console.log("setSite"); 
         // 정확한 url을 입력해도 안될 수가 있음.... 수작업이 필요함..... 

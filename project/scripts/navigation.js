@@ -9,14 +9,18 @@ import { Site } from "./site.js";
     cqdsd.setExpandNavigationBox(Category.categories);
 
     let curUrl = new URL(document.location.toString());
+    console.log(curUrl.search);
     let pageKey = curUrl.searchParams.get("key");
-    let navList = document.querySelectorAll("#nav_list_box li");
-    for (const navLiEl of navList){
-        if (navLiEl.innerHTML.includes(pageKey)){
-            navLiEl.classList.add("selected");
-            break;
-        }
-    }
+    let navList = document.querySelector(`#nav_list_box>li[id="${pageKey}"]`);
+    navList.firstElementChild.classList.add("selected");
+    console.log(navList);
+    // for (const navLiEl of navList){
+        
+    //     if (navLiEl.innerHTML.includes(pageKey)){
+    //         navLiEl.firstElementChild.classList.add("selected");
+    //         break;
+    //     }
+    // }
 
     // 검색 기능 추가
     const searchForm = document.querySelector("#site-search-form");
@@ -29,7 +33,7 @@ import { Site } from "./site.js";
             return;
         }
 
-        window.location.href = `./search.html?key=${encodeURI(word)}`;
+        window.location.href = `./search.html?q=${encodeURI(word)}`;
     })
     
     

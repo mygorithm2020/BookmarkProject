@@ -199,7 +199,7 @@ export class Constraint {
       site.Status = 1;
     }
 
-    if (!site.FaviconImg){
+    if (!site.FaviconImg && site.Status == 6){
       try{
           await this.apiClient.getSiteResponse(urlObj.origin + "/favicon.ico");
           site.FaviconImg = urlObj.origin + "/favicon.ico";
@@ -210,7 +210,7 @@ export class Constraint {
 
     }   
 
-    this.correctionSite(site);
+    await this.correctionSite(site);
 
     // 이미지 값이 존재하면 해당 링크 파일 다운 받아서 저장하고 값으로 저장
     if (site.Img){
@@ -236,12 +236,18 @@ export class Constraint {
       }
     }
 
-    if (uSite.Description && uSite.Description.length > 1000){
-      uSite.Description = uSite.Description.slice(0, 1000);
-    }
+    if (uSite.Description){
+      uSite.Description = uSite.Description.trim();
+      if (uSite.Description.length > 1000){
+        uSite.Description = uSite.Description.slice(0, 1000);
+      }
+    }    
 
-    if (uSite.Keywords && uSite.Keywords.length > 1000){
-      uSite.Keywords = uSite.Keywords.slice(0, 1000);
+    if (uSite.Keywords){
+      uSite.Keywords = uSite.Keywords.trim();
+      if (uSite.Keywords.length > 1000){
+        uSite.Keywords = uSite.Keywords.slice(0, 1000);
+      }
     }
 
     //  이미지 url 링크 보정
@@ -249,8 +255,11 @@ export class Constraint {
       uSite.OGImg = uSite.URL + uSite.OGImg;
     }
 
-    if (uSite.OGDescription && uSite.OGDescription.length > 1000){
-      uSite.OGDescription = uSite.OGDescription.slice(0, 1000);
+    if (uSite.OGDescription){
+      uSite.OGDescription = uSite.OGDescription.trim();
+      if (uSite.OGDescription.length > 1000){
+        uSite.OGDescription = uSite.OGDescription.slice(0, 1000);
+      }
     }    
     
     if (!uSite.Name){
@@ -271,6 +280,7 @@ export class Constraint {
 
     // 이미지 값이 존재하면 해당 링크 파일 다운 받아서 저장하고 값으로 저장
     if (uSite.Img){
+      uSite.Img = uSite.Img.trim();
       try {
         uSite.Img = await this.imageLinkToFileName(uSite.SiteId, uSite.Img);
       } catch {
@@ -279,6 +289,7 @@ export class Constraint {
     }
 
     if (!uSite.SiteDescription){
+      
       if (uSite.OGDescription){
         uSite.SiteDescription = uSite.OGDescription;
       } else if (uSite.Description){

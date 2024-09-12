@@ -38,6 +38,8 @@ export class MysqlException {
                 error : "mysql db error"
         
             }, HttpStatus.INTERNAL_SERVER_ERROR);
+
+            
         }
     }
 }

@@ -256,7 +256,7 @@ export class Category{
         // 세팅
         for (const d of categories){    
             if (d.Layer === 1 || !d.ParentId){
-                q.insertAdjacentHTML("beforeend", `<li><a href="./category.html?key=${d.Name}">${d.NameKR}</a></li>`);
+                q.insertAdjacentHTML("beforeend", `<li id="${d.Name}"><a href="./category.html?key=${d.Name}">${d.NameKR}</a></li>`);
             }            
         }
     }
@@ -326,7 +326,7 @@ export class Category{
                 res.push(cateIdx);
                 
                 for (const cateJdx of categories){
-                    if (cateJdx.Layer === 2 && cateJdx.ParentId === cateIdx.CategoryId){
+                    if (cateJdx.ParentId === cateIdx.CategoryId){
                         res.push(cateJdx);
                     }                
                 }

@@ -63,6 +63,7 @@ nav a:hover {
 nav .selected {
     font-weight: bold;
     font-size: 1.2rem;
+    
 }
 
 #main-nav-box{

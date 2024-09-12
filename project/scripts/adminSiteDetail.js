@@ -30,7 +30,7 @@ mainContent01El.insertAdjacentHTML("beforeend", siteDetailtoHtmlAdmin(site, Cate
 let siteEdit = document.getElementById("site-edit-form");
 siteEdit.addEventListener("submit", async (target) => {
   target.preventDefault();
-  var confirmRes = window.confirm("정말 수정하시겠습니까?");
+  let confirmRes = window.confirm("정말 수정하시겠습니까?");
   if(confirmRes){
     siteEdit.disabled = true;
   } else {
@@ -72,6 +72,16 @@ siteEdit.addEventListener("submit", async (target) => {
     site.Status = undefined;
   }else if (siteEdit.querySelector("select[name='status']").value <= 4){
     site.Status = siteEdit.querySelector("select[name='status']").value;
+  }
+
+  // 공개할떄 기본 정보가 없다면 한번 더 확인 받기
+  if (site.Status == 2){
+    if (!site.Name || !site.Img || !site.SiteDescription){
+      let confirmMan = window.confirm("공개를 위한 필수값이 부족합니다. 정말로 공개하시겠습니까?");
+      if(!confirmMan){
+        return;
+      }
+    }
   }
   
   console.log(site);

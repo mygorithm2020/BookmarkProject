@@ -64,19 +64,27 @@ class Site{
 }
 
 
-
+const enrollSite = new Set();
 const start = Date.now();
 (async function(){
     // 웹사이트를 불러와서
     let data = await ApiRequest.axiosGet("/site/daemon");
     console.log(data.length);
     //  크롬을 띄워서 해당 사이트 정보 스캔
-    let cnt = 0;
     for (const one of data){
-        console.log(one.URL);
         enrollSite.add(one.URL);
+    }
+
+    let cnt = 0;    
+    for (const one of data){                
         const res = new Site(one);
+        console.log(cnt + ":  " + one.URL);
+        cnt += 1;
+        if (res.Status == 2 || res.Status == 3 || res.Status == 4){
+            continue;
+        }
         await (async function example() {
+            
             // let driver = await new Builder().forBrowser('chrome').build();
             // try {
             //     // Google 홈페이지로 이동
@@ -103,78 +111,92 @@ const start = Date.now();
             // }
 
             let options = new chrome.Options();
-            options.addArguments('--headless'); // 백그라운드 실행 옵션
-            
+            // options.addArguments('--headless'); // 백그라운드 실행 옵션
+            options.windowSize({ width : 800,  height : 450});
 
             let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
-
-            await driver.manage().setTimeouts({
-                implicit: 3000, // 10초
-                pageLoad: 10000, // 30초
-                script: 10000 // 30초
-            });
-
             // let options = new Options(driver);
             // options.addArguments('--headless'); // Headless 모드
             try {
-                await driver.get(res.URL);
-                let title = await driver.getTitle();
-                res.Title = title;
+                // await driver.manage().setTimeouts({
+                //     implicit: 3000, // 10초
+                //     pageLoad: 10000, // 30초
+                //     script: 10000 // 30초
+                // });
+
+                
+
+                await driver.get(res.URL);                    
                 // let page = await driver.getPageSource();
 
-                let links = await driver.findElements(By.css("link"));
-                // let links = await driver.wait(until.elementsLocated(By.css("link")), 3000);
+                await driver.sleep(4000);
+
+                // let links = await driver.findElements(By.css("link"));
+                let links = await driver.wait(until.elementsLocated(By.css("link")), 4000);
                 let tempSize = 0;            
                 for (let idx =0; idx < links.length; idx++){
-                if (links[idx].getAttribute("rel")){
-                    const linkRel = await links[idx].getAttribute("rel");
-                    if (linkRel.toLowerCase().includes("icon")){                    
-                        let size = await links[idx].getAttribute("sizes")? parseInt(links[idx].getAttribute("sizes")) : 0;
-                    if (tempSize === 0 || tempSize < size){
-                        res.FaviconImg = await links[idx].getAttribute("href");    
-                        tempSize = size;
-                    }                    
-                    }
-                }              
+                    if (links[idx].getAttribute("rel")){
+                        const linkRel = await links[idx].getAttribute("rel");
+                        if (linkRel.toLowerCase().includes("icon")){                    
+                            let size = await links[idx].getAttribute("sizes")? parseInt(links[idx].getAttribute("sizes")) : 0;
+                        if (tempSize === 0 || tempSize < size){
+                            res.FaviconImg = await links[idx].getAttribute("href");    
+                            tempSize = size;
+                        }                    
+                        }
+                    }              
                 }
+
+                let title = await driver.getTitle();
+                res.Title = title;
 
                 // // let button = await driver.wait(until.elementLocated(By.id('foo')), 10000);
 
-                let metaEl = await driver.findElements(By.css("meta"));
+                // let metaEl = await driver.findElements(By.css("meta"));
+                let metaEl = await driver.wait(until.elementsLocated(By.css("meta")), 4000);
                 for (let idx = 0; idx <metaEl.length; idx++){
-                // console.log(metaEl[idx].rawAttrs);
-                // // console.log(`name : ${metaEl[idx].getAttribute("name")}`);
-                // // console.log(`property : ${metaEl[idx].getAttribute("property")}`);
-                // // console.log(`attri : ${JSON.stringify(metaEl[idx].attrs)}`);
-                // console.log("------------------------");     
-                
-                if (await metaEl[idx].getAttribute("name")){
-                    console.log(await metaEl[idx].getAttribute("name"));
+                    // console.log(metaEl[idx].rawAttrs);
+                    // // console.log(`name : ${metaEl[idx].getAttribute("name")}`);
+                    // // console.log(`property : ${metaEl[idx].getAttribute("property")}`);
+                    // // console.log(`attri : ${JSON.stringify(metaEl[idx].attrs)}`);
+                    // console.log("------------------------");     
                     let metaFromName = await metaEl[idx].getAttribute("name");
-                    metaFromName = metaFromName.toLowerCase();
-                    if (metaFromName === "description"){
-                    res.Description = await metaEl[idx].getAttribute("content");
-                    } else if (metaFromName === "keywords") {
-                    res.Keywords = await metaEl[idx].getAttribute("content");
-                    }
-                } else if (await metaEl[idx].getAttribute("property")){
                     let metaFromProperty = await metaEl[idx].getAttribute("property");
-                    metaFromProperty = metaFromProperty.toLowerCase();
-                    if (metaFromProperty === "og:title"){
-                    res.OGTitle = await metaEl[idx].getAttribute("content");
-                    } else if ( metaFromProperty === "og:site_name"){
-                    res.OGSiteName = await metaEl[idx].getAttribute("content");
-                    } else if ( metaFromProperty === "og:image"){
-                    res.OGImg = await metaEl[idx].getAttribute("content");
-                    } else if ( metaFromProperty === "og:description"){
-                    res.OGDescription = await metaEl[idx].getAttribute("content");
-                    } else if ( metaFromProperty === "og:url"){
-                    res.OGURL = await metaEl[idx].getAttribute("content");
-                    } 
-                }  
+                    let metaFromId = await metaEl[idx].getAttribute("id");
+                    let metaContent = await metaEl[idx].getAttribute("content");
+
+                    if (metaContent){
+                        if (metaFromName){                    
+                            metaFromName = metaFromName.toLowerCase();
+                            if (metaFromName === "description"){
+                                res.Description = metaContent;
+                            } else if (metaFromName === "keywords") {
+                                res.Keywords = metaContent;
+                            }
+                        } else if (metaFromId){
+                            metaFromId = metaFromId.toLowerCase();
+                            if (metaFromId === "description"){
+                                res.Description = metaContent;
+                            } else if (metaFromId === "keywords") {
+                                res.Keywords = metaContent;
+                            }
+                        } else if (metaFromProperty){                    
+                            metaFromProperty = metaFromProperty.toLowerCase();
+                            if (metaFromProperty === "og:title"){
+                                res.OGTitle = metaContent;
+                            } else if ( metaFromProperty === "og:site_name"){
+                                res.OGSiteName = metaContent;
+                            } else if ( metaFromProperty === "og:image"){
+                                res.OGImg = metaContent;
+                            } else if ( metaFromProperty === "og:description"){
+                                res.OGDescription = metaContent;
+                            } else if ( metaFromProperty === "og:url"){
+                                res.OGURL = metaContent;
+                            } 
+                        }                          
+                    }                    
                 }
                 console.log(res);
-
                 
 
                 //  새로운 사이트 등록
@@ -185,6 +207,10 @@ const start = Date.now();
                         try {
                             const urlObj = new URL(newS);                        
                             const newUrl = urlObj.origin;
+                            // 서브 도메인은 제외하자 너무 잡다한게 많아진다
+                            if (newUrl.split(".").length > 3 || newUrl.includes("login") || newUrl.includes("signup") || newUrl.includes("test")){
+                                continue;
+                            }
                             if (!enrollSite.has(newUrl)){
                                 console.log(newUrl);
                                 enrollSite.add(newUrl);
@@ -192,7 +218,7 @@ const start = Date.now();
                                 // 여기에서 새로 등록 api 추가
                                 await ApiRequest.axiosPost("/site/daemon", {URL : newUrl});
                             }
-                        } catch {
+                        } catch (err){
 
                         }                        
                     }
@@ -204,18 +230,18 @@ const start = Date.now();
             } catch (err) {
                 console.log(err);
             } finally {
-                await driver.quit(); 
-                cnt += 1;
-                console.log("진행률 : " + cnt/data.length * 100);
-                console.log("시간 경과 : " + parseInt((Date.now() - start)/1000) + " 초");
+                await driver.quit();                 
                 // setTimeout(async () => {
                                                 
                 // }, 1000);           
             }
-        })();        
-
+            
+        })();    
+        
+        console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})`);
+        console.log("시간 경과 : " + parseInt((Date.now() - start)/1000) + " 초");
         // 생각보다 오래걸려서 일부분씩 하자
-        if (cnt/data.length * 100 > 30){
+        if (cnt/data.length * 100 > 5){
             break;
         }
         
