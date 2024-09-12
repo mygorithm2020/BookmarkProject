@@ -12,7 +12,7 @@ import { Site } from "./site.js";
 fetch('https://api.ipify.org?format=json')
 .then(response => response.json())
 .then(data => {
-    console.log(data.ip);
+    // console.log(data.ip);
     document.cookie = `${decodeURIComponent("clienip")} = ${decodeURIComponent(data.ip)};`;
 })
 .catch(error => {
@@ -38,7 +38,7 @@ spinner.classList.toggle("cover");
 
 window.onload = async function() {
     setTimeout(() => {
-        console.log("ssss");
+        // console.log("ssss");
         // const asdqwcc = document.querySelector("#header_main_logo").parentElement;
         // console.log(asdqwcc);
         // asdqwcc.click();

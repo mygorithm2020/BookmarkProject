@@ -1,27 +1,30 @@
-<div id="nav-search-box">
-    <form id="site-search-form">
-        <input type="text" placeholder="사이트 검색" name="word" maxlength="30">
-        <button type="submit"><img src="../images/search.png"></button>
-    </form>
+<div id="navigation">
+    <div id="nav-search-box">
+        <form id="site-search-form">
+            <input type="text" placeholder="사이트 검색" name="word" maxlength="30">
+            <button type="submit"><img src="../images/search.png"></button>
+        </form>
+    </div>
+    <div id="main-nav-box" class="bg-color-4">
+        <input type="image" id="category-open" alt="카테고리 확장 버튼" src="../images/menuExpand.png" alt="" />
+        <ul id="nav_list_box">
+            <!-- <li><a href="./categoryPortal.html?key=portal">포털</a></li>
+            <li><a href="./category.html?key=ai">인공지능 AI</a></li>
+            <li><a href="./category.html?key=shopping">쇼핑</a></li>
+            <li><a href="./category.html?key=utility">도움되는 사이트</a></li> -->
+        </ul>
+    </div>
+    <div id="category-box-expand" class="hidden bg-color-4">
+        <ul id="subcategory-box">
+            <!-- <li><a href="">임시카테고리01</a>
+                <ul class="category-expand-each-box">
+                    <li><a href="">확장카테0101</a></li>
+                    <li><a href="">확장카테0102</a></li>
+                    <li><a href="">확장카테0103</a></li>
+                </ul>
+            </li> -->
+        </ul>
+    </div>
+    <script type="module" src="../scripts/navigation.js"></script>
+
 </div>
-<div id="main-nav-box" class="bg-color-4">
-    <input type="image" id="category-open" alt="카테고리 확장 버튼" src="../images/menuExpand.png" alt="" />
-    <ul id="nav_list_box">
-        <!-- <li><a href="./categoryPortal.html?key=portal">포털</a></li>
-        <li><a href="./category.html?key=ai">인공지능 AI</a></li>
-        <li><a href="./category.html?key=shopping">쇼핑</a></li>
-        <li><a href="./category.html?key=utility">도움되는 사이트</a></li> -->
-    </ul>
-</div>
-<div id="category-box-expand" class="hidden bg-color-4">
-    <ul id="subcategory-box">
-        <!-- <li><a href="">임시카테고리01</a>
-            <ul class="category-expand-each-box">
-                <li><a href="">확장카테0101</a></li>
-                <li><a href="">확장카테0102</a></li>
-                <li><a href="">확장카테0103</a></li>
-            </ul>
-        </li> -->
-    </ul>
-</div>
-<script type="module" src="../scripts/navigation.js"></script>

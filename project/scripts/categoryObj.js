@@ -246,7 +246,7 @@ export class Category{
     }
 
 
-    async setNavigationBox(categories){
+    setNavigationBox(categories){
         let q = document.getElementById("nav_list_box");
         
         if (!categories || categories.length === 0){
@@ -262,7 +262,7 @@ export class Category{
     }
 
     //카테고리 확장 버튼 클릭시 목록 리스트 구현
-    async setExpandNavigationBox(categories){
+    setExpandNavigationBox(categories){
         const subCategoryBox = document.getElementById("subcategory-box");
         const cate = document.getElementById("category-box-expand");
         let subCate = "";
