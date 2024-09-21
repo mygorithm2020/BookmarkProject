@@ -1,6 +1,13 @@
-console.log("Sdsd");
-console.log(parseInt(null)? "ss": "aa");
-console.log(parseInt(undefined));
+// console.log("Sdsd");
+// console.log(parseInt(null)? "ss": "aa");
+// console.log(parseInt(undefined));
+
+// const q = "https://login.sendgrid.com/";
+// const w = q.split(".");
+// console.log(w);
+// console.log(w[w.length-2]);
+// return;
+
 
 //ES6
 // import { ApiRequest } from './ApiRequest.js';
@@ -132,7 +139,7 @@ const start = Date.now();
                 await driver.get(res.URL);                    
                 // let page = await driver.getPageSource();
 
-                await driver.sleep(4000);
+                await driver.sleep(3000);
 
                 // let links = await driver.findElements(By.css("link"));
                 let links = await driver.wait(until.elementsLocated(By.css("link")), 4000);
@@ -199,38 +206,44 @@ const start = Date.now();
                         }                          
                     }                    
                 }
-                console.log(res);
                 
-
-                //  새로운 사이트 등록
-                let hyperLinks = await driver.findElements(By.css("a"));  
-                for (const hl of hyperLinks){
-                    const newS = await hl.getAttribute("href");
-                    if (newS && newS.startsWith('https:')){
-                        try {
-                            const urlObj = new URL(newS);                        
-                            const newUrl = urlObj.origin;
-                            // 서브 도메인은 제외하자 너무 잡다한게 많아진다
-                            if (newUrl.split(".").length > 3 || newUrl.includes("login") || newUrl.includes("signup") || newUrl.includes("test")){
-                                continue;
-                            }
-                            if (!enrollSite.has(newUrl) && !tempEnrollSites.has(newUrl)){
-                                console.log(newUrl);
-                                tempEnrollSites.add(newUrl);
-                                enrollSite.add(newUrl);                                
-                            }
-                        } catch (err){
-    
-                        }                        
-                    }
-                }              
 
                 res.Status = 6;
                 // 사이트 업데이트
+                console.log(res);
                 await ApiRequest.axiosPatch("/site/daemon", res);
+                
+
+                //  새로운 사이트 등록
+                console.log("링크 조회 중");
+                let hyperLinks = await driver.findElements(By.css("a"));  
+                for (const hl of hyperLinks){                    
+                    const newS = await hl.getAttribute("href");
+                    try {
+                        if (newS && newS.startsWith('https:')){                            
+                            const urlObj = new URL(newS);                        
+                            const newUrl = urlObj.origin;
+                            const urlReg = newUrl.split(".");
+                            // 서브 도메인은 제외하자 너무 잡다한게 많아진다
+                            // 길이가 3보다 크면서 서브도메인이
+                             
+                            if ((urlReg.length > 2 && urlReg[urlReg.length-2].length > 2 && !newUrl.includes("www.")) || newUrl.includes("login") || newUrl.includes("signup") || newUrl.includes("test")){
+                                continue;
+                            }
+                            if (!enrollSite.has(newUrl) && !tempEnrollSites.has(newUrl)){                                
+                                tempEnrollSites.add(newUrl);
+                                enrollSite.add(newUrl);                                
+                            }                      
+                        }
+                    } catch (err) {
+
+                    }                    
+                }
+                console.log("링크 조회 끝");      
 
             } catch (err) {
                 console.log(err);
+                console.log(`${res.URL} 등록실패`);
                 // 사이트 조회 실패
                 res.Status = 5;
                 await ApiRequest.axiosPatch("/site/daemon", res);
@@ -241,22 +254,22 @@ const start = Date.now();
                 // }, 1000);           
             }
 
-            for (const addNewUrl of tempEnrollSites){
+            console.log("사이트 등록 중" + tempEnrollSites.size);
+            for (const addNewUrl of tempEnrollSites){                
                 // 여기에서 새로 등록 api 추가
                 try {
                     await ApiRequest.axiosPost("/site/daemon", {URL : addNewUrl});
-                } catch {
+                } catch (err) {
 
-                }
-                
-            }            
+                }                
+            }    
+            console.log("사이트 등록 끝");        
             
         })();    
         
-        console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})`);
-        console.log("시간 경과 : " + parseInt((Date.now() - start)/1000) + " 초");
+        console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})    ${parseInt((Date.now() - start)/1000)} 초`);        
         // 생각보다 오래걸려서 일부분씩 하자
-        if (cnt/data.length * 100 > 2){
+        if (cnt/data.length * 100 > 10){
             break;
         }
         

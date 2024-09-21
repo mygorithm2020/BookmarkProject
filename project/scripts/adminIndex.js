@@ -16,6 +16,11 @@ let mainContent01El = document.getElementById("main_content01");
 let addBox = document.getElementById("add-box");
 let spinner = document.querySelector(".loading-spinner");  
 
+const updateDesc = "최근 변경 순";
+const updateAsc = "변경 오래된 순";
+const createDesc = "최근 생성 순";
+const createAsc = "생성 오래된 순";
+
 
 const selectedStatus = [false, false, false, false, false, false, false, false];
 
@@ -100,10 +105,7 @@ async function setSitePage(){
         </form>
         `);
     
-    const updateDesc = "최근 변경 순";
-    const updateAsc = "변경 오래된 순";
-    const createDesc = "최근 생성 순";
-    const createAsc = "생성 오래된 순";
+    
 
     let siteFilterHtml = "";
     siteFilterHtml += `
@@ -151,6 +153,12 @@ async function setSitePage(){
         </div>`
     );
 
+    let addSiteBtn = document.getElementById("add-site");
+    let searchEl = document.querySelector("#search-box > input");
+    let siteSearchForm = document.querySelector("#search-box");
+    const changeEl = document.querySelectorAll(".change-sequence");
+    const showEl = document.querySelector("#sort-value");
+
     // 카테고리 표시
     let cqdsd = new Category();
     Category.categories = await cqdsd.getCategoryAdmin();
@@ -163,8 +171,7 @@ async function setSitePage(){
     let showList = [];
     // 카드 이벤트 효과 추가
 
-    // 사이트 등록 기능 추가
-    let addSiteBtn = document.getElementById("add-site");
+    // 사이트 등록 기능 추가    
     addSiteBtn.addEventListener("click", async (target) => {
         target.preventDefault();
         spinner.classList.toggle("cover");
@@ -197,9 +204,7 @@ async function setSitePage(){
         addSiteBtn.disabled = false;
     });
 
-    // 검색 기능 추가
-    let searchEl = document.querySelector("#search-box > input");
-    let siteSearchForm = document.querySelector("#search-box");
+    // 검색 기능 추가    
     siteSearchForm.addEventListener("submit", (target)=> {
         target.preventDefault();
         let searchBtn = siteSearchForm.querySelector("#site-search-btn");
@@ -207,7 +212,7 @@ async function setSitePage(){
 
         showList = makeFilteredList(sites, searchEl.value, selectedStatus);
 
-        initSiteList(showList);
+        initSiteList(showList, showEl.textContent);
         searchBtn.disabled = false;
         // let siteList = mainContent01El.querySelector("#site-card-box");
         // if (siteList){
@@ -221,71 +226,15 @@ async function setSitePage(){
         document.querySelector(`input[name=status-${ii}]`).addEventListener("change", ()=>{
             selectedStatus[ii] = !selectedStatus[ii];
             showList = makeFilteredList(sites, searchEl.value, selectedStatus);
-            initSiteList(showList);
+            initSiteList(showList, showEl.textContent);
         })
     }  
 
-    // 정렬기준 변경기능
-    const changeEl = document.querySelectorAll(".change-sequence");
-    const showEl = document.querySelector("#sort-value");
+    // 정렬기준 변경기능    
     for (const cEl of changeEl){
         cEl.addEventListener("click", ()=> {
-            showEl.textContent = cEl.textContent;
-            if (cEl.textContent === updateDesc){ 
-                showList.sort(function(a, b){
-                    if (a.UpdatedDate < b.UpdatedDate){
-                        return 1;
-                    }
-                    if (a.UpdatedDate === b.UpdatedDate){
-                        return 0;
-                    }
-                    if (a.UpdatedDate > b.UpdatedDate){
-                        return -1;        
-                    }
-                });           
-                
-                
-            } else if (cEl.textContent === updateAsc){
-                showList.sort(function(a, b){
-                    if (a.UpdatedDate > b.UpdatedDate){
-                        return 1;
-                    }
-                    if (a.UpdatedDate === b.UpdatedDate){
-                        return 0;
-                    }
-                    if (a.UpdatedDate < b.UpdatedDate){
-                        return -1;        
-                    }
-                });
-
-            } else if (cEl.textContent === createDesc){
-                showList.sort(function(a, b){
-                    if (a.CreatedDate < b.CreatedDate){
-                        return 1;
-                    }
-                    if (a.CreatedDate === b.CreatedDate){
-                        return 0;
-                    }
-                    if (a.CreatedDate > b.CreatedDate){
-                        return -1;        
-                    }
-                }); 
-
-            } else if (cEl.textContent === createAsc){
-                showList.sort(function(a, b){
-                    if (a.CreatedDate > b.CreatedDate){
-                        return 1;
-                    }
-                    if (a.CreatedDate === b.CreatedDate){
-                        return 0;
-                    }
-                    if (a.CreatedDate < b.CreatedDate){
-                        return -1;        
-                    }
-                }); 
-
-            } 
-            initSiteList(showList);
+            showEl.textContent = cEl.textContent;            
+            initSiteList(showList, showEl.textContent);
         })
 
     }
@@ -327,15 +276,73 @@ function makeFilteredList(originSiteList, searchValue, statusList){
         }
     }
 
-    //  정렬 까지 여기다?
+    
     return filterdSites;
 }
 
-function initSiteList(showSiteList){
+function initSiteList(showSiteList, order){
     let siteList = mainContent01El.querySelector("#site-card-box");
     if (siteList){
         siteList.remove();
-    }        
+    }
+    
+    
+    //  정렬, 디폴트는 최근 업데이트 순
+    if (order === updateDesc || !order){ 
+        showSiteList.sort(function(a, b){
+            if (a.UpdatedDate < b.UpdatedDate){
+                return 1;
+            }
+            if (a.UpdatedDate === b.UpdatedDate){
+                return 0;
+            }
+            if (a.UpdatedDate > b.UpdatedDate){
+                return -1;        
+            }
+        });           
+        
+        
+    } else if (order === updateAsc){
+        showSiteList.sort(function(a, b){
+            if (a.UpdatedDate > b.UpdatedDate){
+                return 1;
+            }
+            if (a.UpdatedDate === b.UpdatedDate){
+                return 0;
+            }
+            if (a.UpdatedDate < b.UpdatedDate){
+                return -1;        
+            }
+        });
+
+    } else if (order === createDesc){
+        showSiteList.sort(function(a, b){
+            if (a.CreatedDate < b.CreatedDate){
+                return 1;
+            }
+            if (a.CreatedDate === b.CreatedDate){
+                return 0;
+            }
+            if (a.CreatedDate > b.CreatedDate){
+                return -1;        
+            }
+        }); 
+
+    } else if (order === createAsc){
+        showSiteList.sort(function(a, b){
+            if (a.CreatedDate > b.CreatedDate){
+                return 1;
+            }
+            if (a.CreatedDate === b.CreatedDate){
+                return 0;
+            }
+            if (a.CreatedDate < b.CreatedDate){
+                return -1;        
+            }
+        }); 
+
+    }
+
     mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(showSiteList));
 }
 

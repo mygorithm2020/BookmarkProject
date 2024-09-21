@@ -24,7 +24,7 @@ class ApiRequest{
             return result.data;   
         })
         .catch(async (error) => {
-            console.log(error);            
+            console.log(error.status);     
         });
         return data;
     }
@@ -36,7 +36,7 @@ class ApiRequest{
             return result.data;   
         })
         .catch(async (error) => {
-            console.log(error);
+            console.log(error.status);
             
         });
         return data;
@@ -49,7 +49,7 @@ class ApiRequest{
             return result.data;   
         })
         .catch(async (error) => {
-            console.log(error);
+            console.log(error.status);
             
         });
         return data;
@@ -63,7 +63,7 @@ class ApiRequest{
             return result.data;   
         })
         .catch(async (error) => {
-            console.log(error);
+            console.log(error.status);
             
         });
         return data;
@@ -76,7 +76,7 @@ class ApiRequest{
             return result.data;   
         })
         .catch(async (error) => {
-            console.log(error);                    
+            console.log(error.status);                 
         });
         return data;
     }
