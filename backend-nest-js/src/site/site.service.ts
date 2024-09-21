@@ -590,6 +590,7 @@ export class SiteService {
     });
   }
 
+  // 실패도 받자....
   async updateDaemon(updateSite: Site) : Promise<UpdateResult> {
     if (!updateSite.SiteId){
       throw new HttpException({
@@ -600,8 +601,15 @@ export class SiteService {
     }
 
     // 상태는 2, 3, 4 가 아닌이상은 6으로 변경
-    if (updateSite.Status != 2 && updateSite.Status != 3 && updateSite.Status != 4){
-      updateSite.Status = 6;
+
+    let res = null;
+    if (updateSite.Status == 5){
+      return await this.sRepo.update({
+        SiteId : updateSite.SiteId,
+      }, {        
+        Status : updateSite.Status,        
+        UpdatedDate : this.customUtils.getUTCDate(),
+      });
     }
 
     await this.constraint.correctionSite(updateSite);
@@ -645,6 +653,7 @@ export class SiteService {
 
     if (updateSite.Img){
       try {
+        updateSite.Img = updateSite.Img.trim();
         updateSite.Img = await this.constraint.imageLinkToFileName(updateSite.SiteId, updateSite.Img);
       } catch (err) {
         console.log(err);

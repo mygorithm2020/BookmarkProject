@@ -117,6 +117,9 @@ const start = Date.now();
             let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
             // let options = new Options(driver);
             // options.addArguments('--headless'); // Headless 모드
+
+            let tempEnrollSites = new Set();
+
             try {
                 // await driver.manage().setTimeouts({
                 //     implicit: 3000, // 10초
@@ -200,7 +203,7 @@ const start = Date.now();
                 
 
                 //  새로운 사이트 등록
-                let hyperLinks = await driver.findElements(By.css("a"));
+                let hyperLinks = await driver.findElements(By.css("a"));  
                 for (const hl of hyperLinks){
                     const newS = await hl.getAttribute("href");
                     if (newS && newS.startsWith('https:')){
@@ -211,37 +214,49 @@ const start = Date.now();
                             if (newUrl.split(".").length > 3 || newUrl.includes("login") || newUrl.includes("signup") || newUrl.includes("test")){
                                 continue;
                             }
-                            if (!enrollSite.has(newUrl)){
+                            if (!enrollSite.has(newUrl) && !tempEnrollSites.has(newUrl)){
                                 console.log(newUrl);
-                                enrollSite.add(newUrl);
-                                
-                                // 여기에서 새로 등록 api 추가
-                                await ApiRequest.axiosPost("/site/daemon", {URL : newUrl});
+                                tempEnrollSites.add(newUrl);
+                                enrollSite.add(newUrl);                                
                             }
                         } catch (err){
-
+    
                         }                        
                     }
-                }
+                }              
 
+                res.Status = 6;
                 // 사이트 업데이트
                 await ApiRequest.axiosPatch("/site/daemon", res);
 
             } catch (err) {
                 console.log(err);
+                // 사이트 조회 실패
+                res.Status = 5;
+                await ApiRequest.axiosPatch("/site/daemon", res);
             } finally {
                 await driver.quit();                 
                 // setTimeout(async () => {
                                                 
                 // }, 1000);           
             }
+
+            for (const addNewUrl of tempEnrollSites){
+                // 여기에서 새로 등록 api 추가
+                try {
+                    await ApiRequest.axiosPost("/site/daemon", {URL : addNewUrl});
+                } catch {
+
+                }
+                
+            }            
             
         })();    
         
         console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})`);
         console.log("시간 경과 : " + parseInt((Date.now() - start)/1000) + " 초");
         // 생각보다 오래걸려서 일부분씩 하자
-        if (cnt/data.length * 100 > 5){
+        if (cnt/data.length * 100 > 2){
             break;
         }
         

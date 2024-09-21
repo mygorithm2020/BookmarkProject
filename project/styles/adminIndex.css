@@ -50,3 +50,43 @@ nav .selected {
 .category-layer2 {
     background-color: darkgray;
 }
+
+#site-status-list{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+}
+
+#site-status-list > li{
+    margin: 2px;
+    font-size: 1rem;   
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none
+}
+
+li > input{
+    display: none;    
+}
+
+li > label {
+    cursor: pointer;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+input + label {  /* 체크박스 만들기 */
+    width: 30px;
+    height: 30px;
+    border: 3px solid #000;
+    display: inline-block;    
+    vertical-align: middle;
+    border-radius: 8px;
+    user-select: none /* 드래그 금지 */
+}
+
+input:checked + label {  /* 체크되었을 때 */
+    background: skyblue;    
+}
