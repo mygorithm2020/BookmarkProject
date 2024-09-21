@@ -200,13 +200,14 @@ function siteDetailtoHtmlAdmin(site, categories){
                     <tr>
                       <td>상태</td>
                       <td>
-                        <select name="status">
-                            <option value="1" ${site.Status == 1 ? "selected" : ""} disabled>${Site.siteStatus[1]}</option>
-                            <option value="2" ${site.Status == 2 ? "selected" : ""} >${Site.siteStatus[2]}</option>
-                            <option value="3" ${site.Status == 3 ? "selected" : ""} >${Site.siteStatus[3]}</option>
-                            <option value="4" ${site.Status == 4 ? "selected" : ""} >${Site.siteStatus[4]}</option>
-                            <option value="5" ${site.Status == 5 ? "selected" : ""} disabled>${Site.siteStatus[5]}</option>
-                            <option value="6" ${site.Status == 6 ? "selected" : ""} disabled>${Site.siteStatus[6]}</option>
+                        <select name="status">                                                
+                          <option value="1" ${site.Status == 1 ? "selected" : ""} disabled>${Site.siteStatus[1]}</option>
+                          <option value="2" ${site.Status == 2 ? "selected" : ""} >${Site.siteStatus[2]}</option>
+                          <option value="3" ${site.Status == 3 ? "selected" : ""} >${Site.siteStatus[3]}</option>
+                          <option value="4" ${site.Status == 4 ? "selected" : ""} >${Site.siteStatus[4]}</option>
+                          <option value="5" ${site.Status == 5 ? "selected" : ""} disabled>${Site.siteStatus[5]}</option>
+                          <option value="6" ${site.Status == 6 ? "selected" : ""} disabled>${Site.siteStatus[6]}</option>
+                          <option value="7" ${site.Status == 7 ? "selected" : ""} disabled>${Site.siteStatus[7]}</option>
                         </select>
                       </td>
                     </tr>

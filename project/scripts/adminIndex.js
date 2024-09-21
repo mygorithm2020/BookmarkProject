@@ -14,7 +14,10 @@ for (const navLiEl of navList){
 }
 let mainContent01El = document.getElementById("main_content01");
 let addBox = document.getElementById("add-box");
-let spinner = document.querySelector(".loading-spinner");            
+let spinner = document.querySelector(".loading-spinner");  
+
+
+const selectedStatus = [false, false, false, false, false, false, false, false];
 
 switch(pageKey){
     case "category":
@@ -102,11 +105,42 @@ async function setSitePage(){
     const createDesc = "최근 생성 순";
     const createAsc = "생성 오래된 순";
 
+    let siteFilterHtml = "";
+    siteFilterHtml += `
+    <fieldset>
+        <legend>상태</legend>
+        <ul id="site-status-list">
+            <li>
+                <input type="checkbox" id="status-0" name="status-0" />
+                <label for="status-0"></label>
+                <label for="status-0">전체</label>
+            </li>`;
+
+    for (let ii=1; ii < 8; ii++){
+        siteFilterHtml += `
+        <li>
+            <input type="checkbox" id="status-${ii}" name="status-${ii}" />
+            <label for="status-${ii}"></label>
+            <label for="status-${ii}">${Site.siteStatus[ii]}</label>
+        </li>
+        `;
+    }    
+    siteFilterHtml += `
+        </ul>
+    </fieldset>`;
+
 
     mainContent01El.insertAdjacentHTML("beforeend", 
-        `<div id="search-box">
+        `<form id="search-box">
             <label>이름 또는 URL 검색</label>
-            <input type="search" placeholder="bookmark" required>                               
+            <input type="search" placeholder="bookmark">    
+            <button id="site-search-btn">검색</button>                           
+        </form>
+        <div>
+            ${siteFilterHtml}
+        </div>
+        <div>
+
         </div>
         <div>
             <button class="change-sequence">${updateDesc}</button>
@@ -125,7 +159,8 @@ async function setSitePage(){
 
     let sites = await Site.getAllSitesAdmin();
     //  HTML에 추가
-    mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));            
+    // mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));
+    let showList = [];
     // 카드 이벤트 효과 추가
 
     // 사이트 등록 기능 추가
@@ -164,27 +199,31 @@ async function setSitePage(){
 
     // 검색 기능 추가
     let searchEl = document.querySelector("#search-box > input");
-    searchEl.addEventListener("input", ()=> {
-        
-        let filterdSites = [];
-        if (!searchEl.value){
-            filterdSites = sites;
-        } else{
-            const searchValue = searchEl.value.toLowerCase()
-            for(const oneSite of sites){
-                if ((oneSite.URL && oneSite.URL.includes(searchValue)) || 
-                (oneSite.Name &&  oneSite.Name.includes(searchValue)) || 
-                (oneSite.NameKR && oneSite.NameKR.includes(searchValue))){
-                    filterdSites.push(oneSite);
-                }
-            }
-        }
-        let siteList = mainContent01El.querySelector("#site-card-box");
-        if (siteList){
-            siteList.remove();
-        }        
-        mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(filterdSites));
+    let siteSearchForm = document.querySelector("#search-box");
+    siteSearchForm.addEventListener("submit", (target)=> {
+        target.preventDefault();
+        let searchBtn = siteSearchForm.querySelector("#site-search-btn");
+        searchBtn.disabled = true;
+
+        showList = makeFilteredList(sites, searchEl.value, selectedStatus);
+
+        initSiteList(showList);
+        searchBtn.disabled = false;
+        // let siteList = mainContent01El.querySelector("#site-card-box");
+        // if (siteList){
+        //     siteList.remove();
+        // }        
+        // mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(filterdSites));
     });
+    
+    // 선택된 상태 값에 따라 데이터 필터링
+    for (let ii=0; ii < 8; ii++){
+        document.querySelector(`input[name=status-${ii}]`).addEventListener("change", ()=>{
+            selectedStatus[ii] = !selectedStatus[ii];
+            showList = makeFilteredList(sites, searchEl.value, selectedStatus);
+            initSiteList(showList);
+        })
+    }  
 
     // 정렬기준 변경기능
     const changeEl = document.querySelectorAll(".change-sequence");
@@ -193,7 +232,7 @@ async function setSitePage(){
         cEl.addEventListener("click", ()=> {
             showEl.textContent = cEl.textContent;
             if (cEl.textContent === updateDesc){ 
-                sites.sort(function(a, b){
+                showList.sort(function(a, b){
                     if (a.UpdatedDate < b.UpdatedDate){
                         return 1;
                     }
@@ -207,7 +246,7 @@ async function setSitePage(){
                 
                 
             } else if (cEl.textContent === updateAsc){
-                sites.sort(function(a, b){
+                showList.sort(function(a, b){
                     if (a.UpdatedDate > b.UpdatedDate){
                         return 1;
                     }
@@ -220,7 +259,7 @@ async function setSitePage(){
                 });
 
             } else if (cEl.textContent === createDesc){
-                sites.sort(function(a, b){
+                showList.sort(function(a, b){
                     if (a.CreatedDate < b.CreatedDate){
                         return 1;
                     }
@@ -233,7 +272,7 @@ async function setSitePage(){
                 }); 
 
             } else if (cEl.textContent === createAsc){
-                sites.sort(function(a, b){
+                showList.sort(function(a, b){
                     if (a.CreatedDate > b.CreatedDate){
                         return 1;
                     }
@@ -246,23 +285,57 @@ async function setSitePage(){
                 }); 
 
             } 
-
-            let siteList = mainContent01El.querySelector("#site-card-box");
-            if (siteList){
-                siteList.remove();
-            }
-            searchEl.value = "";
-            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));
+            initSiteList(showList);
         })
 
     }
-
     spinner.classList.toggle("cover");
 }
 
 function setMemberPage(){
-
     spinner.classList.toggle("cover");
 }
 
+function makeFilteredList(originSiteList, searchValue, statusList){
+    let filterdSites = [];
+    let tempList = [];
+
+    // 검색 값 없음
+    if (!searchValue){
+        tempList = originSiteList;
+    } else {
+        // 검색 값 없음
+        searchValue = searchValue.toLowerCase();
+        for(const oneSite of originSiteList){
+            if ((oneSite.URL && oneSite.URL.includes(searchValue)) || 
+            (oneSite.Name &&  oneSite.Name.includes(searchValue)) || 
+            (oneSite.NameKR && oneSite.NameKR.includes(searchValue))){
+                tempList.push(oneSite);
+            }
+        }
+    }    
+
+    // 상태 전체 선택
+    if (statusList[0]){
+        filterdSites = tempList;            
+    } else {
+        // 상태 일부 선택
+        for(const oneSite of tempList){
+            if (selectedStatus[oneSite.Status]){
+                filterdSites.push(oneSite);
+            }                    
+        }
+    }
+
+    //  정렬 까지 여기다?
+    return filterdSites;
+}
+
+function initSiteList(showSiteList){
+    let siteList = mainContent01El.querySelector("#site-card-box");
+    if (siteList){
+        siteList.remove();
+    }        
+    mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(showSiteList));
+}
 

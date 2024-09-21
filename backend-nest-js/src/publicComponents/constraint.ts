@@ -250,9 +250,15 @@ export class Constraint {
       }
     }
 
-    //  이미지 url 링크 보정
-    if (uSite.OGImg && !uSite.OGImg.startsWith("//") && uSite.OGImg.startsWith("/")){ 
-      uSite.OGImg = uSite.URL + uSite.OGImg;
+    if (uSite.OGImg){
+      //  이미지 url 링크 보정
+      if (uSite.OGImg.startsWith("//")){
+        uSite.OGImg = "https:" + uSite.OGImg;
+      } else if (uSite.OGImg.startsWith("/")){
+        uSite.OGImg = uSite.URL + uSite.OGImg;
+      } else {
+          // 모르겠네 또 어떤 케이스가...
+      }
     }
 
     if (uSite.OGDescription){

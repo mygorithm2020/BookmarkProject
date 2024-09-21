@@ -61,7 +61,7 @@ export class ApiClient{
     
         } catch (err) {
           //  문제 있는 사이트는 숨기기....
-          res.Status = 5;
+          // res.Status = 5;
           
           // 404만 걸러내자
           console.log("getSiteResponseErr : " + err);
