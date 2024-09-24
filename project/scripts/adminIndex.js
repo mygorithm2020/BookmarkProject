@@ -22,8 +22,6 @@ const createDesc = "최근 생성 순";
 const createAsc = "생성 오래된 순";
 
 
-const selectedStatus = [false, false, false, false, false, false, false, false];
-
 switch(pageKey){
     case "category":
         setCategoryPage();
@@ -97,6 +95,8 @@ async function setCategoryPage(){
 
 async function setSitePage(){
 
+    const selectedStatus = [false, false, false, false, false, false, false, false];
+
     addBox.insertAdjacentHTML("beforeend",`
         <form>
             <label>사이트 url    </label> 
@@ -116,6 +116,7 @@ async function setSitePage(){
                 <input type="checkbox" id="status-0" name="status-0" />
                 <label for="status-0"></label>
                 <label for="status-0">전체</label>
+                <span id="status-one-0"></span>
             </li>`;
 
     for (let ii=1; ii < 8; ii++){
@@ -124,6 +125,7 @@ async function setSitePage(){
             <input type="checkbox" id="status-${ii}" name="status-${ii}" />
             <label for="status-${ii}"></label>
             <label for="status-${ii}">${Site.siteStatus[ii]}</label>
+            <span id="status-one-${ii}"></span>
         </li>
         `;
     }    
@@ -169,6 +171,18 @@ async function setSitePage(){
     //  HTML에 추가
     // mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));
     let showList = [];
+
+    // 뒤로가기 시 간헐적으로 체크가 되어 있으나 값이 안보이는 현상 떄문에 변화 감지 전에 초기화 진행
+    for (let ii=0; ii < 8; ii++){
+        if (document.querySelector(`input[name=status-${ii}]`).checked){
+            selectedStatus[ii] = true;
+        } else {
+            selectedStatus[ii] = false;
+        }
+    }    
+    showList = makeFilteredList(sites, searchEl.value, selectedStatus);
+    initSiteList(showList, showEl.textContent);
+
     // 카드 이벤트 효과 추가
 
     // 사이트 등록 기능 추가    
@@ -248,6 +262,7 @@ function setMemberPage(){
 function makeFilteredList(originSiteList, searchValue, statusList){
     let filterdSites = [];
     let tempList = [];
+    let statusCntList = [0, 0, 0, 0, 0, 0, 0, 0];
 
     // 검색 값 없음
     if (!searchValue){
@@ -263,16 +278,25 @@ function makeFilteredList(originSiteList, searchValue, statusList){
             }
         }
     }    
-
+    
     // 상태 전체 선택
     if (statusList[0]){
         filterdSites = tempList;            
+        statusCntList[0] = tempList.length;
     } else {
-        // 상태 일부 선택
+        // 상태 일부 선택        
         for(const oneSite of tempList){
-            if (selectedStatus[oneSite.Status]){
-                filterdSites.push(oneSite);
+            statusCntList[oneSite.Status] += 1;
+            if (statusList[oneSite.Status]){
+                filterdSites.push(oneSite);                
             }                    
+        }
+    }
+
+    for (let idx = 0; idx<statusCntList.length; idx ++){
+        if (statusList[idx]){
+            console.log(document.querySelector(`#status-one-${idx}`));
+            document.querySelector(`#status-one-${idx}`).textContent = `(${statusCntList[idx]})`;
         }
     }
 
@@ -342,6 +366,8 @@ function initSiteList(showSiteList, order){
         }); 
 
     }
+
+    // 개수 표시
 
     mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(showSiteList));
 }

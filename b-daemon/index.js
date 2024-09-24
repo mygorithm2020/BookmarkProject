@@ -21,32 +21,32 @@ const chrome = require('selenium-webdriver/chrome');
 // import ('chromedriver');
 
 class Site{
-    SiteId;
-    URL;        
-    Name;        
-    NameKR;        
-    IPAddress;        
-    Img;        
-    SiteDescription;        
-    AppLinkAndroid;        
-    AppLinkIOS;
-    Views;        
-    Good;        
-    Bad;        
-    MemberId;        
-    Status;
-    Title;
-    FaviconImg;
-    Description;
-    Keywords;
-    OGTitle;
-    OGSiteName;        
-    OGImg;
-    OGDescription;
-    OGURL; 
-    IsDeleted;
-    CreatedDate;
-    UpdatedDate;
+    // SiteId;
+    // URL;        
+    // Name;        
+    // NameKR;        
+    // IPAddress;        
+    // Img;        
+    // SiteDescription;        
+    // AppLinkAndroid;        
+    // AppLinkIOS;
+    // Views;        
+    // Good;        
+    // Bad;        
+    // MemberId;        
+    // Status;
+    // Title;
+    // FaviconImg;
+    // Description;
+    // Keywords;
+    // OGTitle;
+    // OGSiteName;        
+    // OGImg;
+    // OGDescription;
+    // OGURL; 
+    // IsDeleted;
+    // CreatedDate;
+    // UpdatedDate;
     constructor(siteObj){        
         this.SiteId = siteObj.SiteId;
         this.URL = siteObj.URL;        
@@ -55,8 +55,8 @@ class Site{
         this.IPAddress = siteObj.IPAddress;        
         this.Img = siteObj.Img;        
         this.SiteDescription = siteObj.SiteDescription;        
-        this.AppLinkAndroid = siteObj.AppLinkAndroid;        
-        this.AppLinkIOS = siteObj.AppLinkIOS;        
+        // this.AppLinkAndroid = siteObj.AppLinkAndroid;        
+        // this.AppLinkIOS = siteObj.AppLinkIOS;        
         this.Status = siteObj.Status;
         this.Title = siteObj.Title;
         this.FaviconImg = siteObj.FaviconImg;
@@ -85,7 +85,7 @@ const start = Date.now();
     let cnt = 0;    
     for (const one of data){                
         const res = new Site(one);
-        console.log(cnt + ":  " + one.URL);
+        console.log(`${cnt} : ${one.URL} , ${one.Status}`)
         cnt += 1;
         if (res.Status == 2 || res.Status == 3 || res.Status == 4){
             continue;
@@ -208,7 +208,10 @@ const start = Date.now();
                 }
                 
 
-                res.Status = 6;
+                if (res.Status == 1 || res.Status == 5 || res.Status == 6){
+                    res.Status = 6;
+                }
+                
                 // 사이트 업데이트
                 console.log(res);
                 await ApiRequest.axiosPatch("/site/daemon", res);
@@ -227,8 +230,16 @@ const start = Date.now();
                             // 서브 도메인은 제외하자 너무 잡다한게 많아진다
                             // 길이가 3보다 크면서 서브도메인이
                              
-                            if ((urlReg.length > 2 && urlReg[urlReg.length-2].length > 2 && !newUrl.includes("www.")) || newUrl.includes("login") || newUrl.includes("signup") || newUrl.includes("test")){
-                                continue;
+                            if ((urlReg.length >= 3 && !newUrl.includes("//www.")) 
+                                || newUrl.includes("-")
+                                || newUrl.includes("image.")
+                                || newUrl.includes("support")
+                                || newUrl.includes("tistory")
+                                || newUrl.includes("login")
+                                || newUrl.includes("signup") 
+                                || newUrl.includes("test") 
+                                || newUrl.includes("blog")){
+                                    continue;
                             }
                             if (!enrollSite.has(newUrl) && !tempEnrollSites.has(newUrl)){                                
                                 tempEnrollSites.add(newUrl);
@@ -255,7 +266,8 @@ const start = Date.now();
             }
 
             console.log("사이트 등록 중" + tempEnrollSites.size);
-            for (const addNewUrl of tempEnrollSites){                
+            for (const addNewUrl of tempEnrollSites){  
+                console.log(addNewUrl);
                 // 여기에서 새로 등록 api 추가
                 try {
                     await ApiRequest.axiosPost("/site/daemon", {URL : addNewUrl});
@@ -269,7 +281,7 @@ const start = Date.now();
         
         console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})    ${parseInt((Date.now() - start)/1000)} 초`);        
         // 생각보다 오래걸려서 일부분씩 하자
-        if (cnt/data.length * 100 > 10){
+        if (cnt/data.length * 100 > 95){
             break;
         }
         
