@@ -132,7 +132,6 @@ export class SiteService {
     let urlObj : URL;
     try {
       urlObj = this.constraint.getUrlObj(site.URL);
-
     } catch {
       throw new HttpException({
         errCode : 25,
@@ -142,13 +141,13 @@ export class SiteService {
     }
     const tartgetUrl = this.constraint.correctionUrl(urlObj);
 
-    // 너무 잡다한게 많다 좀 거르자
-    if (tartgetUrl.split(".").length > 3 || tartgetUrl.includes("login") || tartgetUrl.includes("signup") || tartgetUrl.includes("test")){
-      throw new HttpException({
-        errCode : 24,
-        error : "this url can not be created"
-      }, HttpStatus.BAD_REQUEST);
-    }
+    // 너무 잡다한게 많다 좀 거르자 => 여기서 하면 매번 바꿔야 하니까.. 데몬에게 좀 위임하자...
+    // if ((tartgetUrl.split(".").length >=3 && !tartgetUrl.includes("//www.")) || tartgetUrl.includes("login") || tartgetUrl.includes("signup") || tartgetUrl.includes("test")){
+    //   throw new HttpException({
+    //     errCode : 24,
+    //     error : "this url can not be created"
+    //   }, HttpStatus.BAD_REQUEST);
+    // }
 
     // 기존에 있는지 확인
     let previous = await this.findOneByUrlAdmin(tartgetUrl, false);
@@ -377,7 +376,7 @@ export class SiteService {
         break;
       default: //여기가 추천케이스 알고리즘 구현 필요
         orderOption = {
-          Views : orderDesc? "DESC" : "ASC"
+          UpdatedDate : orderDesc? "DESC" : "ASC"
         }
     }
 
@@ -602,7 +601,7 @@ export class SiteService {
 
     // 상태는 2, 3, 4 가 아닌이상은 6으로 변경
 
-    let res = null;
+    // let res = null;
     if (updateSite.Status == 5){
       return await this.sRepo.update({
         SiteId : updateSite.SiteId,
@@ -651,6 +650,7 @@ export class SiteService {
       }, HttpStatus.BAD_REQUEST);
     }
 
+    // https 로 했을 때 실패하는 경우가 가끔 있어서 http로 자동 재 요청하는 로직을 넣을지 아니면 사람에게 맡길지.....
     if (updateSite.Img){
       try {
         updateSite.Img = updateSite.Img.trim();

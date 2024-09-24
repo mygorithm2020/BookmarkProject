@@ -228,10 +228,25 @@ export class Site {
                                 </div>
                                 <div class="info-bottom">
                                     ${siteList[i].Categories && siteList[i].Categories.length > 0? "카테고리 등록" : "카테고리 미등록"}
-                                </div>                                                            
+                                </div>  
+                                                                                          
                             </li>                            
                             <li>
                                 ${siteList[i].SiteDescription}                            
+                            </li>
+                            <li>
+                                <div>
+                                    ${new Date(siteList[i].CreatedDate).toLocaleString()}
+                                </div>
+                                <div>
+                                    (${parseInt((Date.now() - new Date(siteList[i].CreatedDate).getTime())/1000/60/60/24)} 일전)
+                                </div>
+                                <div>
+                                    ${new Date(siteList[i].UpdatedDate).toLocaleString()}                                
+                                </div>
+                                <div>
+                                    (${parseInt((Date.now() - new Date(siteList[i].UpdatedDate).getTime())/1000/60/60/24)} 일전)
+                                </div>
                             </li>                        
                         </ul>                                             
                     </a>

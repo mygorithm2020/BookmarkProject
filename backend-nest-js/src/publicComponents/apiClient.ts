@@ -27,6 +27,7 @@ export class ApiClient{
             headers : {
             Accept : "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
             "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+            "Accept-Encoding" : "gzip, deflate, br"
             
             },
             responseType : 'arraybuffer'
@@ -81,8 +82,7 @@ export class ApiClient{
           }
         }
     
-        if (response){
-          res.Status = 6;
+        if (response){          
           try{    
             // 한글 인코딩 방식 확인 처리, 대부분 utf8이지만 가끔 euckr이 있음
             let contentType = response.headers['content-type']
@@ -132,7 +132,8 @@ export class ApiClient{
                   }                    
                 }
               }              
-            }      
+            }
+            
             // <link rel="shortcut icon" href="//img.danawa.com/new/danawa_main/v1/img/danawa_favicon.ico">
             let metaEl = root.querySelectorAll("meta")
             for (let idx = 0; idx <metaEl.length; idx++){
@@ -165,8 +166,7 @@ export class ApiClient{
               }  
             }
             
-          } catch (err) {
-            res.Status = 5;
+          } catch (err) {            
             console.log(err);
             // throw "data extract failed";
           }

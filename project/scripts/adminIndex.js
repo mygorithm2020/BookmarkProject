@@ -16,8 +16,11 @@ let mainContent01El = document.getElementById("main_content01");
 let addBox = document.getElementById("add-box");
 let spinner = document.querySelector(".loading-spinner");  
 
+const updateDesc = "최근 변경 순";
+const updateAsc = "변경 오래된 순";
+const createDesc = "최근 생성 순";
+const createAsc = "생성 오래된 순";
 
-const selectedStatus = [false, false, false, false, false, false, false, false];
 
 switch(pageKey){
     case "category":
@@ -95,6 +98,8 @@ async function setCategoryPage(){
 
 async function setSitePage(){
 
+    const selectedStatus = [false, false, false, false, false, false, false, false];
+
     addBox.insertAdjacentHTML("beforeend",`
         <form>
             <label>사이트 url    </label> 
@@ -103,10 +108,7 @@ async function setSitePage(){
         </form>
         `);
     
-    const updateDesc = "최근 변경 순";
-    const updateAsc = "변경 오래된 순";
-    const createDesc = "최근 생성 순";
-    const createAsc = "생성 오래된 순";
+    
 
     let siteFilterHtml = "";
     siteFilterHtml += `
@@ -117,6 +119,7 @@ async function setSitePage(){
                 <input type="checkbox" id="status-0" name="status-0" />
                 <label for="status-0"></label>
                 <label for="status-0">전체</label>
+                <span id="status-one-0"></span>
             </li>`;
 
     for (let ii=1; ii < 8; ii++){
@@ -125,6 +128,7 @@ async function setSitePage(){
             <input type="checkbox" id="status-${ii}" name="status-${ii}" />
             <label for="status-${ii}"></label>
             <label for="status-${ii}">${Site.siteStatus[ii]}</label>
+            <span id="status-one-${ii}"></span>
         </li>
         `;
     }    
@@ -154,6 +158,12 @@ async function setSitePage(){
         </div>`
     );
 
+    let addSiteBtn = document.getElementById("add-site");
+    let searchEl = document.querySelector("#search-box > input");
+    let siteSearchForm = document.querySelector("#search-box");
+    const changeEl = document.querySelectorAll(".change-sequence");
+    const showEl = document.querySelector("#sort-value");
+
     // 카테고리 표시
     let cqdsd = new Category();
     Category.categories = await cqdsd.getCategoryAdmin();
@@ -164,10 +174,21 @@ async function setSitePage(){
     //  HTML에 추가
     // mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(sites));
     let showList = [];
+
+    // 뒤로가기 시 간헐적으로 체크가 되어 있으나 값이 안보이는 현상 떄문에 변화 감지 전에 초기화 진행
+    for (let ii=0; ii < 8; ii++){
+        if (document.querySelector(`input[name=status-${ii}]`).checked){
+            selectedStatus[ii] = true;
+        } else {
+            selectedStatus[ii] = false;
+        }
+    }    
+    showList = makeFilteredList(sites, searchEl.value, selectedStatus);
+    initSiteList(showList, showEl.textContent);
+
     // 카드 이벤트 효과 추가
 
-    // 사이트 등록 기능 추가
-    let addSiteBtn = document.getElementById("add-site");
+    // 사이트 등록 기능 추가    
     addSiteBtn.addEventListener("click", async (target) => {
         target.preventDefault();
         spinner.classList.toggle("cover");
@@ -200,9 +221,7 @@ async function setSitePage(){
         addSiteBtn.disabled = false;
     });
 
-    // 검색 기능 추가
-    let searchEl = document.querySelector("#search-box > input");
-    let siteSearchForm = document.querySelector("#search-box");
+    // 검색 기능 추가    
     siteSearchForm.addEventListener("submit", (target)=> {
         target.preventDefault();
         let searchBtn = siteSearchForm.querySelector("#site-search-btn");
@@ -210,7 +229,7 @@ async function setSitePage(){
 
         showList = makeFilteredList(sites, searchEl.value, selectedStatus);
 
-        initSiteList(showList);
+        initSiteList(showList, showEl.textContent);
         searchBtn.disabled = false;
         // let siteList = mainContent01El.querySelector("#site-card-box");
         // if (siteList){
@@ -224,71 +243,15 @@ async function setSitePage(){
         document.querySelector(`input[name=status-${ii}]`).addEventListener("change", ()=>{
             selectedStatus[ii] = !selectedStatus[ii];
             showList = makeFilteredList(sites, searchEl.value, selectedStatus);
-            initSiteList(showList);
+            initSiteList(showList, showEl.textContent);
         })
     }  
 
-    // 정렬기준 변경기능
-    const changeEl = document.querySelectorAll(".change-sequence");
-    const showEl = document.querySelector("#sort-value");
+    // 정렬기준 변경기능    
     for (const cEl of changeEl){
         cEl.addEventListener("click", ()=> {
-            showEl.textContent = cEl.textContent;
-            if (cEl.textContent === updateDesc){ 
-                showList.sort(function(a, b){
-                    if (a.UpdatedDate < b.UpdatedDate){
-                        return 1;
-                    }
-                    if (a.UpdatedDate === b.UpdatedDate){
-                        return 0;
-                    }
-                    if (a.UpdatedDate > b.UpdatedDate){
-                        return -1;        
-                    }
-                });           
-                
-                
-            } else if (cEl.textContent === updateAsc){
-                showList.sort(function(a, b){
-                    if (a.UpdatedDate > b.UpdatedDate){
-                        return 1;
-                    }
-                    if (a.UpdatedDate === b.UpdatedDate){
-                        return 0;
-                    }
-                    if (a.UpdatedDate < b.UpdatedDate){
-                        return -1;        
-                    }
-                });
-
-            } else if (cEl.textContent === createDesc){
-                showList.sort(function(a, b){
-                    if (a.CreatedDate < b.CreatedDate){
-                        return 1;
-                    }
-                    if (a.CreatedDate === b.CreatedDate){
-                        return 0;
-                    }
-                    if (a.CreatedDate > b.CreatedDate){
-                        return -1;        
-                    }
-                }); 
-
-            } else if (cEl.textContent === createAsc){
-                showList.sort(function(a, b){
-                    if (a.CreatedDate > b.CreatedDate){
-                        return 1;
-                    }
-                    if (a.CreatedDate === b.CreatedDate){
-                        return 0;
-                    }
-                    if (a.CreatedDate < b.CreatedDate){
-                        return -1;        
-                    }
-                }); 
-
-            } 
-            initSiteList(showList);
+            showEl.textContent = cEl.textContent;            
+            initSiteList(showList, showEl.textContent);
         })
 
     }
@@ -302,6 +265,7 @@ function setMemberPage(){
 function makeFilteredList(originSiteList, searchValue, statusList){
     let filterdSites = [];
     let tempList = [];
+    let statusCntList = [0, 0, 0, 0, 0, 0, 0, 0];
 
     // 검색 값 없음
     if (!searchValue){
@@ -317,28 +281,97 @@ function makeFilteredList(originSiteList, searchValue, statusList){
             }
         }
     }    
-
+    
     // 상태 전체 선택
     if (statusList[0]){
         filterdSites = tempList;            
+        statusCntList[0] = tempList.length;
     } else {
-        // 상태 일부 선택
+        // 상태 일부 선택        
         for(const oneSite of tempList){
-            if (selectedStatus[oneSite.Status]){
-                filterdSites.push(oneSite);
+            statusCntList[oneSite.Status] += 1;
+            if (statusList[oneSite.Status]){
+                filterdSites.push(oneSite);                
             }                    
         }
     }
 
-    //  정렬 까지 여기다?
+    for (let idx = 0; idx<statusCntList.length; idx ++){
+        if (statusList[idx]){
+            console.log(document.querySelector(`#status-one-${idx}`));
+            document.querySelector(`#status-one-${idx}`).textContent = `(${statusCntList[idx]})`;
+        }
+    }
+
+    
     return filterdSites;
 }
 
-function initSiteList(showSiteList){
+function initSiteList(showSiteList, order){
     let siteList = mainContent01El.querySelector("#site-card-box");
     if (siteList){
         siteList.remove();
-    }        
+    }
+    
+    
+    //  정렬, 디폴트는 최근 업데이트 순
+    if (order === updateDesc || !order){ 
+        showSiteList.sort(function(a, b){
+            if (a.UpdatedDate < b.UpdatedDate){
+                return 1;
+            }
+            if (a.UpdatedDate === b.UpdatedDate){
+                return 0;
+            }
+            if (a.UpdatedDate > b.UpdatedDate){
+                return -1;        
+            }
+        });           
+        
+        
+    } else if (order === updateAsc){
+        showSiteList.sort(function(a, b){
+            if (a.UpdatedDate > b.UpdatedDate){
+                return 1;
+            }
+            if (a.UpdatedDate === b.UpdatedDate){
+                return 0;
+            }
+            if (a.UpdatedDate < b.UpdatedDate){
+                return -1;        
+            }
+        });
+
+    } else if (order === createDesc){
+        showSiteList.sort(function(a, b){
+            if (a.CreatedDate < b.CreatedDate){
+                return 1;
+            }
+            if (a.CreatedDate === b.CreatedDate){
+                return 0;
+            }
+            if (a.CreatedDate > b.CreatedDate){
+                return -1;        
+            }
+        }); 
+
+    } else if (order === createAsc){
+        showSiteList.sort(function(a, b){
+            if (a.CreatedDate > b.CreatedDate){
+                return 1;
+            }
+            if (a.CreatedDate === b.CreatedDate){
+                return 0;
+            }
+            if (a.CreatedDate < b.CreatedDate){
+                return -1;        
+            }
+        }); 
+
+    }
+
+    // 개수 표시
+
     mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(showSiteList));
 }
 

@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Member } from "src/member/entities/member.entity";
 import { Category } from "src/category/entities/category.entity";
+// import { run } from "node:test";
 
 // 나중에 엔터니 내부로 옮겨야 할거 같음
 @Injectable()
@@ -115,7 +116,7 @@ export class Constraint {
   
   getUrlObj(url : string): URL{
 
-      if (url == null){
+      if (!url){
         throw "no url";
       }
   
@@ -123,7 +124,10 @@ export class Constraint {
       if (!url.startsWith("http")){
         url = "https://" + url;
       }
+
       // url 파싱해서 정리
+      url = url.replace("www.", "");
+
       let res = new URL(url);
       return res;
   }
@@ -267,6 +271,11 @@ export class Constraint {
         uSite.OGDescription = uSite.OGDescription.slice(0, 1000);
       }
     }    
+
+    // 이미 유저가 변경한 사이트면 표시 정보 자동 변경 불가능
+    if (uSite.Status == 2 || uSite.Status == 3 || uSite.Status == 4){
+      return;
+    }
     
     if (!uSite.Name){
       if (uSite.OGTitle){
