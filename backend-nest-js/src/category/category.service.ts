@@ -60,6 +60,9 @@ export class CategoryService {
       where : {
         IsDeleted : 0,
         Status : 2
+      },
+      order : {
+        Views : "DESC"
       }
     });
 

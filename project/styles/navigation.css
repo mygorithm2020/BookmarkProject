@@ -133,7 +133,7 @@ nav .selected {
 #subcategory-box {
     padding: 16px;
     display: flex;
-    justify-content: space-around;
+    justify-content: left;
     flex-direction: row;
     flex-wrap: wrap;
     border-top: 20px double gray ;

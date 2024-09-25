@@ -27,6 +27,8 @@ select * from TA_AuthToken where Token LIKE '%eyJh' 'eyJhbGciOiJIUzI1NiIsInR5cCI
 
 select * from ta_site where isdeleted = 0 and (Description LIKE '%중고차%' or SiteDescription LIKE '%중고차%')
 
+update ta_site set isDeleted = 1 where siteId = 'd8f5794ee10843eda11c2e48d0285b6f'
+select * from ta_site order by createdDate desc
 select * from ta_site where siteid = '62fe83ca0943461e9e28491ee6260965'
 select * from ta_site where isDeleted = 0 and status = 2;
 select * from ta_site order by status;
@@ -72,6 +74,8 @@ select * from ta_site where isDeleted = 0 and status != 2;
 select * from ta_site where url = 'https://playground.com';
 select * from ta_site where views > 1;
 select * from ta_member;
+
+select * FROM TA_Category
 
 
 

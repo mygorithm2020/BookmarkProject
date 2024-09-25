@@ -173,8 +173,26 @@ export class Category{
     }
 
     // AJAX
-    getCategoryAdmin(){
-        let data = ApiRequest.axiosGet("/category/admin");
+    async getCategoryAdmin(){
+        let data = await ApiRequest.axiosGet("/category/admin");
+
+        // 정렬
+        if (data){
+            data.sort(function(a, b){
+                if (a.NameKR > b.NameKR){
+                    return 1;
+                }
+                if (a.NameKR === b.NameKR){
+                    return 0;
+                }
+                if (a.NameKR < b.NameKR){
+                    return -1;        
+                }
+            });
+        }
+        
+
+
         // 카테고리 불러오기
         // let data = axios.get(`${this.API_HOST}/category/admin`, { withCredentials: true })
         // .then((result) => {

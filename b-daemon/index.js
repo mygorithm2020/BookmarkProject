@@ -87,7 +87,7 @@ const start = Date.now();
         const res = new Site(one);
         console.log(`${cnt} : ${one.URL} , ${one.Status}`)
         cnt += 1;
-        if (res.Status == 2 || res.Status == 3 || res.Status == 4){
+        if (res.Status == 2 || res.Status == 3 || res.Status == 4 || res.Status == 6 || res.Status == 5){
             continue;
         }
         await (async function example() {
@@ -133,9 +133,7 @@ const start = Date.now();
                 //     pageLoad: 10000, // 30초
                 //     script: 10000 // 30초
                 // });
-
                 
-
                 await driver.get(res.URL);                    
                 // let page = await driver.getPageSource();
 
@@ -214,37 +212,42 @@ const start = Date.now();
                 
                 // 사이트 업데이트
                 console.log(res);
-                await ApiRequest.axiosPatch("/site/daemon", res);
-                
+                await ApiRequest.axiosPatch("/site/daemon", res);                
 
                 //  새로운 사이트 등록
                 console.log("링크 조회 중");
                 let hyperLinks = await driver.findElements(By.css("a"));  
-                for (const hl of hyperLinks){                    
-                    const newS = await hl.getAttribute("href");
+                for (const hl of hyperLinks){                                        
                     try {
-                        if (newS && newS.startsWith('https:')){                            
-                            const urlObj = new URL(newS);                        
-                            const newUrl = urlObj.origin;
-                            const urlReg = newUrl.split(".");
-                            // 서브 도메인은 제외하자 너무 잡다한게 많아진다
-                            // 길이가 3보다 크면서 서브도메인이
-                             
-                            if ((urlReg.length >= 3 && !newUrl.includes("//www.")) 
-                                || newUrl.includes("-")
-                                || newUrl.includes("image.")
-                                || newUrl.includes("support")
-                                || newUrl.includes("tistory")
-                                || newUrl.includes("login")
-                                || newUrl.includes("signup") 
-                                || newUrl.includes("test") 
-                                || newUrl.includes("blog")){
-                                    continue;
+                        const newS = await hl.getAttribute("href");
+                        if (newS){
+                            if (newS.startsWith("//")){
+                                newS = "https:" + newS;
                             }
-                            if (!enrollSite.has(newUrl) && !tempEnrollSites.has(newUrl)){                                
-                                tempEnrollSites.add(newUrl);
-                                enrollSite.add(newUrl);                                
-                            }                      
+
+                            if (newS.startsWith('https:')){                            
+                                const urlObj = new URL(newS);                        
+                                const newUrl = urlObj.origin;
+                                const urlReg = newUrl.split(".");
+                                // 서브 도메인은 제외하자 너무 잡다한게 많아진다
+                                // 길이가 3보다 크면서 서브도메인이
+                                 
+                                if ((urlReg.length >= 3 && !newUrl.includes("//www.")) 
+                                    || newUrl.includes("-")
+                                    || newUrl.includes("image.")
+                                    || newUrl.includes("support")
+                                    || newUrl.includes("tistory")
+                                    || newUrl.includes("login")
+                                    || newUrl.includes("signup") 
+                                    || newUrl.includes("test") 
+                                    || newUrl.includes("blog")){
+                                        continue;
+                                }
+                                if (!enrollSite.has(newUrl) && !tempEnrollSites.has(newUrl)){                                
+                                    tempEnrollSites.add(newUrl);
+                                    enrollSite.add(newUrl);                                
+                                }                      
+                            }
                         }
                     } catch (err) {
 
@@ -275,8 +278,7 @@ const start = Date.now();
 
                 }                
             }    
-            console.log("사이트 등록 끝");        
-            
+            console.log("사이트 등록 끝");
         })();    
         
         console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})    ${parseInt((Date.now() - start)/1000)} 초`);        
