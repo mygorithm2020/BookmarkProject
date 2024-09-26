@@ -76,7 +76,6 @@ const start = Date.now();
 (async function(){
     // 웹사이트를 불러와서
     let data = await ApiRequest.axiosGet("/site/daemon");
-    console.log(data.length);
     //  크롬을 띄워서 해당 사이트 정보 스캔
     for (const one of data){
         enrollSite.add(one.URL);
@@ -136,8 +135,9 @@ const start = Date.now();
                 
                 await driver.get(res.URL);                    
                 // let page = await driver.getPageSource();
-
                 await driver.sleep(3000);
+
+                console.log(await driver.getCurrentUrl());
 
                 // let links = await driver.findElements(By.css("link"));
                 let links = await driver.wait(until.elementsLocated(By.css("link")), 4000);
@@ -215,52 +215,54 @@ const start = Date.now();
                 await ApiRequest.axiosPatch("/site/daemon", res);                
 
                 //  새로운 사이트 등록
-                console.log("링크 조회 중");
-                let hyperLinks = await driver.findElements(By.css("a"));  
-                for (const hl of hyperLinks){                                        
-                    try {
-                        const newS = await hl.getAttribute("href");
-                        if (newS){
-                            if (newS.startsWith("//")){
-                                newS = "https:" + newS;
-                            }
+                // console.log("링크 조회 중");
+                // let hyperLinks = await driver.findElements(By.css("a"));  
+                // for (const hl of hyperLinks){                                        
+                //     try {
+                //         const newS = await hl.getAttribute("href");
+                //         if (newS){
+                //             if (newS.startsWith("//")){
+                //                 newS = "https:" + newS;
+                //             }
 
-                            if (newS.startsWith('https:')){                            
-                                const urlObj = new URL(newS);                        
-                                const newUrl = urlObj.origin;
-                                const urlReg = newUrl.split(".");
-                                // 서브 도메인은 제외하자 너무 잡다한게 많아진다
-                                // 길이가 3보다 크면서 서브도메인이
+                //             if (newS.startsWith('https:')){                            
+                //                 const urlObj = new URL(newS);                        
+                //                 const newUrl = urlObj.origin;
+                //                 const urlReg = newUrl.split(".");
+                //                 // 서브 도메인은 제외하자 너무 잡다한게 많아진다
+                //                 // 길이가 3보다 크면서 서브도메인이
                                  
-                                if ((urlReg.length >= 3 && !newUrl.includes("//www.")) 
-                                    || newUrl.includes("-")
-                                    || newUrl.includes("image.")
-                                    || newUrl.includes("support")
-                                    || newUrl.includes("tistory")
-                                    || newUrl.includes("login")
-                                    || newUrl.includes("signup") 
-                                    || newUrl.includes("test") 
-                                    || newUrl.includes("blog")){
-                                        continue;
-                                }
-                                if (!enrollSite.has(newUrl) && !tempEnrollSites.has(newUrl)){                                
-                                    tempEnrollSites.add(newUrl);
-                                    enrollSite.add(newUrl);                                
-                                }                      
-                            }
-                        }
-                    } catch (err) {
+                //                 if ((urlReg.length >= 3 && !newUrl.includes("//www.")) 
+                //                     || newUrl.includes("-")
+                //                     || newUrl.includes("image.")
+                //                     || newUrl.includes("support")
+                //                     || newUrl.includes("tistory")
+                //                     || newUrl.includes("login")
+                //                     || newUrl.includes("signup") 
+                //                     || newUrl.includes("test") 
+                //                     || newUrl.includes("blog")){
+                //                         continue;
+                //                 }
+                //                 if (!enrollSite.has(newUrl) && !tempEnrollSites.has(newUrl)){                                
+                //                     tempEnrollSites.add(newUrl);
+                //                     enrollSite.add(newUrl);                                
+                //                 }                      
+                //             }
+                //         }
+                //     } catch (err) {
 
-                    }                    
-                }
-                console.log("링크 조회 끝");      
+                //     }                    
+                // }
+                // console.log("링크 조회 끝");      
 
             } catch (err) {
                 console.log(err);
                 console.log(`${res.URL} 등록실패`);
                 // 사이트 조회 실패
-                res.Status = 5;
-                await ApiRequest.axiosPatch("/site/daemon", res);
+                if (res.Status !== 2 && res.Status !== 3 && res.Status !== 4){
+                    res.Status = 5;
+                    await ApiRequest.axiosPatch("/site/daemon", res);
+                }
             } finally {
                 await driver.quit();                 
                 // setTimeout(async () => {
@@ -283,7 +285,7 @@ const start = Date.now();
         
         console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})    ${parseInt((Date.now() - start)/1000)} 초`);        
         // 생각보다 오래걸려서 일부분씩 하자
-        if (cnt/data.length * 100 > 95){
+        if (cnt/data.length * 100 > 85){
             break;
         }
         
