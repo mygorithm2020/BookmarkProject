@@ -161,7 +161,7 @@ jobs:
           exclude : |
             README.md
             **/pages/**    
-            *.html
+            
 
 
       - name: Deploy to production01
