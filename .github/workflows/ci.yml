@@ -1,0 +1,181 @@
+# # 1. 워크플로의 이름 지정
+# name: CI
+
+# # 2. 워크플로가 시작될 조건 지정
+# on:
+#   push:
+#     branches: [CIB]
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest # 3. 실행환경 지정
+#     #4. 실행 스탭 지정
+#     steps:
+#       - uses: actions/checkout@v3
+
+#       # - uses: actions/setup-java@v3
+#       #   with:
+#       #     distribution: 'zulu'
+#       #     java-version: '17'
+      
+#       # - name: Grant execute permission for gradlew
+#       #   run : chmod +x gradlew
+      
+#       # - name: Build with Gradle
+#       #   run: ./gradlew clean build
+
+
+# name: GitHub Actions Demo
+# run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+# on: [push]
+# jobs:
+#   Explore-GitHub-Actions:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+#       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+#       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+#       - name: Check out repository code
+#         uses: actions/checkout@v4
+#       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+#       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+#       - name: List files in the repository
+#         run: |
+#           ls ${{ github.workspace }}
+#       - run: echo "🍏 This job's status is ${{ job.status }}."
+
+
+# 액션 구분 용 큰 카테고리, 실제 리스트는 커밋 메시지로 구분
+name: CI/CD for NestJS project
+
+# 워크플로 실행 조건 설정
+on:
+  # 이벤트   
+  push:
+    # 세부 조건
+    branches: [ v2 ] # 테스트 이후 실제 브랜치로 변경
+
+# 작업
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.10.x'
+          
+      - name: List files in the repository
+        run: |
+          ls -a
+      - run: git branch -a
+      # - run: cd ${{ github.workspace }}/backend-nest-js
+      - name: Install dependencies
+        # run: echo "npm ci"
+        run: cd backend-nest-js; npm ci
+      - name: Build
+        # run: echo "npm run build"
+        run: cd backend-nest-js; npm run build
+      - name: Test
+        run: echo "npm run test"
+
+  BackDeploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ssh 접속 방법
+      # - name: Set up SSH
+      #   uses: webfactory/ssh-agent@v0.9.0
+      #   with:
+      #     ssh-private-key: ${{ secrets.KEY }}
+
+      # - name: Deploy to server
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} <<EOF
+      #       ls -a
+      #       node -v
+      #       echo $SHELL
+      #       echo $HOME
+      #       echo $PATH
+      #       export PATH="/home/mygori2024/.nvm/v20.16.0/bin:$PATH"
+      #       echo $PATH
+      #       source .nvm/nvm.sh
+      #       node -v
+      #       nvm -v            
+      #       nvm ls
+      #     EOF
+      
+      # uses로 다른 방법으로 ssh 접속 방법
+      - name: excuting remote ssh commands
+        uses: appleboy/ssh-action@v1.0.3 #ssh 접속
+        with:
+          host: ${{ secrets.BACK_HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.BACK_SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            echo $HOME
+            echo $SHELL
+            echo $PATH
+            ls -a
+            node -v
+            nvm -v
+            source .nvm/nvm.sh
+            node -v
+            nvm -v
+            nvm use 20.16.0
+            cd BookmarkProject/backend-nest-js
+            git pull origin v2
+            npm run build
+            # 기존 NestJS 애플리케이션을 멈춤
+            if screen -list | grep -q nestjs; then
+              screen -X -S nestjs quit
+              echo "Stopped existing NestJS application."
+            else
+              echo "No running application found."
+            fi
+
+            screen -dmS nestjs npm run start:prod
+            echo "Started new NestJS application"
+
+  frontDeploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to production02
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FRONT_HOST }}
+          # protocol : ftps
+          # port : 22
+          username: ${{ secrets.FRONT_USERNAME }}
+          password: ${{ secrets.FRONT_PASSWORD }}
+          local-dir : ./project/
+          server-dir : ./
+          # 로컬 서버의 README 와 pages 폴더 제외, 서버경로의 기존 html 파일 제외
+          exclude : |
+            README.md
+            **/pages/**    
+            *.html
+
+
+      - name: Deploy to production01
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FRONT_HOST }}
+          # protocol : ftps
+          # port : 22
+          username: ${{ secrets.FRONT_USERNAME }}
+          password: ${{ secrets.FRONT_PASSWORD }}
+          local-dir : ./project/pages/
+          server-dir : ./
+          # 서버경로의 기존 모든 폴더 제외, 아이콘 제외
+          exclude: |
+            **/*/**
+            *.ico
+      
