@@ -39,7 +39,7 @@ a:hover {
 
 #site-search-form>input {    
     margin-right: 10px;
-    padding: 12px;
+    padding: 10px;
     border-radius: 12px;
     width: 36%;
     font-size: 1.1rem;
@@ -88,14 +88,15 @@ nav .selected {
 
 
 #category-open {
+    padding-left: 4px;
     max-width: 50px;
-    max-height: 40px;    
+    max-height: 30px;    
 }
 
 
 
 #nav_list_box {
-    font-size: 1.1rem;
+    font-size: calc(0.8rem + 0.2vw + 0.2vh);
     display: flex;
     justify-content: space-around;
     flex-direction: row;
@@ -178,7 +179,7 @@ nav .selected {
 @media screen and (max-width:640px) {    
     #nav_list_box {
         flex-wrap: nowrap;
-        overflow: scroll;        
+        overflow: scroll;     
     }
 
     #site-search-form>input {    

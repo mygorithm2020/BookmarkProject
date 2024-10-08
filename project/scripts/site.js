@@ -13,6 +13,7 @@ export class Site {
         5 : "자동등록실패",
         6 : "자동등록성공",
         7 : "자동등록보류",
+        8 : "자동등록"
     }
 
     constructor(siteInfo){
@@ -196,65 +197,63 @@ export class Site {
     static listToHtmlForAdmin(siteList){
         let res = "";
 
-        res += `<ul id="site-card-box" class="bg-color-3">`
-        if (!siteList || siteList.length === 0){
-            res += `<div class="no-data-templet">등록된 사이트가 없습니다.</div>`;
-
-        } else {
-            for (let i = 0 ; i < siteList.length; i++){
-                if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
-                    siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
-                }
-                res += `
-                <li class="site-card">
-                    <a class="external_link" href="siteDetail.html?site=${siteList[i].SiteId}"  rel="external" data-siteId=${siteList[i].SiteId}>
-                        <ul class="site-card-list">
-                            <li>
-                                <img class="site_card_img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ? this.IMG_HOST + "/" + siteList[i].SiteId + "/" + siteList[i].Img : '../images/noImage.jpg'}" alt="no images">    
-                            </li>
-                            <li>
-                                <div class="info-top">
-                                    ${siteList[i].URL}
-                                </div>  
-                                <div class="info-bottom">
-                                    ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}
-                                </div>                                
-                            </li>
-                            <li>
-                                <div class="info-top">
-                                    ${this.siteStatus[siteList[i].Status]}
-                                </div>
-                                <div class="info-bottom">
-                                    ${siteList[i].Categories && siteList[i].Categories.length > 0? "카테고리 등록" : "카테고리 미등록"}
-                                </div>  
-                                                                                          
-                            </li>                            
-                            <li>
-                                ${siteList[i].SiteDescription}                            
-                            </li>
-                            <li>
-                                <div>
-                                    ${new Date(siteList[i].CreatedDate).toLocaleString()}
-                                </div>
-                                <div>
-                                    (${parseInt((Date.now() - new Date(siteList[i].CreatedDate).getTime())/1000/60/60/24)} 일전)
-                                </div>
-                                <div>
-                                    ${new Date(siteList[i].UpdatedDate).toLocaleString()}                                
-                                </div>
-                                <div>
-                                    (${parseInt((Date.now() - new Date(siteList[i].UpdatedDate).getTime())/1000/60/60/24)} 일전)
-                                </div>
-                            </li>                        
-                        </ul>                                             
-                    </a>
-                </li>`;
-            }
+        if (!siteList || siteList.length == 0){
+            return res;
         }
-        
+
+        for (let i = 0 ; i < siteList.length; i++){
+            if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
+                siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
+            }
+            res += `
+            <li class="site-card">
+                <a class="external_link" href="siteDetail.html?site=${siteList[i].SiteId}"  rel="external" data-siteId=${siteList[i].SiteId}>
+                    <ul class="site-card-list">
+                        <li>
+                            ${i+1}
+                        </li>
                         
-        res += `
-        </ul>`
+                        <li>
+                            <img class="site_card_img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ? this.IMG_HOST + "/" + siteList[i].SiteId + "/" + siteList[i].Img : '../images/noImage.jpg'}" alt="no images">    
+                        </li>
+                        <li>
+                            <div class="info-top">
+                                ${siteList[i].URL}
+                            </div>  
+                            <div class="info-bottom">
+                                ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}
+                            </div>                                
+                        </li>
+                        <li>
+                            <div class="info-top">
+                                ${this.siteStatus[siteList[i].Status]}
+                            </div>
+                            <div class="info-bottom">
+                                ${siteList[i].Categories && siteList[i].Categories.length > 0? "카테고리 등록" : "카테고리 미등록"}
+                            </div>  
+                                                                                      
+                        </li>                            
+                        <li>
+                            ${siteList[i].SiteDescription}                            
+                        </li>
+                        <li>
+                            <div>
+                                ${new Date(siteList[i].CreatedDate).toLocaleString()}
+                            </div>
+                            <div>
+                                (${parseInt((Date.now() - new Date(siteList[i].CreatedDate).getTime())/1000/60/60/24)} 일전)
+                            </div>
+                            <div>
+                                ${new Date(siteList[i].UpdatedDate).toLocaleString()}                                
+                            </div>
+                            <div>
+                                (${parseInt((Date.now() - new Date(siteList[i].UpdatedDate).getTime())/1000/60/60/24)} 일전)
+                            </div>
+                        </li>                        
+                    </ul>                                             
+                </a>
+            </li>`;
+        }
 
         return res;
     }

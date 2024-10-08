@@ -21,6 +21,9 @@ const updateAsc = "변경 오래된 순";
 const createDesc = "최근 생성 순";
 const createAsc = "생성 오래된 순";
 
+let pageCnt = 0;
+const onepageCnt = 30; // 한번에 표시하는 개수
+
 
 switch(pageKey){
     case "category":
@@ -119,7 +122,7 @@ async function setSitePage(){
                 <span id="status-one-0"></span>
             </li>`;
 
-    for (let ii=1; ii < 8; ii++){
+    for (let ii=1; ii < 9; ii++){
         siteFilterHtml += `
         <li>
             <input type="checkbox" id="status-${ii}" name="status-${ii}" />
@@ -152,7 +155,10 @@ async function setSitePage(){
             <button class="change-sequence">${createDesc}</button>
             <button class="change-sequence">${createAsc}</button>
             <span id="sort-value">${updateDesc}</span>
-        </div>`
+        </div>
+        <ul id="site-card-box" class="bg-color-3">
+            <div class="no-data-templet">등록된 사이트가 없습니다.</div>
+        </ul>`
     );
 
     let addSiteBtn = document.getElementById("add-site");
@@ -314,8 +320,14 @@ function makeFilteredList(originSiteList, searchValue, statusList){
 
 function initSiteList(showSiteList, order){
     let siteList = mainContent01El.querySelector("#site-card-box");
+    console.log(siteList);
     if (siteList){
-        siteList.remove();
+        // siteList.remove();
+        siteList.textContent = "";
+    }
+    const showMoreBtn = mainContent01El.querySelector("#show-more-site");
+    if (showMoreBtn){
+        showMoreBtn.remove();
     }
     
     
@@ -375,8 +387,29 @@ function initSiteList(showSiteList, order){
 
     }
 
+    if (!showSiteList || showSiteList.length == 0){
+        siteList.insertAdjacentHTML("beforeend", `<div class="no-data-templet">등록된 사이트가 없습니다.</div>`);
+        return;
+    }
     // 개수 표시
+    siteList.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(showSiteList.slice(onepageCnt * pageCnt, onepageCnt * (pageCnt+1))));
 
-    mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(showSiteList));
+    if (showSiteList.length > onepageCnt * (pageCnt+1)){
+        siteList.insertAdjacentHTML("afterend", "<button id='show-more-site'>더보기</button>");        
+        mainContent01El.querySelector("#show-more-site").addEventListener("click", ()=> {      
+            pageCnt ++;
+            if (showSiteList && showSiteList.length > onepageCnt * pageCnt){
+                siteList.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(showSiteList.slice(onepageCnt * pageCnt, onepageCnt * (pageCnt+1))));
+                if (showSiteList.length <= onepageCnt * (pageCnt+1)){
+                    mainContent01El.querySelector("#show-more-site").remove();   
+                    siteList.insertAdjacentHTML("afterend", "<div id='show-more-site'></div>");
+                }
+            }             
+        })
+    }
+
+    
+
+    
 }
 

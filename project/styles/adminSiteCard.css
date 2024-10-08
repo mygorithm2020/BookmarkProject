@@ -21,14 +21,14 @@
 }
 
 .site-card-list > li:first-child {
-    padding: 6px;
-    flex: 4;    
+    /* padding: 6px; */
+    flex: 1;    
     text-align: center;
 }
 
 .site-card-list > li {
     padding: 6px;
-    flex: 3;
+    flex: 5;
     overflow: hidden;
     color: black;    
 }
