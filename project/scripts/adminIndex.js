@@ -264,6 +264,9 @@ function setMemberPage(){
 
 function makeFilteredList(originSiteList, searchValue, statusList){
     let filterdSites = [];
+    if (!originSiteList || originSiteList.length == 0){
+        return filterdSites;
+    }
     let tempList = [];
     let statusCntList = [0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -273,13 +276,18 @@ function makeFilteredList(originSiteList, searchValue, statusList){
     } else {
         // 검색 값 없음
         searchValue = searchValue.toLowerCase();
-        for(const oneSite of originSiteList){
-            if ((oneSite.URL && oneSite.URL.includes(searchValue)) || 
-            (oneSite.Name &&  oneSite.Name.includes(searchValue)) || 
-            (oneSite.NameKR && oneSite.NameKR.includes(searchValue))){
-                tempList.push(oneSite);
-            }
-        }
+        tempList = originSiteList.filter((item) => {
+            return (item.URL && item.URL.includes(searchValue)) || 
+            (item.Name &&  item.Name.includes(searchValue)) || 
+            (item.NameKR && item.NameKR.includes(searchValue))
+        })
+        // for(const oneSite of originSiteList){
+        //     if ((oneSite.URL && oneSite.URL.includes(searchValue)) || 
+        //     (oneSite.Name &&  oneSite.Name.includes(searchValue)) || 
+        //     (oneSite.NameKR && oneSite.NameKR.includes(searchValue))){
+        //         tempList.push(oneSite);
+        //     }
+        // }
     }    
     
     // 상태 전체 선택

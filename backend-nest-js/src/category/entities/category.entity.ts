@@ -49,6 +49,9 @@ export class Category {
     @Column()
     Sequence : number;
 
+    @Column()
+    Views : number;
+
     @Column({
         type : "smallint",
         nullable : false,

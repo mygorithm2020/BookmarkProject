@@ -125,8 +125,9 @@ export class Constraint {
         url = "https://" + url;
       }
 
-      // url 파싱해서 정리
-      url = url.replace("www.", "");
+      // www. 가 붙는 경우가 있고 안붙는 경우가 있어서 같은걸로 취급하려했는데,,,, 하나는 되고 하나는 안되는 경우가 있어버리네...
+      // url 파싱해서 정리 => 안되는 경우가 있네...
+      // url = url.replace("www.", "");
 
       let res = new URL(url);
       return res;
@@ -202,6 +203,10 @@ export class Constraint {
     if(!site.Status){
       site.Status = 1;
     }
+
+    // 반응형이야 고려 대상이 아니고 적응형 페이지들의 경우
+    // 모바일 페이지는 예를 들어 //m. 이런 페이지는 따로 설정 안해도 모바일 기기에서 접속하면 해당 페이지들이 알아서 리다이렉트를 설정해둔거 같은데..... 그러면.. .흠
+    // 굳이 내가 따로 뭔가 설정을 할 필요는 없어 보이는데..
 
     if (!site.FaviconImg && site.Status == 6){
       try{

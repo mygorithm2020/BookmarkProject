@@ -75,21 +75,20 @@ export class Site {
                 <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
                     <div class="site-card-top ">                    
                         <img class="site-card-img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ?Site.IMG_HOST + "/" + siteList[i].SiteId + "/" + siteList[i].Img : siteList[i].Img}" alt="no images">
-                        
-                    </div>
-                    <div class="site-card-mid bg-color-5">
-                        <div>
-                            ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
-                        </div>
                         <ul class="site-detail-box">
-                            
-                            
-                                                         
-                        </ul>
+                                                            
+                        </ul>                        
                     </div>
-                    <p class="site-card-bottom bg-color-5">
-                        ${siteList[i].SiteDescription? siteList[i].SiteDescription : ""}   
-                    </p>                         
+                    <div class="site-card-text-box bg-color-5">
+                        <div class="site-card-mid bg-color-5">
+                            <div>
+                                ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
+                            </div>                            
+                        </div>
+                        <p class="site-card-bottom bg-color-5">
+                            ${siteList[i].SiteDescription? siteList[i].SiteDescription : ""}   
+                        </p>    
+                    </div>                                         
                 </a>     
                   
             </li>`;

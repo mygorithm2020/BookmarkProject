@@ -1,5 +1,7 @@
 /* 헤더와 푸터용 css 파일 */
 
+
+
 #header-full-box {
     max-width: 1280px;
     margin: 0 auto;
@@ -31,8 +33,7 @@
     max-width: 360px;
 }
 
-#header_main_logo {
-    
+#header_main_logo {    
     height: 100%;
 }
 
@@ -88,7 +89,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.288);
     z-index: 5;
-    transition: all 0.4s;
+    transition: all 0.4s ease-out;
 
 }
 
@@ -103,7 +104,7 @@
     border-radius: 10px;
     box-shadow: 0px 40px 20px 10px rgba(0, 0, 0, 0.765);   
     z-index: 10;
-    transition: all 0.4s;
+    transition: all 0.4s ease-out;
 }
 
 #close-btn{
@@ -169,6 +170,18 @@
     margin: 10px;
     padding-left: 20px;
 } */
+
+
+@media screen and (max-width:768px) {
+    #header_nav {
+        float: right;
+        display: flex;
+        flex-direction: row;        
+    }    
+    #header_nav>li:last-child{
+        display: none;
+    }
+}
 
 
 

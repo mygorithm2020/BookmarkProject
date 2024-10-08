@@ -1,14 +1,3 @@
-// console.log("Sdsd");
-// console.log(parseInt(null)? "ss": "aa");
-// console.log(parseInt(undefined));
-
-// const q = "https://login.sendgrid.com/";
-// const w = q.split(".");
-// console.log(w);
-// console.log(w[w.length-2]);
-// return;
-
-
 //ES6
 // import { ApiRequest } from './ApiRequest.js';
 // import pkg from "selenium-webdriver";
@@ -76,7 +65,8 @@ const start = Date.now();
 (async function(){
     // 웹사이트를 불러와서
     let data = await ApiRequest.axiosGet("/site/daemon");
-    console.log(data.length);
+    // 내가 임의의 사이트를 보내기
+    // data = [{URL : "test.com"}]
     //  크롬을 띄워서 해당 사이트 정보 스캔
     for (const one of data){
         enrollSite.add(one.URL);
@@ -84,43 +74,19 @@ const start = Date.now();
 
     let cnt = 0;    
     for (const one of data){                
-        const res = new Site(one);
-        console.log(`${cnt} : ${one.URL} , ${one.Status}`)
+        const res = new Site(one);        
         cnt += 1;
-        if (res.Status == 2 || res.Status == 3 || res.Status == 4){
+        console.log(`${cnt} : ${one.URL} , ${one.Status}`)
+        if (res.Status == 2 || res.Status == 3 || res.Status == 4 || res.Status == 5 || res.Status == 8 || res.Status == 6){
             continue;
         }
         await (async function example() {
             
-            // let driver = await new Builder().forBrowser('chrome').build();
-            // try {
-            //     // Google 홈페이지로 이동
-            //     await driver.get(one.URL);
-
-            //     // 페이지 제목 출력
-            //     let title = await driver.getTitle();
-            //     console.log('Page title is:', title);
-            // } finally {
-            //     // 브라우저 닫기
-            //     await driver.quit();
-            // }
-
-            // let options = new Options();
-            // options.addArguments('--headless'); // Headless 모드
-
-            // let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
-            // try {
-            //     await driver.get("https://kr.hotels.com");
-            //     let title = await driver.getTitle();
-            //     console.log('Page title is:', title);
-            // } finally {
-            //     await driver.quit();
-            // }
-
             let options = new chrome.Options();
             // options.addArguments('--headless'); // 백그라운드 실행 옵션
             options.windowSize({ width : 800,  height : 450});
 
+            // let driver = await new Builder().forBrowser('chrome').build();
             let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
             // let options = new Options(driver);
             // options.addArguments('--headless'); // Headless 모드
@@ -128,17 +94,15 @@ const start = Date.now();
             let tempEnrollSites = new Set();
 
             try {
-                // await driver.manage().setTimeouts({
-                //     implicit: 3000, // 10초
-                //     pageLoad: 10000, // 30초
-                //     script: 10000 // 30초
-                // });
-
+                // 창 열리는 만료 시간
+                await driver.manage().setTimeouts({
+                    implicit: 10000, // 10초
+                    pageLoad: 10000, // 30초
+                    script: 10000 // 30초
+                });
                 
-
                 await driver.get(res.URL);                    
                 // let page = await driver.getPageSource();
-
                 await driver.sleep(3000);
 
                 // let links = await driver.findElements(By.css("link"));
@@ -164,12 +128,7 @@ const start = Date.now();
 
                 // let metaEl = await driver.findElements(By.css("meta"));
                 let metaEl = await driver.wait(until.elementsLocated(By.css("meta")), 4000);
-                for (let idx = 0; idx <metaEl.length; idx++){
-                    // console.log(metaEl[idx].rawAttrs);
-                    // // console.log(`name : ${metaEl[idx].getAttribute("name")}`);
-                    // // console.log(`property : ${metaEl[idx].getAttribute("property")}`);
-                    // // console.log(`attri : ${JSON.stringify(metaEl[idx].attrs)}`);
-                    // console.log("------------------------");     
+                for (let idx = 0; idx <metaEl.length; idx++){                    
                     let metaFromName = await metaEl[idx].getAttribute("name");
                     let metaFromProperty = await metaEl[idx].getAttribute("property");
                     let metaFromId = await metaEl[idx].getAttribute("id");
@@ -207,57 +166,76 @@ const start = Date.now();
                     }                    
                 }
                 
+                const curUrl = await driver.getCurrentUrl();
+                const curUrlObj = new URL(curUrl);                
+                // 등록된 url 과 열리는 창이 다르면 (redirect) 된다면 이미 공개된 경우를 제외하곤 비공개로 전환                
+                if (res.URL !== curUrlObj.origin && res.Status != 2){
+                    console.log(`다르다고? : ${curUrlObj.origin}`);
+                    res.Status = 4;
+                }
 
-                if (res.Status == 1 || res.Status == 5 || res.Status == 6){
+                if (res.Status == 1 || res.Status == 5 || res.Status == 8){
                     res.Status = 6;
                 }
                 
                 // 사이트 업데이트
-                console.log(res);
-                await ApiRequest.axiosPatch("/site/daemon", res);
-                
+                console.log(JSON.stringify(res));
+                if (res.SiteId){
+                    await ApiRequest.axiosPatch("/site/daemon", res);                
+                }
 
                 //  새로운 사이트 등록
                 console.log("링크 조회 중");
                 let hyperLinks = await driver.findElements(By.css("a"));  
-                for (const hl of hyperLinks){                    
-                    const newS = await hl.getAttribute("href");
+                for (const hl of hyperLinks){                                        
                     try {
-                        if (newS && newS.startsWith('https:')){                            
-                            const urlObj = new URL(newS);                        
-                            const newUrl = urlObj.origin;
-                            const urlReg = newUrl.split(".");
-                            // 서브 도메인은 제외하자 너무 잡다한게 많아진다
-                            // 길이가 3보다 크면서 서브도메인이
-                             
-                            if ((urlReg.length >= 3 && !newUrl.includes("//www.")) 
-                                || newUrl.includes("-")
-                                || newUrl.includes("image.")
-                                || newUrl.includes("support")
-                                || newUrl.includes("tistory")
-                                || newUrl.includes("login")
-                                || newUrl.includes("signup") 
-                                || newUrl.includes("test") 
-                                || newUrl.includes("blog")){
-                                    continue;
+                        const newS = await hl.getAttribute("href");
+                        if (newS){
+                            if (newS.startsWith("//")){
+                                newS = "https:" + newS;
                             }
-                            if (!enrollSite.has(newUrl) && !tempEnrollSites.has(newUrl)){                                
-                                tempEnrollSites.add(newUrl);
-                                enrollSite.add(newUrl);                                
-                            }                      
+
+                            if (newS.startsWith('https:')){                            
+                                const urlObj = new URL(newS);                        
+                                const newUrl = urlObj.origin;
+                                const urlReg = newUrl.split(".");
+                                // 서브 도메인은 제외하자 너무 잡다한게 많아진다
+                                // 길이가 3보다 크면서 서브도메인이
+                                
+                                if ((urlReg.length >= 3 && !newUrl.includes("//www.")) 
+                                    || newUrl.includes("-")
+                                    || newUrl.includes("image.")
+                                    || newUrl.includes("support")
+                                    || newUrl.includes("tistory")
+                                    || newUrl.includes("login")
+                                    || newUrl.includes("signup") 
+                                    || newUrl.includes("test") 
+                                    || newUrl.includes("blog")
+                                    || newUrl.includes(".go.kr")
+                                    || newUrl.includes(".or.kr")){
+                                        continue;
+                                }
+                                if (!enrollSite.has(newUrl) && !tempEnrollSites.has(newUrl)){                                
+                                    tempEnrollSites.add(newUrl);
+                                    enrollSite.add(newUrl);                                
+                                }                      
+                            }
                         }
                     } catch (err) {
 
                     }                    
                 }
-                console.log("링크 조회 끝");      
+                console.log("링크 조회 끝");    
+                  
 
             } catch (err) {
                 console.log(err);
-                console.log(`${res.URL} 등록실패`);
+                console.log(`${res.URL} 자동등록실패`);
                 // 사이트 조회 실패
-                res.Status = 5;
-                await ApiRequest.axiosPatch("/site/daemon", res);
+                if (res.Status !== 2 && res.Status !== 3 && res.Status !== 4){
+                    res.Status = 5;
+                    await ApiRequest.axiosPatch("/site/daemon", res);
+                }
             } finally {
                 await driver.quit();                 
                 // setTimeout(async () => {
@@ -270,18 +248,17 @@ const start = Date.now();
                 console.log(addNewUrl);
                 // 여기에서 새로 등록 api 추가
                 try {
-                    await ApiRequest.axiosPost("/site/daemon", {URL : addNewUrl});
+                    await ApiRequest.axiosPost("/site/daemon", {URL : addNewUrl, Status : 8});
                 } catch (err) {
 
                 }                
             }    
-            console.log("사이트 등록 끝");        
-            
+            console.log("사이트 등록 끝");
         })();    
         
         console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})    ${parseInt((Date.now() - start)/1000)} 초`);        
         // 생각보다 오래걸려서 일부분씩 하자
-        if (cnt/data.length * 100 > 95){
+        if (cnt/data.length * 100 > 90){
             break;
         }
         

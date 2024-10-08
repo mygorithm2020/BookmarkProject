@@ -170,8 +170,26 @@ export class Category{
     }
 
     // AJAX
-    getCategoryAdmin(){
-        let data = ApiRequest.axiosGet("/category/admin");
+    async getCategoryAdmin(){
+        let data = await ApiRequest.axiosGet("/category/admin");
+
+        // 정렬
+        if (data){
+            data.sort(function(a, b){
+                if (a.NameKR > b.NameKR){
+                    return 1;
+                }
+                if (a.NameKR === b.NameKR){
+                    return 0;
+                }
+                if (a.NameKR < b.NameKR){
+                    return -1;        
+                }
+            });
+        }
+        
+
+
         // 카테고리 불러오기
         // let data = axios.get(`${this.API_HOST}/category/admin`, { withCredentials: true })
         // .then((result) => {
@@ -276,8 +294,6 @@ export class Category{
             subCate += "</ul></li>";
         }
         subCategoryBox.insertAdjacentHTML("beforeend", subCate);
-        
-        
 
         // 카테고리 바 확장
         document.getElementById("category-open").addEventListener("click", e => {        
@@ -294,7 +310,6 @@ export class Category{
             //     cate.style.display = "none";        
             // }
         });
-
     }
 
     // 카테고리 리스트를 보기 좋게 그룹화하기 리스트 변경

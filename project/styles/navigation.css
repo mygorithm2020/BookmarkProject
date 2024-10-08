@@ -12,7 +12,6 @@ nav {
     top: 80px;
     left: 0;
     right: 0; */
-    
 }
 
 #navigation{
@@ -86,30 +85,39 @@ nav .selected {
     align-items: center;
 }
 
+
+
 #category-open {
     max-width: 50px;
     max-height: 40px;    
 }
 
+
+
 #nav_list_box {
     font-size: 1.1rem;
     display: flex;
     justify-content: space-around;
+    flex-direction: row;
     width: 90%;
+    flex-wrap: wrap;
 }
 
 #nav_list_box > li {
+    flex: 0 0 auto;
     display: inline-block;
     margin: 5px;
     min-width: 30px;
+    padding: 4px;
     text-align: center;    
 }
 /* 너비 좁아지면 카테고리 사이드로 빼자 세로로 */
 
-#nav_list_box li a {
-    padding: 12px;
+#nav_list_box>li>a {
+    padding: 8px;
     color: black;
     border-radius: 6px;
+    white-space: nowrap;
 }
 
 #category-box-show {
@@ -120,9 +128,11 @@ nav .selected {
 
 #category-box-expand{
     position: absolute;
-    width: 1280px;
+    max-width: 1280px;
+    width: 100%;
     margin: 0;
-    transition: all 0.4s;    
+    transition: all 0.5s;
+    transition-timing-function: ease-out;    
 }
 
 #category-box-expand-active{
@@ -133,13 +143,14 @@ nav .selected {
 #subcategory-box {
     padding: 16px;
     display: flex;
-    justify-content: space-around;
+    justify-content: left;
     flex-direction: row;
     flex-wrap: wrap;
     border-top: 20px double gray ;
 }
 
 #subcategory-box > li {
+    flex: 0 0 auto;
     color: black;
     padding: 6px;
     min-width: 16%;
@@ -161,4 +172,17 @@ nav .selected {
 
 .category-expand-each-box > li{
     padding: 6px;
+}
+
+
+@media screen and (max-width:640px) {    
+    #nav_list_box {
+        flex-wrap: nowrap;
+        overflow: hidden;
+        
+    }
+
+    #site-search-form>input {    
+        width: 80%;
+    }
 }
