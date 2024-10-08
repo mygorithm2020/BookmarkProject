@@ -1,35 +1,47 @@
 /* 사이트 연결 카드 구현 (재활용 가능) */
 
 #site-card-box {
-    display: grid;
-    grid-template-columns: 25% 25% 25% 25%;    
+    /* display: grid;
+    grid-template-columns: 25% 25% 25% 25%;     */
     /* grid-template-columns: 25% 25% 25% 25%; */    
-    /* display: flex;
+    display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    flex-direction: row; */
+    flex-direction: row;
     /* align-content: stretch; */
     padding: 0;
+    /* transform-style: preserve-3d;
+    perspective: 100px;
+    perspective-origin: 10px 20px; */
+    
 }
 
-#site-card-box>li {
+.site-card {
     /* border: 2px solid #f1f3f6; */
     /* 배경 색 나중에 바꾸자 */
-    /* width: calc(100% / 3); */
+    /* width: calc(100% / 4); */
+    flex: 0 0 24%;
+    /* flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 24%;     */
     height: 220px;
     /* background-color: #f1f3f6; */
-    margin: 6px;
-    margin-bottom: 10px;
+    margin: 0.5%;
     font-size: calc(0.9rem + 0.1vw + 0.1vh);
     overflow: hidden;
     border: 3px solid #f1f3f6;
-    border-radius: 6% 6%;
+    border-radius: 3% 3%;    
+    
+}
+
+.site-card>a{
+    
 }
 
 #site-card-box>li:hover {
     box-shadow: 0px 0px 10px 0px gray;    
     z-index: 2;
-    overflow: visible;
+    /* overflow: visible; */
     border-radius: 0;   
 }
 
@@ -54,7 +66,6 @@
     padding: 2px;
     padding-left: 4%;
     transition: transform 0.3s; /* 애니메이션 효과 추가 */
-    
 }
 
 /* 나중에 좋아요 생기면 디자인 변경하면서 이미지 오른쪽에 추가 */
@@ -66,10 +77,13 @@
     padding: 10px;
 } */
 
+.site-card-text-box{
+    height: 50%;
+}
+
 /* 지금 방문수 주석처리해서 임시로 top padding 추가*/
 .site-card-mid {
     width: 100%;
-    height: 24%;
     padding: 8px;
     color: black;
 }
@@ -83,23 +97,64 @@
     white-space: nowrap;
 }
 
-.site-card-mid >ul {
+/* .site-card-mid >ul {
     height: 35%;
     font-size: calc(0.6rem + 0.2vw + 0.2vh);
     margin-top: 2%;
-}
+} */
 
 
 .site-card-bottom{
     width: 100%;
-    height: 26%;
     padding: 8px;
     font-size: calc(0.6rem + 0.2vw + 0.2vh);
     margin: 0;
     overflow: hidden;
     color: black;
+    word-wrap: break-word;
 }
 
 .site-card-bottom:hover{
     font-weight: bold;
+}
+
+
+
+@media screen and (max-width:640px) {
+    #site-card-box{    
+        flex-direction: column;            
+    }    
+
+    .site-card {
+        width: 99%;        
+    }
+
+    .external_link {
+        display: flex; 
+        flex-direction: row;        
+        /* flex-wrap: wrap; */
+        flex: 1 0 20%;
+        height: 100px;        
+        width: 100%;
+    }
+
+    .site-card-top {
+        flex: 0 0 30%;
+        width: 30%;
+        height: 100%;
+    }
+
+    .site-card-img {
+        max-width: 90%;
+        height: 100%;
+        
+    }
+
+    .site-card-text-box {
+        flex: 0 0 70%;
+        height: 100%;
+        width: 70%;
+    }
+
+    
 }

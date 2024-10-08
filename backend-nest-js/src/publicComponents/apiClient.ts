@@ -100,6 +100,7 @@ export class ApiClient{
             for (let idx = 0; idx <metas.length; idx++){
               if (metas[idx].getAttribute("http-equiv") &&
               metas[idx].getAttribute("http-equiv").toLowerCase() === "content-type" &&
+              metas[idx].getAttribute("content") &&
               metas[idx].getAttribute("content").toLowerCase().includes("euc-kr")){
                 root = Parse(iconv.decode(response.data, "euc-kr"))
                 break;

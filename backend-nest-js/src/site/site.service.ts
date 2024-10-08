@@ -93,6 +93,9 @@ export class SiteService {
         error : "the url is already exist"
       }, HttpStatus.BAD_REQUEST);
     } 
+
+    
+
     
     // url 유효한지 확인
     // 이외의 사이트 문제는 그냥 따로 프로그램 돌려서 정보 수집하자
@@ -171,7 +174,9 @@ export class SiteService {
       }
     }
 
-    let siteModel : Site = new Site();    
+    let siteModel : Site = new Site();
+    // 데몬 등록 상태 구분
+    siteModel.Status = 8; 
     await this.constraint.generateSite(siteModel, urlObj);      
     // console.log(siteModel);
     //https 로 실패할 경우 http로 시도할 것인가 말것인가...........

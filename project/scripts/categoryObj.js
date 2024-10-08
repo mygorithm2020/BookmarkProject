@@ -295,8 +295,6 @@ export class Category{
             subCate += "</ul></li>";
         }
         subCategoryBox.insertAdjacentHTML("beforeend", subCate);
-        
-        
 
         // 카테고리 바 확장
         document.getElementById("category-open").addEventListener("click", e => {        
@@ -313,7 +311,6 @@ export class Category{
             //     cate.style.display = "none";        
             // }
         });
-
     }
 
     // 카테고리 리스트를 보기 좋게 그룹화하기 리스트 변경

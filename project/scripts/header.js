@@ -105,6 +105,7 @@ formBox.addEventListener("submit", async (target)=>{
     target.preventDefault();
     const btn = formBox.querySelector("#add-site-btn");
     btn.disabled = true;
+    btn.value = "등록 중....";
 
     const url = reUrlEl.value;
     if(!url || url.trim() == ""){
@@ -132,6 +133,7 @@ formBox.addEventListener("submit", async (target)=>{
 
     }    
     btn.disabled = false;
+    btn.value = "추천";
 })
 
 function OpenOrCloseModal(){

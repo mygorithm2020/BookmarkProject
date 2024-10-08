@@ -125,8 +125,9 @@ export class Constraint {
         url = "https://" + url;
       }
 
-      // url 파싱해서 정리
-      url = url.replace("www.", "");
+      // www. 가 붙는 경우가 있고 안붙는 경우가 있어서 같은걸로 취급하려했는데,,,, 하나는 되고 하나는 안되는 경우가 있어버리네...
+      // url 파싱해서 정리 => 안되는 경우가 있네...
+      // url = url.replace("www.", "");
 
       let res = new URL(url);
       return res;
