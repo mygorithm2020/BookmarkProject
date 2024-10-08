@@ -146,7 +146,7 @@ nav .selected {
     justify-content: left;
     flex-direction: row;
     flex-wrap: wrap;
-    border-top: 20px double gray ;
+    border-top: 10px solid black;
 }
 
 #subcategory-box > li {
@@ -178,8 +178,7 @@ nav .selected {
 @media screen and (max-width:640px) {    
     #nav_list_box {
         flex-wrap: nowrap;
-        overflow: hidden;
-        
+        overflow: scroll;        
     }
 
     #site-search-form>input {    

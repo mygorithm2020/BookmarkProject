@@ -1,6 +1,7 @@
 /* Bordered form */
 #main_content01 {
-  margin: 10% 26%;  
+  margin: 10% auto;
+  width: 80%;  
   border: 1px solid black;
   padding: 2%;
   border-radius: 10px;
@@ -11,7 +12,9 @@
 .container {
   margin: 0 auto;
   padding: 10px;
-  width: 80%;  
+  width: 80%;
+  border-radius: 6px;
+  
 }
 
 /* Full-width inputs */
@@ -36,11 +39,19 @@ input[type=email], input[type=password] {
   border: none;
   cursor: pointer;
   width: 100%;
+  border-radius: 6px;
 }
 
 /* Add a hover effect for buttons */
 button:hover {
   opacity: 0.8;
+}
+
+#extra-box{
+  margin: 0 auto;
+  width: 78%;
+  padding: 2%;
+  border-radius: 6px;
 }
 
 /* Extra style for the cancel button (red) */
@@ -49,17 +60,18 @@ button:hover {
   font-size: 1.1rem;
   font-weight: 500;
   color: black;
-  padding: 4% 6%;
-  margin: 0 4%;
+  padding: 4% 4%;
+  margin: 0 2%;
 }
 
 /* Change styles for span and cancel button on extra small screens */
-@media screen and (max-width: 300px) {
+@media screen and (max-width: 640px) {
   span.psw {
     display: block;
     float: none;
   }
-  .cancelbtn {
-    width: 100%;
+  #extra-box{
+    display: flex;
+    flex-direction: column;
   }
 }
