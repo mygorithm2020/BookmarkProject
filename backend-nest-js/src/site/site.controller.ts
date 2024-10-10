@@ -1,4 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Res, Ip, Req, Query, UseInterceptors, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+  Res,
+  Ip,
+  Req,
+  Query,
+  UseInterceptors,
+  UseGuards,
+} from '@nestjs/common';
 import { SiteService } from './site.service';
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
@@ -11,16 +26,17 @@ import { ServerCache } from 'src/publicComponents/memoryCache';
 import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
 import { AdminAuthGuard, CustomAuthGuard } from 'src/middleware/auth.guard';
 
-@ApiTags("site")
+@ApiTags('site')
 @Controller('site')
 export class SiteController {
-  constructor(private readonly siteService: SiteService,
-    private readonly categoryService: CategoryService
+  constructor(
+    private readonly siteService: SiteService,
+    private readonly categoryService: CategoryService,
   ) {}
 
-  stancdard(@Body() createSiteDto: Site){
+  stancdard(@Body() createSiteDto: Site) {
     // 서비스 호출 등의 기능만 수행
-    let res = this.siteService.standard(createSiteDto);
+    const res = this.siteService.standard(createSiteDto);
     // 리턴 형태 만들기 json으로
     return res;
   }
@@ -33,33 +49,30 @@ export class SiteController {
     // 권한 체크
     // 관리자면 통과, 로그인 했으면 통과
 
-    let res = this.siteService.create(createSiteDto);
-    console.log(res);    
+    const res = this.siteService.create(createSiteDto);
+    console.log(res);
     return res;
   }
 
   @Post('/daemon')
   // @UseGuards(AdminAuthGuard)
   createDaemon(@Body() createSiteDto: Site) {
-    let res = this.siteService.createDaemon(createSiteDto);
+    const res = this.siteService.createDaemon(createSiteDto);
     console.log(res);
     return res;
   }
-  
 
-  @Post("/test")
+  @Post('/test')
   createTest(@Body() createSiteDto: Site, @Ip() reqIp: string) {
-    console.log(reqIp);   
-        
+    console.log(reqIp);
+
     // 권한 체크
     // 관리자면 통과, 로그인 했으면 통과
 
-    let res = this.siteService.createTest(createSiteDto);
-    
+    const res = this.siteService.createTest(createSiteDto);
+
     return res;
   }
-
-  
 
   // body가 필요해서 post로
   // @Post("/url")
@@ -72,9 +85,9 @@ export class SiteController {
   // 숫자 1당 20개씩하고 없으면 리턴 없고...
   @Get()
   async findAllPublic() {
-    let q = await this.siteService.findAllPublic();
-    let res : ApiResultExpand<Site[]>;
-    if (q.length > 0){
+    const q = await this.siteService.findAllPublic();
+    let res: ApiResultExpand<Site[]>;
+    if (q.length > 0) {
       res.ResCode = 200;
       res.Body = q;
     }
@@ -82,37 +95,43 @@ export class SiteController {
   }
 
   // 나중에 로그인했으면 로그인 정보 받아서 로직에 관여
-  @Get("/recommend")
+  @Get('/recommend')
   findRecommended(@Ip() reqIp: string) {
     const result = this.siteService.findRecommedSites();
     return result;
   }
 
   // 숫자 1당 20개씩하고 없으면 리턴 없고...
-  @Get("/category")
+  @Get('/category')
   findSitesByCategory(
-    @Query("id") categoryId : string, 
-    @Query("page") page: number, 
-    @Query("sort") sort: string, 
-    @Query("sortdir") sortdir: number){
-    let isDesc : boolean = sortdir == 0 ? false : true;
-    let result = this.siteService.findByCategoryPublic(categoryId, page, sort, isDesc);
+    @Query('id') categoryId: string,
+    @Query('page') page: number,
+    @Query('sort') sort: string,
+    @Query('sortdir') sortdir: number,
+  ) {
+    const isDesc: boolean = sortdir == 0 ? false : true;
+    const result = this.siteService.findByCategoryPublic(
+      categoryId,
+      page,
+      sort,
+      isDesc,
+    );
     return result;
   }
 
-  @Get("/search")
-  findSitesByWord(@Query("key") word : string){
+  @Get('/search')
+  findSitesByWord(@Query('key') word: string) {
     // 서비스 호출 등의 기능만 수행
     console.log(word);
     word = decodeURIComponent(word);
-    let res = this.siteService.findAllBySearchPublic(word);
+    const res = this.siteService.findAllBySearchPublic(word);
     // 리턴 형태 만들기 json으로
     return res;
   }
 
   // url base64인코딩해서 보내기
-  @Get("/url/:base64url")
-  findOneByUrl(@Param('base64url') url : string) {
+  @Get('/url/:base64url')
+  findOneByUrl(@Param('base64url') url: string) {
     console.log(url);
     url = atob(url);
     return this.siteService.findOneByUrlPublic(url);
@@ -133,7 +152,11 @@ export class SiteController {
 
   @Get('/daemon')
   // @UseGuards(AdminAuthGuard)
-  findAllDaemon(@Query("page") page : number, @Query("order") order : string, @Query("sort") orderDesc : boolean) {
+  findAllDaemon(
+    @Query('page') page: number,
+    @Query('order') order: string,
+    @Query('sort') orderDesc: boolean,
+  ) {
     return this.siteService.findAllAdmin(page, null, false);
   }
 
@@ -141,21 +164,21 @@ export class SiteController {
   findOne(@Param('id') siteId: string) {
     return this.siteService.findOnePublic(siteId);
   }
-  
+
   // 없으면 만들고 기존거 삭제하면서 새로운거만 받을 예정이라 put으로
-  @Put("/category-site")
-  async createCategorySite(@Body() site: Site, @Ip() reqIp: string) {        
+  @Put('/category-site')
+  async createCategorySite(@Body() site: Site, @Ip() reqIp: string) {
     // 권한 체크
     // 관리자면 통과, 로그인 했으면 통과
-    let categoryIds = [];
-    
+    const categoryIds = [];
+
     // for (const category of site.Categories){
     //   categoryIds.push(category.CategoryId);
     // }
 
     // // 카테고리마다 부모 카테고리 계속해서 찾고 다 연결해서 등록
     // let linkCategories :string[] = [];
-    // let allCtegories = await this.categoryService.findAll();    
+    // let allCtegories = await this.categoryService.findAll();
     // while (categoryIds){
     //   const oneCategoryId = categoryIds.pop();
     //   linkCategories.push(oneCategoryId);
@@ -168,20 +191,21 @@ export class SiteController {
     // }
 
     // let res = this.siteService.createCategorySite(site.SiteId, linkCategories);
-    
+
     // return res;
   }
 
   // 전달받은 정보(칼럼)만 수정
-  @Put("/admin")
+  @Put('/admin')
   @UseGuards(AdminAuthGuard)
   async updateSite(@Body() site: Site, @Ip() reqIp: string) {
     let result = {};
-    let updateRes = await this.siteService.updateSiteAndCategorySiteAdmin(site);
-    if (updateRes){
+    const updateRes =
+      await this.siteService.updateSiteAndCategorySiteAdmin(site);
+    if (updateRes) {
       result = {
-        SiteId : site.SiteId
-      }
+        SiteId: site.SiteId,
+      };
     }
     return result;
   }
@@ -189,15 +213,21 @@ export class SiteController {
   @Patch('/views')
   async updateViews(@Req() req: Request, @Body() updateSiteDto: Site) {
     // 조회수 필터링 조건
-    if (ServerCache.checkRestrictedViews(req.headers["user-agent"], req.ip, updateSiteDto.SiteId)){
-       return 
+    if (
+      ServerCache.checkRestrictedViews(
+        req.headers['user-agent'],
+        req.ip,
+        updateSiteDto.SiteId,
+      )
+    ) {
+      return;
     }
     // 멤버별로 조회수 기록 로그형태
 
-    let res = await this.siteService.updateViews(updateSiteDto.SiteId);
-    if (res.affected > 0){
+    const res = await this.siteService.updateViews(updateSiteDto.SiteId);
+    if (res.affected > 0) {
       return {
-        SiteId : updateSiteDto.SiteId
+        SiteId: updateSiteDto.SiteId,
       };
     }
     return {};
@@ -206,11 +236,11 @@ export class SiteController {
   // 좋아요 => 기존에 없으면 좋아요 추가 있으면 좋아요 삭제
   @Patch('/good')
   @UseGuards(CustomAuthGuard)
-  async updateGood(@Req() req: Request, @Body() updateSiteDto: Site) {    
-    let res = await this.siteService.updateViews(updateSiteDto.SiteId);
-    if (res.affected > 0){
+  async updateGood(@Req() req: Request, @Body() updateSiteDto: Site) {
+    const res = await this.siteService.updateViews(updateSiteDto.SiteId);
+    if (res.affected > 0) {
       return {
-        SiteId : updateSiteDto.SiteId
+        SiteId: updateSiteDto.SiteId,
       };
     }
     return {};
@@ -219,11 +249,11 @@ export class SiteController {
   // 싫어요 => 기존에 없으면 좋아요 추가 있으면 좋아요 삭제
   @Patch('/bad')
   @UseGuards(CustomAuthGuard)
-  async updateBad(@Req() req: Request, @Body() updateSiteDto: Site) {    
-    let res = await this.siteService.updateViews(updateSiteDto.SiteId);
-    if (res.affected > 0){
+  async updateBad(@Req() req: Request, @Body() updateSiteDto: Site) {
+    const res = await this.siteService.updateViews(updateSiteDto.SiteId);
+    if (res.affected > 0) {
       return {
-        SiteId : updateSiteDto.SiteId
+        SiteId: updateSiteDto.SiteId,
       };
     }
     return {};
@@ -234,10 +264,10 @@ export class SiteController {
   @Patch('/admin')
   @UseGuards(AdminAuthGuard)
   async update(@Body() updateSiteDto: Site) {
-    let res = await this.siteService.updateByAdmin(updateSiteDto);
-    if (res.affected > 0){
+    const res = await this.siteService.updateByAdmin(updateSiteDto);
+    if (res.affected > 0) {
       return {
-        SiteId : updateSiteDto.SiteId
+        SiteId: updateSiteDto.SiteId,
       };
     }
     return {};
@@ -247,10 +277,10 @@ export class SiteController {
   // @UseGuards(AdminAuthGuard)
   async updateDaemon(@Body() updateSiteDto: Site) {
     console.log(updateSiteDto);
-    let res = await this.siteService.updateDaemon(updateSiteDto);
-    if (res.affected > 0){
+    const res = await this.siteService.updateDaemon(updateSiteDto);
+    if (res.affected > 0) {
       return {
-        SiteId : updateSiteDto.SiteId
+        SiteId: updateSiteDto.SiteId,
       };
     }
     return {};
@@ -261,5 +291,4 @@ export class SiteController {
   remove(@Param('id') id: string) {
     return this.siteService.removeAdmin(id);
   }
-  
 }

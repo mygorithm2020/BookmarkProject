@@ -1,9 +1,19 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { Roles } from './roles.decorator';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants, jwtConstantsAdmin } from 'src/authentication/entities/Auth.constant';
+import {
+  jwtConstants,
+  jwtConstantsAdmin,
+} from 'src/authentication/entities/Auth.constant';
 import { Request } from 'express';
 import { HttpErrorCode } from 'src/publicComponents/ExceptionHandler';
 
@@ -18,25 +28,24 @@ import { HttpErrorCode } from 'src/publicComponents/ExceptionHandler';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-    constructor(private reflector: Reflector) {}
-    
-    canActivate(
-        context: ExecutionContext,
-    ): boolean | Promise<boolean> | Observable<boolean> {
-        console.log("guard");        
-        return true;
+  constructor(private reflector: Reflector) {}
 
-        const roles = this.reflector.get(Roles, context.getHandler());
-        if (!roles) {
-            return true;
-        }
-        const request = context.switchToHttp().getRequest();
-        console.log(request);
-        const user = request.user;
-        // return matchRoles(roles, user.roles);
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    console.log('guard');
+    return true;
+
+    const roles = this.reflector.get(Roles, context.getHandler());
+    if (!roles) {
+      return true;
     }
+    const request = context.switchToHttp().getRequest();
+    console.log(request);
+    const user = request.user;
+    // return matchRoles(roles, user.roles);
+  }
 }
-
 
 @Injectable()
 export class CustomAuthGuard implements CanActivate {
@@ -45,31 +54,34 @@ export class CustomAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    console.log("token" + token);
+    console.log('token' + token);
     if (!token) {
       // throw new UnauthorizedException();
-      throw new HttpException({
-        errCode : HttpErrorCode.AuthOne,
-        error : "authorizaion is required in header"
-      }, HttpStatus.UNAUTHORIZED);
-    }
-    try {      
-      const payload = await this.jwtService.verifyAsync(
-        token,
+      throw new HttpException(
         {
-          secret: jwtConstants.accessSecret
-        }
+          errCode: HttpErrorCode.AuthOne,
+          error: 'authorizaion is required in header',
+        },
+        HttpStatus.UNAUTHORIZED,
       );
+    }
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: jwtConstants.accessSecret,
+      });
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
       console.log(payload);
       request['user'] = payload;
     } catch (err) {
       console.log(err);
-      throw new HttpException({
-        errCode : HttpErrorCode.AuthTwo,
-        error : "token is expired"
-      }, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        {
+          errCode: HttpErrorCode.AuthTwo,
+          error: 'token is expired',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     return true;
   }
@@ -87,22 +99,22 @@ export class AdminAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    console.log("token" + token);    
+    console.log('token' + token);
     if (!token) {
       // throw new UnauthorizedException();
-      throw new HttpException({
-        errCode : HttpErrorCode.AuthOne,
-        error : "authorizaion is required in header"
-      }, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        {
+          errCode: HttpErrorCode.AuthOne,
+          error: 'authorizaion is required in header',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     // return true;
     try {
-      const payload = await this.jwtService.verifyAsync(
-        token,
-        {
-          secret: jwtConstantsAdmin.accessSecret
-        }
-      );
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: jwtConstantsAdmin.accessSecret,
+      });
 
       // admin 검증 로직 추가
 
@@ -111,10 +123,13 @@ export class AdminAuthGuard implements CanActivate {
       request['user'] = payload;
     } catch (err) {
       console.log(err);
-      throw new HttpException({
-        errCode : HttpErrorCode.AuthTwo,
-        error : "token is expired"
-      }, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        {
+          errCode: HttpErrorCode.AuthTwo,
+          error: 'token is expired',
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     return true;
   }

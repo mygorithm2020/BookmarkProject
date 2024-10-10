@@ -1,26 +1,25 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity({name : 'TA_AuthToken'})
+@Entity({ name: 'TA_AuthToken' })
 export class AuthToken {
+  @PrimaryColumn()
+  TokenId: number;
 
-    @PrimaryColumn()
-    TokenId : number;
+  @Column()
+  Token: string;
 
-    @Column()
-    Token : string;
+  @Column()
+  MemberId: string;
 
-    @Column()
-    MemberId : string;
+  @Column()
+  IP: string;
 
-    @Column()
-    IP : string;
+  @Column()
+  UserAgent: string;
 
-    @Column()
-    UserAgent  : string;
+  @Column()
+  Origin: string;
 
-    @Column()
-    Origin  : string;
-
-    @Column()
-    CreateDate : Date;
+  @Column()
+  CreateDate: Date;
 }

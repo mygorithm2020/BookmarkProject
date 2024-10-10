@@ -1,3 +1,3 @@
 export class CreateCategoryDto {
-    CategoryId : string;
+  CategoryId: string;
 }

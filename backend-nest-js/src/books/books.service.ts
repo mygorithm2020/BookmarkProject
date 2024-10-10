@@ -7,9 +7,10 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class BooksService {
-
-  constructor(@InjectRepository(Book)
-  private booksRepository: Repository<Book>) { }
+  constructor(
+    @InjectRepository(Book)
+    private booksRepository: Repository<Book>,
+  ) {}
 
   // create(createBookDto: CreateBookDto) {
   //   return 'This action adds a new book';
@@ -31,8 +32,6 @@ export class BooksService {
   //   return `This action removes a #${id} book`;
   // }
 
-  
-
   async create(book: Book): Promise<Book> {
     const newBook = this.booksRepository.create(book);
     return await this.booksRepository.save(newBook);
@@ -45,18 +44,18 @@ export class BooksService {
   async findOne(id: number): Promise<Book> {
     return await this.booksRepository.findOne({
       where: {
-        id
-      }
+        id,
+      },
     });
   }
 
   async update(id: number, book: Book): Promise<number> {
     await this.booksRepository.update(id, book);
-    return id
+    return id;
   }
 
   async remove(id: number): Promise<number> {
     await this.booksRepository.delete(id);
-    return id
+    return id;
   }
 }

@@ -1,15 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Req, HttpException, HttpStatus, Res, UseFilters, ParseIntPipe, UseGuards, UseInterceptors, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  HttpException,
+  HttpStatus,
+  Res,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Response, Request } from 'express';
-import { AdminAuthGuard, CustomAuthGuard, RolesGuard } from 'src/middleware/auth.guard';
-import { LoggingInterceptor } from 'src/middleware/logging.interceptor';
+import {
+  AdminAuthGuard,
+  CustomAuthGuard,
+  RolesGuard,
+} from 'src/middleware/auth.guard';
 import { ServerCache } from 'src/publicComponents/memoryCache';
 
-@ApiTags("category")
+@ApiTags('category')
 @UseGuards(RolesGuard)
 // @UseInterceptors(LoggingInterceptor)
 @Controller('category')
@@ -19,37 +34,40 @@ export class CategoryController {
   @ApiBody({
     schema: {
       properties: {
-        UserId: { type: "string", },
-        Password: { type: "string" }
-      }
-    }
+        UserId: { type: 'string' },
+        Password: { type: 'string' },
+      },
+    },
   })
   @UseGuards(CustomAuthGuard)
   @Post()
   create(@Body() createCategoryDto: Category) {
-    throw new HttpException({
-      errCode : 11,
-      error : "this api is not found"
-    }, HttpStatus.NOT_FOUND);
+    throw new HttpException(
+      {
+        errCode: 11,
+        error: 'this api is not found',
+      },
+      HttpStatus.NOT_FOUND,
+    );
     return this.categoryService.create(createCategoryDto);
   }
 
-  
-  @Post("/admin")
-  @UseGuards(AdminAuthGuard)  
+  @Post('/admin')
+  @UseGuards(AdminAuthGuard)
   createAdmin(@Req() req: Request, @Body() createCategoryDto: Category) {
-    
     return this.categoryService.create(createCategoryDto);
   }
 
-  @Post("/daemon")  
+  @Post('/daemon')
   createDaemon(@Req() req: Request, @Body() createCategoryDto: Category) {
     return this.categoryService.create(createCategoryDto);
   }
 
-
   @Get()
-  async findAll(@Req() req: Request, @Res({passthrough : true}) res : Response) {
+  async findAll(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     // let ip = forwarded ? forwarded.split(/, /)[0] : req.connection.remoteAddress;
     // console.log(ip);
     // console.log(req.headers);
@@ -57,10 +75,10 @@ export class CategoryController {
     // console.log(req.headers.cookie);
     // res.cookie("test", "test", {sameSite : "none", httpOnly : true});
     // res.end();
-    let result  = ServerCache.getCategorys();
-    
-    if (!result || result.length === 0){      
-      let newCategorys = await this.categoryService.findAllPublic();
+    let result = ServerCache.getCategorys();
+
+    if (!result || result.length === 0) {
+      const newCategorys = await this.categoryService.findAllPublic();
       ServerCache.setCategorys(newCategorys);
       result = ServerCache.getCategorys();
     }
@@ -69,12 +87,12 @@ export class CategoryController {
     return result;
   }
 
-  @Get("/admin")
+  @Get('/admin')
   @UseGuards(AdminAuthGuard)
   findAllAdmin(@Req() req: Request) {
     // res.cookie("test", "test");
     console.log(req.cookies);
-    console.log(req.cookies["username3"]);
+    console.log(req.cookies['username3']);
     console.log(req.headers.cookie);
     return this.categoryService.findAllAdmin();
   }
@@ -82,12 +100,14 @@ export class CategoryController {
   @Get('/admin/:id')
   @UseGuards(AdminAuthGuard)
   findOneAdmin(@Param('id') id: string) {
-    if (!id){
-      throw new HttpException({
-        errCode : 11,
-        error : "no id"
-
-      }, HttpStatus.BAD_REQUEST);      
+    if (!id) {
+      throw new HttpException(
+        {
+          errCode: 11,
+          error: 'no id',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return this.categoryService.findOneAdmin(id);
   }
@@ -95,13 +115,15 @@ export class CategoryController {
   @UseGuards(CustomAuthGuard)
   @Get(':id')
   findOne(@Req() req: Request) {
-    const id : string = req.params["id"];
-    if (!id){
-      throw new HttpException({
-        errCode : 11,
-        error : "no id"
-
-      }, HttpStatus.BAD_REQUEST);
+    const id: string = req.params['id'];
+    if (!id) {
+      throw new HttpException(
+        {
+          errCode: 11,
+          error: 'no id',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return this.categoryService.findOneAdmin(id);
   }
@@ -114,13 +136,15 @@ export class CategoryController {
   @Patch('/admin')
   @UseGuards(AdminAuthGuard)
   async updateAdmin(@Body() category: Category) {
-    let res = await this.categoryService.updateAdmin(category.CategoryId, category);
+    const res = await this.categoryService.updateAdmin(
+      category.CategoryId,
+      category,
+    );
     return res.affected;
   }
 
   // @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoryDto: Category) {
-    
     // return this.categoryService.updateAdmin(id, updateCategoryDto);
   }
 
@@ -135,6 +159,4 @@ export class CategoryController {
   remove(@Param('id') id: string) {
     return this.categoryService.remove(id);
   }
-
-  
 }

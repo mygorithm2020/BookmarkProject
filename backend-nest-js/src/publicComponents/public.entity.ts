@@ -1,11 +1,17 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export class publicColumn {
-    @Column()
-    CreateDate : Date;
+  @Column()
+  CreateDate: Date;
 
-    @Column()
-    UpdateDate : Date;
+  @Column()
+  UpdateDate: Date;
 }
 // @Entity({name : 'TA_Member'})
 // export class Member {
@@ -40,11 +46,8 @@ export class publicColumn {
 //     @Column()
 //     IsDeleted : number;
 
-    
 // }
 
-abstract class Sdsds{
-
-    abstract func() : string;
-    
+abstract class Sdsds {
+  abstract func(): string;
 }

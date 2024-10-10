@@ -85,7 +85,50 @@ BEGIN
 END $$
 DELIMITER ;
 
---　이　아래로　서버　등록　완료　-- 
+-- 회원과 다른 정보와의 관계
+CREATE TABLE TA_ReMemberOthers (
+	Id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    MemberId CHAR(32) NOT NULL PRIMARY KEY,
+    ForeignId CHAR(32) NOT NULL PRIMARY KEY,
+    Kind INT NOT NULL DEFAULT 0 COMMENT "1 : 조회, 2: 좋아요, 3: 싫어요",
+    CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
+    UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+);
+CREATE INDEX IDX_ReMemberOthers_MemberId ON TA_ReMemberOthers (MemberId);
+CREATE INDEX IDX_ReMemberOthers_ForeignId ON TA_ReMemberOthers (ForeignId);
+
+-- 댓글
+CREATE TABLE TA_Comment (
+	CommentId CHAR(32) NOT NULL PRIMARY KEY,
+    MemberId CHAR(32) NOT NULL,
+    SiteId CHAR(32) NOT NULL,
+    Content VARCHAR(512) NOT NULL,
+    Good INT  default 0,
+    Bad INT  default 0,
+    IsDeleted SMALLINT NOT NULL DEFAULT 0 CHECK (IsDeleted >= 0),
+    CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
+    UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+);
+CREATE INDEX IDX_Comment_MemberId ON TA_Comment (MemberId);
+CREATE INDEX IDX_Comment_SiteId ON TA_Comment (SiteId);
+
+-- 회원즐겨찾기
+CREATE TABLE TA_MemberBookmark (
+	BookmarkId CHAR(32) NOT NULL PRIMARY KEY,
+    MemberId CHAR(32) NOT NULL,
+    ParentId CHAR(32),
+    Kind INT NOT NULL DEFAULT 1 COMMENT "1: 폴더, 2: 사이트",
+    Img VARCHAR(512),
+    Name VARCHAR(255),
+    URL VARCHAR(512),
+    PrevId CHAR(32),
+    NextId CHAR(32),
+    CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
+    UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+);
+CREATE INDEX IDX_MemberBookmark_BookmarkIdMemberId ON TA_MemberBookmark (BookmarkId, MemberId);
+
+-- 　이　아래로　서버　등록　완료　-- 
  
 -- 인증 기록
 CREATE TABLE TA_Authentication (
