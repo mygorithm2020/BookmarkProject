@@ -106,7 +106,7 @@ export class CategoryService {
     });
     // 캐시 내용 변경
     if (updateRes.affected > 0) {
-      ServerCache.setCategorys(await this.findAllPublic());
+      await ServerCache.setCategorys(await this.findAllPublic());
     }
 
     return updateRes;

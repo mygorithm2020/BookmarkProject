@@ -75,12 +75,12 @@ export class CategoryController {
     // console.log(req.headers.cookie);
     // res.cookie("test", "test", {sameSite : "none", httpOnly : true});
     // res.end();
-    let result = ServerCache.getCategorys();
+    let result = await ServerCache.getCategorys();
 
     if (!result || result.length === 0) {
       const newCategorys = await this.categoryService.findAllPublic();
-      ServerCache.setCategorys(newCategorys);
-      result = ServerCache.getCategorys();
+      await ServerCache.setCategorys(newCategorys);
+      result = await ServerCache.getCategorys();
     }
 
     // let data = await this.cRepo.find()

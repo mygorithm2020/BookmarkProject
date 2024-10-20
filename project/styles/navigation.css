@@ -73,8 +73,7 @@ nav a:hover {
 
 nav .selected {
     font-weight: bold;
-    font-size: 1.2rem;
-    
+    font-size: calc(0.9rem + 0.2vw + 0.2vh);
 }
 
 #main-nav-box{
@@ -93,8 +92,6 @@ nav .selected {
     max-height: 30px;    
 }
 
-
-
 #nav_list_box {
     font-size: calc(0.8rem + 0.2vw + 0.2vh);
     display: flex;
@@ -108,9 +105,9 @@ nav .selected {
     flex: 0 0 auto;
     display: inline-block;
     margin: 5px;
-    min-width: 30px;
+    min-width: 30px;    
     padding: 4px;
-    text-align: center;    
+    text-align: center; 
 }
 /* 너비 좁아지면 카테고리 사이드로 빼자 세로로 */
 
@@ -147,7 +144,7 @@ nav .selected {
     justify-content: left;
     flex-direction: row;
     flex-wrap: wrap;
-    border-top: 10px solid black;
+    border-top: 10px solid rgba(0, 0, 0, 0.281);
 }
 
 #subcategory-box > li {
@@ -177,7 +174,13 @@ nav .selected {
 
 
 @media screen and (max-width:640px) {    
+
+    #category-open{
+        display: none;
+    }
+
     #nav_list_box {
+        width: 96%;
         flex-wrap: nowrap;
         overflow: scroll;     
     }
@@ -185,4 +188,6 @@ nav .selected {
     #site-search-form>input {    
         width: 80%;
     }
+
+    
 }

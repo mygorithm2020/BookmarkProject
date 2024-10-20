@@ -72,9 +72,6 @@ const start = Date.now();
         enrollSite.add(one.URL);
     }
 
-    // console.log(data[0] + data[1]);
-    // return;
-
     let cnt = 0;    
     for (const one of data){                
         const res = new Site(one);        

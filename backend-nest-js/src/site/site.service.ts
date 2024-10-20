@@ -440,7 +440,7 @@ export class SiteService {
     // 로그인하면 마지막 조회한 카테고리 여기에 추가해서 넣자
 
     // const res = this.getRecommendSite();
-    let result = ServerCache.getRecommendSites();
+    let result = await ServerCache.getRecommendSites();
     if (!result || result.length == 0) {
       const reLoadSites: Site[] = await this.sRepo.query(
         `(select * from TA_Site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 25)
@@ -451,11 +451,10 @@ export class SiteService {
         UNION
         (select * from TA_Site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 25)
         UNION
-        (select * from TA_Site where isDeleted = 0 and status = 2 order by UpdatedDate DESC LIMIT 25)
-        order by rand()`,
+        (select * from TA_Site where isDeleted = 0 and status = 2 order by UpdatedDate DESC LIMIT 25)`,
       );
-      ServerCache.setRecommendSites(reLoadSites);
-      result = ServerCache.getRecommendSites();
+      await ServerCache.setRecommendSites(reLoadSites);
+      result = await ServerCache.getRecommendSites();
     }
     return result;
   }

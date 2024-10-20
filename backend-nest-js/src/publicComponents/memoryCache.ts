@@ -10,7 +10,7 @@ export class ServerCache {
   private static sesstionList: Map<string, Date>;
   private static restrictedViews: { lastUpdate: Date; keyValues: Set<string> };
 
-  static setCategorys(categorys: Category[]) {
+  static async setCategorys(categorys: Category[]) {
     this.cachedCategorys = {
       lastDate: new Date(),
       categorys: categorys,
@@ -18,7 +18,7 @@ export class ServerCache {
   }
 
   // 그냥 시간으로 하지말고 새로 카테고리를 추가하면 자동으로 변경되는게 나을 듯...
-  static getCategorys(): Category[] {
+  static async getCategorys(): Promise<Category[]> {
     // 시간이 지났거나, 값이 없으면 => 하루마다
     if (
       !this.cachedCategorys ||
@@ -31,7 +31,7 @@ export class ServerCache {
     return this.cachedCategorys.categorys;
   }
 
-  static setRecommendSites(sites: Site[]) {
+  static async setRecommendSites(sites: Site[]) {
     this.recommendSites = {
       lastDate: new Date(),
       sites: sites,
@@ -40,11 +40,11 @@ export class ServerCache {
 
   // 나중에 다양한 조건으로 더 알맞은 사이트 추천
   // 생일(나이), 성별, 관심 카테고리
-  static getRecommendSites(
+  static async getRecommendSites(
     categorys?: Category[],
     birth?: string,
     gender?: string,
-  ): Site[] {
+  ): Promise<Site[]> {
     // 시간이 지났거나, 값이 없으면 => 시간마다
     if (
       !this.recommendSites ||
@@ -57,14 +57,14 @@ export class ServerCache {
     return this.recommendSites.sites;
   }
 
-  static setSession(sessionId: string) {
+  static async setSession(sessionId: string) {
     if (!this.sesstionList) {
       this.sesstionList = new Map();
     }
     this.sesstionList.set(sessionId, new Date());
   }
 
-  static getSessionId(sessionId: string): string {
+  static async getSessionId(sessionId: string): Promise<string> {
     let res = sessionId;
 
     if (!this.sesstionList || !this.sesstionList.has(sessionId)) {
@@ -84,16 +84,16 @@ export class ServerCache {
     }
 
     // 인증 시간 갱신
-    this.setSession(sessionId);
+    await this.setSession(sessionId);
     return res;
   }
 
   // 조회수 조작을 막기 위해 같은 정보로 동일하게 오면 제한, 대신 메모리로 관리하므로 시간마다 값 초기화
-  static checkRestrictedViews(
+  static async checkRestrictedViews(
     reqUserAgent: string,
     reqIp: string,
     SiteId: string,
-  ): boolean {
+  ): Promise<boolean> {
     // 1시간마다 측정하자
     const newStr: string =
       Math.trunc(new Date().getUTCHours()) + reqUserAgent + reqIp + SiteId;

@@ -214,7 +214,7 @@ export class SiteController {
   async updateViews(@Req() req: Request, @Body() updateSiteDto: Site) {
     // 조회수 필터링 조건
     if (
-      ServerCache.checkRestrictedViews(
+      await ServerCache.checkRestrictedViews(
         req.headers['user-agent'],
         req.ip,
         updateSiteDto.SiteId,
