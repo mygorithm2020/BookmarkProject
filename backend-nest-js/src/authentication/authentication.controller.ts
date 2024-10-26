@@ -85,10 +85,6 @@ export class AuthenticationController {
     return result;
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
 
   // 토큰 리프레쉬 + 현재 로그인 상태 확인용
   @Get('/refresh')
@@ -150,11 +146,6 @@ export class AuthenticationController {
     return result;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
   // 인증번호 확인
   @Patch('/checkemail')
   async checkAuth(@Body() auth: Authentication) {
@@ -176,23 +167,10 @@ export class AuthenticationController {
     };
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateAuthenticationDto: UpdateAuthenticationDto,
-  ) {
-    return this.authService.update(+id, updateAuthenticationDto);
-  }
-
   // jwt 토큰 삭제
   @Delete('/logout')
   logout(@Body() authToken: AuthToken) {
     const token = authToken.Token;
     return this.authService.deleteToken(token);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
   }
 }

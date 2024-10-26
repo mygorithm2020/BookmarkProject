@@ -207,14 +207,6 @@ export class AuthenticationService {
     };
   }
 
-  findAll() {
-    return `This action returns all authentication`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} authentication`;
-  }
-
   findOneByTokenAdmin(token: string): Promise<AuthToken> {
     const res = this.atRepo.findOne({
       where: {

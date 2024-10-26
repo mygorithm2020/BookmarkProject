@@ -42,7 +42,16 @@ console.log(process.env.DB_HOST);
         index: false, // 인덱스 파일 제공 여부 설정
         maxAge: 600000, // 캐시 유효 기간 설정
       },
-    }),
+    },
+    // { nginx에서 ip 제한 추가하면 같이 추가
+    //   rootPath: join(__dirname, '..', 'log'),
+    //   serveRoot: '/serverlog',
+    //   serveStaticOptions: {
+    //     index: false, // 인덱스 파일 제공 여부 설정
+    //     maxAge: 10000, // 캐시 유효 기간 설정
+    //   },
+    // }
+    ),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
