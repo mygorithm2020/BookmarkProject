@@ -12,7 +12,7 @@
   - mysql.sql 파일 바탕으로 db, user, table create
   - 필요한 node 설치
   - 현재 경로에서 db연결 관련 .env파일 생성
-  - npm install, npm run start:dev
+  - npm clean-install(npm ci), npm run build, npm run start:prod
 - 링크 : 
 - 결과 미리보기  
 <br>

@@ -1,5 +1,4 @@
 import { Category } from "./categoryObj.js";
-import { Site } from "./site.js";
 
 (async function (){
     let cqdsd = new Category();
@@ -26,14 +25,17 @@ import { Site } from "./site.js";
 
     // 검색 기능 추가
     const searchForm = document.querySelector("#site-search-form");
+    let query = curUrl.searchParams.get("q");
+    searchForm.querySelector("input[name=word]").value = query;
     searchForm.addEventListener("submit", async (target)=>{
         target.preventDefault();
 
 
-        const word = searchForm.querySelector("input[name=word]").value;
+        let word = searchForm.querySelector("input[name=word]").value;
         if(!word || word.trim() == ""){
             return;
         }
+        word = word.trim();
 
         window.location.href = `./search.html?q=${encodeURI(word)}`;
     })
@@ -43,6 +45,7 @@ import { Site } from "./site.js";
     window.addEventListener("scroll", scrollEvent);
     let navBox = document.querySelector("nav");
     let lastScrollY = 0;
+    let maxScrollY = 0;
     const fixLocate = navBox.offsetTop;
 
     function scrollEvent(event){
@@ -52,14 +55,16 @@ import { Site } from "./site.js";
         // const STANDARD = 30;
 
         // console.log(navBox.offsetTop);
+        console.log(maxScrollY, window.scrollY, maxScrollY - 2 * STANDARD);
         
         if(window.scrollY > fixLocate){
             // console.log(window.scrollY);
             // navBox.classList.add("fixed-nav");
             if(window.scrollY > lastScrollY){
             // 현재 스크롤 위치가 이전 위치보다 클때 (내려가는 중)
-                navBox.classList.remove("fixed-nav");
-            }else {
+                navBox.classList.remove("fixed-nav");                
+                maxScrollY = window.scrollY;                
+            }else if (window.scrollY < maxScrollY - 2 * STANDARD) {
             // 현재 스크롤 위치가 이전 위치보다 작을때 (올라가는 중)
                 navBox.classList.add("fixed-nav");
             }            
@@ -70,9 +75,7 @@ import { Site } from "./site.js";
         //   header.classList.remove("hide")
         //   goTop.classList.remove("show")
         }
-        
-        lastScrollY = window.scrollY;
-        
+        lastScrollY = window.scrollY;                
     }
 
 })();

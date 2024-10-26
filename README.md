@@ -11,8 +11,8 @@
 - 프로젝트 실행 방법: 
     - [Backend](./backend-nest-js/)
     - [Front](./project/)      
-- 링크 : http://dothomeftp.dothome.co.kr/
-- 결과 미리보기  
+- 링크 : http://browseys.site/
+- 미리보기  
 <br>
 <img src="imageEx01.png" width="300px">
 <img src="imageEx02.png" width="300px">

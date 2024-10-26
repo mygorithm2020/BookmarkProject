@@ -12,10 +12,18 @@ import { Constraint } from 'src/publicComponents/constraint';
 import { ApiClient } from 'src/publicComponents/apiClient';
 
 @Module({
-  imports : [TypeOrmModule.forFeature([
-    Site, CategorySite, Category,
-  ]), HttpModule],
+  imports: [
+    TypeOrmModule.forFeature([Site, CategorySite, Category]),
+    HttpModule,
+  ],
   controllers: [SiteController],
-  providers: [SiteService, CustomUtils, CategoryService, Constraint, ApiClient, FileAdapter],
+  providers: [
+    SiteService,
+    CustomUtils,
+    CategoryService,
+    Constraint,
+    ApiClient,
+    FileAdapter,
+  ],
 })
 export class SiteModule {}

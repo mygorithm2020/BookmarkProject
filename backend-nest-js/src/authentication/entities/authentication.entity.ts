@@ -1,32 +1,31 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
-@Entity({name : 'TA_Authentication'})
+@Entity({ name: 'TA_Authentication' })
 export class Authentication {
+  @PrimaryColumn()
+  AuthId: number;
 
-    @PrimaryColumn()
-    AuthId : number;
+  @Column()
+  Email: string;
 
-    @Column()
-    Email : string;
+  @Column()
+  PhoneCode: string;
 
-    @Column()
-    PhoneCode : string;
+  @Column()
+  PhoneNo: string;
 
-    @Column()
-    PhoneNo : string;
+  @Column()
+  AuthCode: string;
 
-    @Column()
-    AuthCode : string;
+  @Column()
+  Count: number;
 
-    @Column()
-    Count : number;
+  @Column()
+  IsAuth: number;
 
-    @Column()
-    IsAuth  : number;
+  @Column()
+  CreateDate: Date;
 
-    @Column()
-    CreateDate : Date;
-
-    @Column()
-    UpdateDate : Date;
+  @Column()
+  UpdateDate: Date;
 }

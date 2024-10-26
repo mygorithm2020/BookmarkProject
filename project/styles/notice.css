@@ -1,3 +1,7 @@
+#main_content01{
+    padding: 10px;
+}
+
 a:hover {
     font-weight: bold;
 }
@@ -12,15 +16,14 @@ a:hover {
     margin: 2% 0;
     width: 100%;    
     border-collapse: collapse;
-    border-top: 2px solid black;
+    border-top: 2px solid black;    
 }
 
 .notice_card{
     border: 1px solid black;
     margin: 10px;
     padding: 6px;
-    font-size: 1.2rem;
-    
+    font-size: 1.2rem;    
 }
 
 .notice_card:hover{

@@ -1,5 +1,5 @@
-import { Member } from "../entities/member.entity";
+import { Member } from '../entities/member.entity';
 
-export class CreateMemberDto extends Member{
-    AuthCode : string;
+export class CreateMemberDto extends Member {
+  AuthCode: string;
 }

@@ -77,9 +77,10 @@ const start = Date.now();
         const res = new Site(one);        
         cnt += 1;
         console.log(`${cnt} : ${one.URL} , ${one.Status}`)
-        if (res.Status == 2 || res.Status == 3 || res.Status == 4 || res.Status == 5 || res.Status == 8 || res.Status == 6){
+        if (res.Status != 1){
             continue;
         }
+        
         await (async function example() {
             
             let options = new chrome.Options();
@@ -258,7 +259,7 @@ const start = Date.now();
         
         console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})    ${parseInt((Date.now() - start)/1000)} 초`);        
         // 생각보다 오래걸려서 일부분씩 하자
-        if (cnt/data.length * 100 > 90){
+        if (cnt/data.length * 100 > 99){
             break;
         }
         
