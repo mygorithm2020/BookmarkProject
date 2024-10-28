@@ -62,13 +62,13 @@
 
 #header_nav>li a{
     color: black;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;    
 }
 
 #header_nav>li button{
     color: black;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: bold;
     font-family: inherit;
     border: none;    
@@ -235,9 +235,6 @@ footer {
         display: flex;
         flex-direction: row;        
     }    
-    #header_nav>li:last-child{
-        display: none;
-    }
 
     #recom-site-box {
         left: 5%;

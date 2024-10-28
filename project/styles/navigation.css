@@ -93,7 +93,7 @@ nav .selected {
 }
 
 #nav_list_box {
-    font-size: calc(0.8rem + 0.2vw + 0.2vh);
+    font-size: calc(0.7rem + 0.2vw + 0.2vh);
     display: flex;
     justify-content: space-around;
     flex-direction: row;
@@ -153,7 +153,7 @@ nav .selected {
     padding: 6px;
     min-width: 16%;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1rem;
     text-align: center;
 }
 
