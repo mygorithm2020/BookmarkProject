@@ -38,6 +38,11 @@ if (ISLOGIN){
         //     </li>  `
         // );
 
+        // headerNav.insertAdjacentHTML("beforeend", `
+        //     <li>
+        //         <a href="myPage.html">마이페이지</a>
+        //     </li>
+        //     `);
     }
     if (document.querySelector("#logout")){
         document.querySelector("#logout").addEventListener("click", ()=> {

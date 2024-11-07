@@ -97,7 +97,7 @@
         - git으로 프로젝트 다운로드
         - 환경파일 등 추가(vi를 통해)
         - npm i, npm run build 등으로 실행 환경 구성
-        - mysql(8.4.0) 최신 LTS 설치
+        - mysql(8.4.0 or 8.9.~) 최신 LTS 설치
         - 유저 생성, 권한 부여, db 생성, table 생성, data migration
         - gcp 콘솔사이트에서 외부ip 방화벽 규칙생성으로 포트별 ip 접근 설정
         - ubuntu 에서 screen 활용해서 ssh 연결 종료 후에도 백그라운드에서 서버 작동

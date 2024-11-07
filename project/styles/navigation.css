@@ -12,10 +12,10 @@ nav {
     top: 80px;
     left: 0;
     right: 0; */
+    
 }
 
-#navigation{
-    
+#navigation{    
     
 }
 
@@ -77,7 +77,7 @@ nav .selected {
 }
 
 #main-nav-box{
-    height: 60px;
+    height: 50px;
     display: flex;
     padding-left: 10px;
     padding-right: 10px;
@@ -98,14 +98,14 @@ nav .selected {
     justify-content: space-around;
     flex-direction: row;
     width: 90%;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow: hidden;
 }
 
 #nav_list_box > li {
-    flex: 0 0 auto;
+    flex: 1 0 14%;
     display: inline-block;
-    margin: 5px;
-    min-width: 30px;    
+    margin: 5px; 
     padding: 4px;
     text-align: center; 
 }
@@ -141,7 +141,7 @@ nav .selected {
 #subcategory-box {
     padding: 16px;
     display: flex;
-    justify-content: left;
+    justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
     border-top: 10px solid rgba(0, 0, 0, 0.281);
@@ -181,7 +181,6 @@ nav .selected {
 
     #nav_list_box {
         width: 96%;
-        flex-wrap: nowrap;
         overflow: scroll;     
     }
 

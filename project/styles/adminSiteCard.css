@@ -8,6 +8,7 @@
     border: 4px solid black;
     height: 150px;    
     margin-top: 6px;
+    counter-increment: admin-card-no 1;
 }
 
 .site-card:hover {
@@ -20,17 +21,16 @@
     justify-content: left;
 }
 
-.site-card-list > li:first-child {
-    /* padding: 6px; */
-    flex: 1;    
-    text-align: center;
-}
 
 .site-card-list > li {
     padding: 6px;
     flex: 5;
     overflow: hidden;
     color: black;    
+}
+
+.site-card-list::before {    
+    content: counter(admin-card-no);  
 }
 
 .site_card_img {
