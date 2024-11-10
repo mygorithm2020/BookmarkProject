@@ -238,13 +238,13 @@ export class Site {
                                 ${new Date(siteList[i].CreatedDate).toLocaleString()}
                             </div>
                             <div>
-                                (${parseInt((Date.now() - new Date(siteList[i].CreatedDate).getTime())/1000/60/60/24)} 일전)
+                                (${parseInt((Date.now() - new Date(siteList[i].CreatedDate).getTime())/1000/60/60/24)} 일 전)
                             </div>
                             <div>
                                 ${new Date(siteList[i].UpdatedDate).toLocaleString()}                                
                             </div>
                             <div>
-                                (${parseInt((Date.now() - new Date(siteList[i].UpdatedDate).getTime())/1000/60/60/24)} 일전)
+                                (${parseInt((Date.now() - new Date(siteList[i].UpdatedDate).getTime())/1000/60/60/24)} 일 전)
                             </div>
                         </li>                        
                     </ul>                                             
