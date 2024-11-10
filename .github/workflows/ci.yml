@@ -79,6 +79,7 @@ jobs:
         run: cd backend-nest-js; npm run build
       - name: Test
         run: echo "npm run test"
+        # run: cd backend-nest-js; npm run test
 
   BackDeploy:
     needs: build
