@@ -23,9 +23,11 @@ show tables;
 
 select * from TA_member
 select * from TA_Authentication
+EXPLAIN
 select * from TA_AuthToken where Token LIKE '%eyJh' 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJWIjoiOXQvRWtGa2FUMUJINzJvaUZNR2wxUVNsSkdLQU9ETVVHN0RpZkxtcjJweGFGVjlJUWd2OTR5QzN6T3NXNTVaSG9nd2IiLCJpYXQiOjE3MjU5MzA2MDUsImV4cCI6MTcyNTkzMTIwNX0.mi_1LJ3ZMAsOSfqluDm33kKvKvElnuXfqtt-vYjrToM'
 
 select * from ta_site where isdeleted = 0 and (Description LIKE '%중고차%' or SiteDescription LIKE '%중고차%')
+
 
 update ta_site set isDeleted = 1 where siteId = 'd8f5794ee10843eda11c2e48d0285b6f'
 select * from ta_site order by createdDate desc

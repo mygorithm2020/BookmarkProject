@@ -85,10 +85,21 @@ window.onload = function(){
 // 리프레시 토큰의 만료일
 export function getExpiredDate(){
     let expiredDate = Date.now() / 1000;
-    if(window.localStorage.getItem(STORAGE_KEY_TOKEN)){        
+    if(REFRESHTOKEN){        
         expiredDate = JSON.parse(atob(REFRESHTOKEN.split(".")[1])).exp;
     }
 
     return expiredDate;
     
+}
+
+// 두 날짜 사이의 차이 계산 => 문자열로 날짜 형식을 입력받아 초단위로 리턴
+export function getTimeDiff(dt1, dt2){
+    if (dt1 == null){
+        return 0;
+    }
+    if (dt2 == null){
+        dt2 = Date.now();
+    }
+    return parseInt((dt2 - new Date(dt1).getTime())/1000);
 }

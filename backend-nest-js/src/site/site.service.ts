@@ -442,6 +442,7 @@ export class SiteService {
     // const res = this.getRecommendSite();
     let result = await ServerCache.getRecommendSites();
     if (!result || result.length == 0) {
+      // 주간? 조회수 높은순, 좋아요 높은순, 싫어요 낮은 순, 최근 등록 순, 최근 업데이트, 마지막 업데이트
       const reLoadSites: Site[] = await this.sRepo.query(
         `(select * from TA_Site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 25)
         UNION
@@ -451,7 +452,9 @@ export class SiteService {
         UNION
         (select * from TA_Site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 25)
         UNION
-        (select * from TA_Site where isDeleted = 0 and status = 2 order by UpdatedDate DESC LIMIT 25)`,
+        (select * from TA_Site where isDeleted = 0 and status = 2 order by UpdatedDate DESC LIMIT 25)
+        UNION
+        (select * from TA_Site where isDeleted = 0 and status = 2 order by UpdatedDate ASC LIMIT 25)`,
       );
       await ServerCache.setRecommendSites(reLoadSites);
       result = await ServerCache.getRecommendSites();

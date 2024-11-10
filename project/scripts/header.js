@@ -8,7 +8,7 @@ const ISLOGIN = window.localStorage.getItem(STORAGE_KEY_NICKNAME) && getExpiredD
 // 리프레시 토큰의 만료일
 function getExpiredDate(){
     let expiredDate = Date.now() / 1000;
-    if(window.localStorage.getItem(STORAGE_KEY_TOKEN)){
+    if(REFRESHTOKEN){
         
         expiredDate = JSON.parse(atob(REFRESHTOKEN.split(".")[1])).exp;
     }
@@ -38,6 +38,11 @@ if (ISLOGIN){
         //     </li>  `
         // );
 
+        // headerNav.insertAdjacentHTML("beforeend", `
+        //     <li>
+        //         <a href="myPage.html">마이페이지</a>
+        //     </li>
+        //     `);
     }
     if (document.querySelector("#logout")){
         document.querySelector("#logout").addEventListener("click", ()=> {

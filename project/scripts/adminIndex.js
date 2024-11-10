@@ -21,7 +21,7 @@ const updateAsc = "변경 오래된 순";
 const createDesc = "최근 생성 순";
 const createAsc = "생성 오래된 순";
 
-let pageCnt = 0;
+
 const onepageCnt = 30; // 한번에 표시하는 개수
 
 
@@ -101,7 +101,7 @@ async function setCategoryPage(){
 
 async function setSitePage(){
 
-    const selectedStatus = [false, false, false, false, false, false, false, false];
+    const selectedStatus = Array.from({length : 9}, () => false);
 
     addBox.insertAdjacentHTML("beforeend",`
         <form>
@@ -125,7 +125,7 @@ async function setSitePage(){
                 <span id="status-one-0"></span>
             </li>`;
 
-    for (let ii=1; ii < 9; ii++){
+    for (let ii=1; ii < selectedStatus.length; ii++){
         siteFilterHtml += `
         <li>
             <input type="checkbox" id="status-${ii}" name="status-${ii}" />
@@ -182,7 +182,7 @@ async function setSitePage(){
     let showList = [];
 
     // 뒤로가기 시 간헐적으로 체크가 되어 있으나 값이 안보이는 현상 떄문에 변화 감지 전에 초기화 진행
-    for (let ii=0; ii < 8; ii++){
+    for (let ii=0; ii < selectedStatus.length; ii++){
         if (document.querySelector(`input[name=status-${ii}]`).checked){
             selectedStatus[ii] = true;
         } else {
@@ -245,7 +245,7 @@ async function setSitePage(){
     });
     
     // 선택된 상태 값에 따라 데이터 필터링
-    for (let ii=0; ii < 8; ii++){
+    for (let ii=0; ii < selectedStatus.length; ii++){
         document.querySelector(`input[name=status-${ii}]`).addEventListener("change", ()=>{
             selectedStatus[ii] = !selectedStatus[ii];
             showList = makeFilteredList(sites, searchEl.value, selectedStatus);
@@ -274,13 +274,12 @@ function makeFilteredList(originSiteList, searchValue, statusList){
         return filterdSites;
     }
     let tempList = [];
-    let statusCntList = [0, 0, 0, 0, 0, 0, 0, 0];
+    let statusCntList = Array.from({length : statusList.length}, ()=> 0);
 
     // 검색 값 없음
     if (!searchValue){
         tempList = originSiteList;
     } else {
-        // 검색 값 없음
         searchValue = searchValue.toLowerCase();
         tempList = originSiteList.filter((item) => {
             return (item.URL && item.URL.includes(searchValue)) || 
@@ -299,22 +298,22 @@ function makeFilteredList(originSiteList, searchValue, statusList){
     // 상태 전체 선택
     if (statusList[0]){
         filterdSites = tempList;            
-        statusCntList[0] = tempList.length;
     } else {
         // 상태 일부 선택        
         for(const oneSite of tempList){
-            statusCntList[oneSite.Status] += 1;
             if (statusList[oneSite.Status]){
                 filterdSites.push(oneSite);                
             }                    
         }
     }
 
+    statusCntList[0] = tempList.length;
+    for(const oneSite of tempList){
+        statusCntList[oneSite.Status] += 1;                    
+    }
+
     for (let idx = 0; idx<statusCntList.length; idx ++){
-        if (statusList[idx]){
-            console.log(document.querySelector(`#status-one-${idx}`));
-            document.querySelector(`#status-one-${idx}`).textContent = `(${statusCntList[idx]})`;
-        }
+        document.querySelector(`#status-one-${idx}`).textContent = `(${statusCntList[idx]})`;
     }
 
     
@@ -394,6 +393,7 @@ function initSiteList(showSiteList, order){
         siteList.insertAdjacentHTML("beforeend", `<div class="no-data-templet">등록된 사이트가 없습니다.</div>`);
         return;
     }
+    let pageCnt = 0;
     // 개수 표시
     siteList.insertAdjacentHTML("beforeend", Site.listToHtmlForAdmin(showSiteList.slice(onepageCnt * pageCnt, onepageCnt * (pageCnt+1))));
 

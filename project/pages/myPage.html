@@ -39,7 +39,6 @@
     <!-- <link rel="stylesheet" href="../css/dev.css"> -->
     <link rel="stylesheet" href="../styles/global.css">
     <link rel="stylesheet" href="../styles/header.css">
-    <link rel="stylesheet" href="../styles/navigation.css">
     
     
 </head>
@@ -48,18 +47,194 @@
 
     </header>
     
-    <main class="layer1">
-        <section id="main_banner" class="layer1">
-            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">
-            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">
-            <input class="banner_input" type="image" src="../images/banner.png" alt="제출버튼">    
-        </section>
+    <main class="layer1">     
+        <aside>
+            <ul id="my-list">
+                <li><a href="myPage.html?key=favorite">즐겨찾기</a></li>
+                <li><a href="myPage.html?key=manager">관리중인 사이트</a></li>
+                <li><a href="myPage.html?key=myinfo">정보변경</a></li>
+                <li><a href="myPage.html?key=password">비밀번호 변경</a></li>
+                <li><a href="myPage.html?key=resign">회원 탈퇴</a></li>
+             </ul>
+        </aside>   
         <section id="main_content01">
-            <h2 class="site-map-text">마이페이지</h2>
+            <h2 class="site-map-text">즐겨찾기</h2>
             <!-- <div class="loading-spinner"></div>             -->
+            <div>
+                <button>폴더 추가</button>
+                <button>사이트 추가</button>
+                <ul>
+                    <li>
+                        a폴더
+                        <button>폴더 추가</button>
+                        <button>사이트 추가</button>
+                        <button>삭제</button>
+                        <ul>
+                            <li>
+                                a사이트
+                                <button>삭제</button>
+                            </li>
+                            <li>
+                                a사이트
+                                <button>삭제</button>
+                            </li>
+                        </ul>
+                        
+                    </li>
+                    <li>
+                        a폴더
+                        <button>폴더 추가</button>
+                        <button>사이트 추가</button>
+                        <button>삭제</button>
+                        <ul>
+                            <li>
+                                a폴더
+                                <button>폴더 추가</button>
+                                <button>사이트 추가</button>
+                                <button>삭제</button>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        a폴더
+                        <button>폴더 추가</button>
+                        <button>사이트 추가</button>
+                        <button>삭제</button>
+                    </li>
+                    <li>
+                        a폴더
+                        <button>폴더 추가</button>
+                        <button>사이트 추가</button>
+                        <button>삭제</button>
+                    </li>
+                    <li>
+                        a사이트
+                        <button>삭제</button>
+                    </li>
+                </ul>  
+            </div>
+
+            <div>
+                <button>사이트 관리자 인증 등록하기</button>
+                <h3>등록신청 내역</h3>
+                <table id="notice_list">                    
+                    <tr class="notice_card bg-color-3">                      
+                      <th>URL</th>
+                      <th>신청 날짜</th>
+                      <th>처리 상태</th>                      
+                      <th>수정</th>     
+                    </tr>                    
+                    <tr class="notice_card">                      
+                      <td><a href="notice.html?key=1">웹사이트 출시</a></td>                      
+                      <td><a href="notice.html?key=1">웹사이트 출시</a></td>                      
+                      <td><a href="notice.html?key=1">웹사이트 출시</a></td>                                                              
+                      <td><button>취소</button></td> 
+                    </tr>                    
+                </table>
+                <h3>등록된 사이트</h3>
+                <table id="notice_list">                    
+                    <tr class="notice_card bg-color-3">                      
+                      <th>이미지</th>
+                      <th>제목</th>
+                      <th>설명</th>
+                      <th>조회수</th>
+                      <th>좋아요</th>
+                      <th>싫어요</th>
+                      <th></th>
+                    </tr>                    
+                    <tr class="notice_card">                                           
+                      <td>웹사이트 출시</td>
+                      <td><a href="">웹사이트 출시</a></td> 
+                      <td>웹사이트 출시</td>
+                      <td>웹사이트 출시</td>
+                      <td>웹사이트 출시</td>
+                      <td>웹사이트 출시</td>          
+                      <td><button>삭제</button></td>
+                    </tr>                    
+                </table>   
+            </div>
+
+            <div>
+                <form id="signup-form" action="" method="post">
+                
+                    <label class="labels" for="uemail-f">이메일</label>
+                    <span>dsdsdsdds</span>
+                    <div id="detail-info-box">
+                        <div>
+                            <label class="labels" for="nickname">닉네임</label>
+                            <input type="text"  name="nickname" maxlength="25">
+                        </div>    
+                        <div>
+                            <label class="labels" for="birth">생년월일</label>
+                            <input type="date" name="birth" value="2000-06-15" min="1940-01-01" max="2020-12-31">
+                        </div>
+                        <div>
+                            <label class="labels" for="gender">성별</label>
+                            <select name="gender" >
+                                <option value="self"></option>
+                                <option value="male">남자</option>
+                                <option value="female">여자</option>                    
+                            </select>
+                        </div>                                
+                        <button id="signup-btn" class="buttons" type="submit">수정</button>    
+                    </div>                      
+                </form>
+            </div>
+
+            <div>
+                <form id="signup-form" action="" method="post">
+                    <div>
+                        <label class="labels" for="uemail-f">이메일</label>
+                        <span>dsdsdsdds</span>
+                        <button id="send-auth-code" class="buttons" type="button">인증번호 전송</button>
+                    </div>
+                    <div id="auth-code-box">
+                        <label class="labels" for="auth-code">인증번호</label>
+                        <div class="container">                    
+                            <input type="text" name="auth-code" required>
+                            <button id="check-auth-code" class="buttons" type="button">이메일 인증</button>
+                            <!-- 중복 확인은 자동 -->                 
+                        </div>    
+                    </div>
+                    <div id="detail-info-box" class="hidden">                        
+                        <div>
+                            <label class="labels" for="psw">새로운 비밀번호</label>
+                            <input type="password" placeholder="Enter Password" name="psw" minlength="6" maxlength="20" required>
+                        </div>
+                        <div>
+                            <label class="labels" for="psw-confirm">새로운 비밀번호 확인</label>
+                            <input type="password" placeholder="Enter Password" name="psw-confirm" minlength="6" maxlength="20" required>   
+                        </div>    
+                    <button id="signup-btn" class="buttons" type="submit">변경</button>    
+                    </div>  
+                    
+                </form>
+            </div>
+
+            <div>
+                <form id="signup-form" action="" method="post">
+                    <div>
+                        <label class="labels" for="uemail-f">이메일</label>
+                        <span>dsdsdsdds</span>
+                    </div>                    
+                    <div id="detail-info-box">                        
+                        <div>
+                            <label class="labels" for="psw">비밀번호</label>
+                            <input type="password" placeholder="Enter Password" name="psw" minlength="6" maxlength="20" required>
+                        </div>
+                        <div>
+                            회원 탈퇴시 모든 정보가 삭제되며, 다시 복구할 수 없습니다.
+                        </div>   
+                    <button id="signup-btn" class="buttons" type="submit">회원 탈퇴</button>    
+                    </div>                      
+                </form>
+            </div>
+                     
+               
         </section>
     </main>
     <footer id="footer"></footer>
     <!-- js 파일들 추가 -->
+    <script src="../scripts/myPage.js" type="module"></script>
 </body>
 </html>

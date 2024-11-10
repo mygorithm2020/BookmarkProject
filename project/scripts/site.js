@@ -210,10 +210,7 @@ export class Site {
             <li class="site-card">
                 <a class="external_link" href="siteDetail.html?site=${siteList[i].SiteId}"  rel="external" data-siteId=${siteList[i].SiteId}>
                     <ul class="site-card-list">
-                        <li>
-                            ${i+1}
-                        </li>
-                        
+                                                
                         <li>
                             <img class="site_card_img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ? this.IMG_HOST + "/" + siteList[i].SiteId + "/" + siteList[i].Img : '../images/noImage.jpg'}" alt="no images">    
                         </li>
@@ -242,13 +239,13 @@ export class Site {
                                 ${new Date(siteList[i].CreatedDate).toLocaleString()}
                             </div>
                             <div>
-                                (${parseInt((Date.now() - new Date(siteList[i].CreatedDate).getTime())/1000/60/60/24)} 일전)
+                                (${parseInt((Date.now() - new Date(siteList[i].CreatedDate).getTime())/1000/60/60/24)} 일 전)
                             </div>
                             <div>
                                 ${new Date(siteList[i].UpdatedDate).toLocaleString()}                                
                             </div>
                             <div>
-                                (${parseInt((Date.now() - new Date(siteList[i].UpdatedDate).getTime())/1000/60/60/24)} 일전)
+                                (${parseInt((Date.now() - new Date(siteList[i].UpdatedDate).getTime())/1000/60/60/24)} 일 전)
                             </div>
                         </li>                        
                     </ul>                                             
