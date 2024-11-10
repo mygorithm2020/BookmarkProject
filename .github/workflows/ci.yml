@@ -127,6 +127,7 @@ jobs:
             source .nvm/nvm.sh
             node -v
             nvm -v
+            nvm install 20.16
             nvm use 20.16.0
             cd BookmarkProject/backend-nest-js
             git pull origin v2
