@@ -110,6 +110,7 @@ jobs:
       #     EOF
       
       # uses로 다른 방법으로 ssh 접속 방법
+      #메모리 사용량 한계로 mysql 멈추는 과정 추가
       - name: excuting remote ssh commands
         uses: appleboy/ssh-action@v1.0.3 #ssh 접속
         with:
@@ -127,10 +128,7 @@ jobs:
             source .nvm/nvm.sh
             node -v
             nvm -v
-            nvm use 20.10.0
-            cd BookmarkProject/backend-nest-js
-            git pull origin v2
-            npm run build
+            nvm use 20.10.0            
             # 기존 NestJS 애플리케이션을 멈춤
             if screen -list | grep -q nestjs; then
               screen -X -S nestjs quit
@@ -138,7 +136,11 @@ jobs:
             else
               echo "No running application found."
             fi
-
+            cd BookmarkProject/backend-nest-js             
+            sudo systemctl stop mysql   
+            git pull origin v2            
+            npm run build
+            sudo systemctl start mysql
             screen -dmS nestjs npm run start:prod
             echo "Started new NestJS application"
 

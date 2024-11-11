@@ -111,8 +111,9 @@
     AWS Ubuntu npm i or ci: 너무 느리거나 멈추는 문제
         - node 20.10 or 20.16 npm 10.2.3환경에서 npm ci와 npm i 를 통해 설치했으나 도중에 에러 없이 멈추는 현상 발생
         - 멈춘 상태에서 SSH 연결을 끊고 재 연결하면 연결조차 안되서 인스턴스 재부팅 필요
-        - 정확한 해결 방안은 못찾았으나 총 3가지 방법을 동시에 사용해서 해결
+        - 총 3가지 방법을 동시에 사용해서 해결(실제로는 메모리 부족으로 mysql만 정지해도 해결되는것으로 보임)
         - npm 캐시 정리(npm cache clean --force), 실행중인 프로세스 정리(mysql 이 가장 리소스가 커서 일단 정지, sudo systemctl stop mysql), 기존 node_modules 삭제(rm -rf node_modules)
+        - npm install 실행
 
 #### 배포
     웹 호스팅 : 가비아, cafe24 등에서 nodejs 호스팅을 찾았지만 너무 구 버전이고, 제한 사항이 많아 진행이 어려움
