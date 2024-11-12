@@ -88,7 +88,7 @@ document.querySelector("#close-btn").addEventListener("click", ()=>{
 });
 
 backCover.addEventListener("click", ()=>{
-    if (!backCover.classList.contains("hidden")){
+    if (!recSiteBox.classList.contains("hidden")){
         OpenOrCloseModal();
             return;
     } 

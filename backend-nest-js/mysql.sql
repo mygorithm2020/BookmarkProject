@@ -246,6 +246,8 @@ CREATE TABLE TA_Site(
 CREATE INDEX IDX_Site_URL ON TA_Site (URL);
 CREATE INDEX IDX_Site_Views ON TA_Site (Views);
 CREATE INDEX IDX_Site_Good ON TA_Site (Good);
+CREATE INDEX IDX_Site_CreatedDate ON TA_Site (CreatedDate);
+CREATE INDEX IDX_Site_UpdatedDate ON TA_Site (UpdatedDate);
 -- ALTER TABLE TA_Site MODIFY COLUMN Bad INT  default 0;
 
 
