@@ -68,9 +68,15 @@ import { SITE_TITLE} from "./global.js";
             // getSiteByCategory(targetCategoryId, 1);
             let mainContent01El = document.getElementById("main_content01");
             let sList = await Site.getSiteByCategory(targetCategoryId, 1);
-            console.log(sList);
-            // 나중에는 총 개수 추가하기
-            mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlTemp(sList[0]));
+
+            
+            if (sList){
+                // 임시로 추천 사이트 기능 대신 랜덤 섞기 추가
+                Site.shuffle(sList[0]);
+                // 나중에는 총 개수 추가하기
+                mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlTemp(sList[0]));
+            }
+            
             // 카드 이벤트 효과 추가
             Site.cardEvent();
             

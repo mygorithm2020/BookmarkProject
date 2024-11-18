@@ -79,13 +79,13 @@ export class Site {
                                                             
                         </ul>                        
                     </div>
-                    <div class="site-card-text-box bg-color-5">
-                        <div class="site-card-mid bg-color-5">
+                    <div class="site-card-text-box">
+                        <div class="site-card-mid ">
                             <div>
                                 ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
                             </div>                            
                         </div>
-                        <p class="site-card-bottom bg-color-5">
+                        <p class="site-card-bottom ">
                             ${siteList[i].SiteDescription? siteList[i].SiteDescription : ""}   
                         </p>    
                     </div>                                         
