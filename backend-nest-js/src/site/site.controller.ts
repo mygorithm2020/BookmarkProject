@@ -50,7 +50,6 @@ export class SiteController {
     // 관리자면 통과, 로그인 했으면 통과
 
     const res = this.siteService.create(createSiteDto);
-    console.log(res);
     return res;
   }
 

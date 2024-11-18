@@ -26,7 +26,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './middleware/logging.interceptor';
 import { Constraint } from './publicComponents/constraint';
 import { ApiClient } from './publicComponents/apiClient';
-import { JwtService } from './auth/jwt/jwt.service';
 import { MemberBookmarkModule } from './member-bookmark/member-bookmark.module';
 
 dotenv.config();
@@ -87,7 +86,6 @@ console.log(process.env.DB_HOST);
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
-    JwtService,
   ],
 })
 export class AppModule implements NestModule {

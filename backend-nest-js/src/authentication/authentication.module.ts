@@ -11,14 +11,23 @@ import { AuthToken } from './entities/authtoken.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from 'src/authentication/entities/Auth.constant';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Authentication, AuthToken]),
-    JwtModule.register({
-      global: true,
-      secret: jwtConstants.accessSecret,
-      signOptions: { expiresIn: jwtConstants.accessExpiresIn },
+    // JwtModule.register({
+    //   global: true,
+    //   secret: process.env.JWT_ACCESS_SECRET,
+    //   signOptions: { expiresIn: jwtConstants.accessExpiresIn },
+    // }),
+    JwtModule.registerAsync({
+      global : true,
+      useFactory : async (configService : ConfigService) => ({
+        secret : configService.get<string>('JWT_ACCESS_SECRET'),
+        signOptions: { expiresIn: jwtConstants.accessExpiresIn },
+      }),
+      inject: [ConfigService],
     }),
     MemberModule,
     HttpModule,

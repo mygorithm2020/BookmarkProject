@@ -123,7 +123,7 @@ formBox.addEventListener("submit", async (target)=>{
     let res = await Site.addSiteAdmin(site);
     if (res){
         if (res.SiteId){
-            alert(`${url} 사이트가 새로 등록되었습니다`);
+            alert(`사이트가 새로 등록되었습니다`);
             // 등록 창 닫기
             OpenOrCloseModal();
         }else if (res.errCode){
