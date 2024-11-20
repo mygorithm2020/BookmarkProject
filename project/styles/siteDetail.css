@@ -1,0 +1,16 @@
+#detail-top{
+    display: flex;
+    flex-direction: row;
+
+    margin: 2%;
+}
+
+#detail-top > img {
+    min-width: 20%;
+    max-width: 40%;
+    margin-right: 4%;
+}
+
+#top-content{
+    font-size: 1.2rem;    
+}

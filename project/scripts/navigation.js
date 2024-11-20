@@ -55,7 +55,7 @@ import { Category } from "./categoryObj.js";
         // const STANDARD = 30;
 
         // console.log(navBox.offsetTop);
-        console.log(maxScrollY, window.scrollY, maxScrollY - 2 * STANDARD);
+        // console.log(maxScrollY, window.scrollY, maxScrollY - 2 * STANDARD);
         
         if(window.scrollY > fixLocate){
             // console.log(window.scrollY);

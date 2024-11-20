@@ -92,11 +92,12 @@ export class ServerCache {
   static async checkRestrictedViews(
     reqUserAgent: string,
     reqIp: string,
-    SiteId: string,
+    siteId: string,
+    memberId : string,
   ): Promise<boolean> {
     // 1시간마다 측정하자
     const newStr: string =
-      Math.trunc(new Date().getUTCHours()) + reqUserAgent + reqIp + SiteId;
+      Math.trunc(new Date().getUTCHours()) + reqUserAgent + reqIp + siteId;
     let res = false;
     if (!this.restrictedViews) {
       this.restrictedViews = {

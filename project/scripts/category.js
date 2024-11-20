@@ -74,11 +74,11 @@ import { SITE_TITLE} from "./global.js";
                 // 임시로 추천 사이트 기능 대신 랜덤 섞기 추가
                 Site.shuffle(sList[0]);
                 // 나중에는 총 개수 추가하기
-                mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlTemp(sList[0]));
+                mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlBasic(sList[0]));
             }
             
             // 카드 이벤트 효과 추가
-            Site.cardEvent();
+            Site.siteEvent();
             
             
             spinner.classList.toggle("cover");

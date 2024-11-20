@@ -57,7 +57,7 @@ export class Site {
     // 1000 넘어가면 표기 변경 구현
     // <li>방문수 ${siteList[i].Views}</li>
 
-    static listToHtmlTemp(siteList){
+    static listToHtmlBasic(siteList){
         let res = "";
         if (!siteList || siteList.length === 0){
             res = `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
@@ -91,100 +91,6 @@ export class Site {
                     </div>                                         
                 </a>     
                   
-            </li>`;
-        }
-                        
-        res += `
-        </ul>`
-
-        return res;
-    }
-
-    static listToHtmlForSearch(siteList){
-        let res = "";
-        if (!siteList || siteList.length === 0){
-            res = `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
-            return res;
-
-        }
-
-        res += `<ul id="site-card-box">`
-        for (let i = 0 ; i < siteList.length; i++){
-            // if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
-            //     siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
-            // }
-            res += `
-            <li class="site-card">
-                <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
-                    <div class="site-card-top ">                    
-                        <img class="site-card-img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ?Site.IMG_HOST + "/" + siteList[i].SiteId + "/" + siteList[i].Img : siteList[i].Img}" alt="no images">
-                        
-                    </div>
-                    <div class="site-card-mid bg-color-5">
-                        <div>
-                            ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}                            
-                        </div>
-                        <ul class="site-detail-box">
-                                                         
-                        </ul>
-                    </div>
-                    <p class="site-card-bottom bg-color-5">
-                        ${siteList[i].SiteDescription? siteList[i].SiteDescription : ""}   
-                    </p>                         
-                </a>     
-                  
-            </li>`;
-        }
-                        
-        res += `
-        </ul>`
-
-        return res;
-    }
-
-    
-
-    static listToHtmlv2(siteList){
-        let res = "";
-        if (!siteList || siteList.length === 0){
-            res = `<div class="no-data-templet">현재 등록된 사이트가 없습니다.</div>`;
-            return res;
-
-        }
-
-        res += `<ul id="site-card-box">`
-        for (let i = 0 ; i < siteList.length; i++){
-            // if (siteList[i].SiteDescription && siteList[i].SiteDescription.length > 80){
-            //     siteList[i].SiteDescription = siteList[i].SiteDescription.slice(0, 80) + "...";
-            // }
-            res += `
-            <li class="site-card">                    
-                <div class="site_card_top_mid">
-                    <a class="external_link" href="${siteList[i].URL}" target="_blank" rel="external" data-siteId=${siteList[i].SiteId}>
-                        <div class="site_card_top">
-                            <div>                            
-                                <img class="site_card_img" src="${siteList[i].Img && !siteList[i].Img.startsWith('http') ? Site.IMG_HOST + "/" + site.SiteId + "/" + site.Img : '../images/noImage.jpg'}" alt="no images">
-                            </div>                                
-                            <div>
-                                ${siteList[i].NameKR ? siteList[i].NameKR : siteList[i].Name}<br>
-                            </div>
-                        </div>
-                        <ul class="site-detail-box">
-                            <li>클릭 수 ${siteList[i].Views}</li>
-                            <li>좋아요 ${siteList[i].Good}</li>
-                            <li>싫어요 ${siteList[i].Bad}</li>                                
-                        </ul>   
-                        <p class="site_card_description">
-                            ${siteList[i].SiteDescription? siteList[i].SiteDescription : ""}                              
-                        </p>                            
-                    </a>                                                        
-                </div>                    
-                <div class="site_card_bottom" 
-                data-siteId=${siteList[i].SiteId}
-                data-siteURL=${siteList[i].URL}>
-                    <input type="button" name="좋아요요요??" value="좋아요">
-                    <input type="button" value="내 즐겨찾기" class="remove-my-bookmark">
-                </div>
             </li>`;
         }
                         
@@ -260,30 +166,13 @@ export class Site {
         let data = ApiRequest.axiosPatch("/site/views", {
             SiteId : siteId
         });
-
-        // 카테고리 불러오기
-        // let data = axios.patch(`${this.API_HOST}/site/views`, {
-        //     SiteId : siteId
-        // },
-        // {
-        //     headers: {
-        //         'Content-Type' : 'application/json'
-        //     }
-            
-        // })
-        // .then((result) => {
-        //     console.log(result);            
-        // })
-        // .catch((error) => {
-        //     console.error(error);
-        // });        
     }
 
     updateGood(memberId, siteId){
 
     }
 
-    static cardEvent(){        
+    static siteEvent(){        
         //조회수 측정 효과 추가
         const cardLinks = document.querySelectorAll(".external_link");
         cardLinks.forEach((element) => {
@@ -326,7 +215,6 @@ export class Site {
 
     // 개수 많아지면 페이지 추가
     static async getRecommendedSite(page){
-
         let data = ApiRequest.axiosGet("/site/recommend");
         return data;
     }
@@ -338,8 +226,14 @@ export class Site {
         return data;
     }
 
-    static async getSiteById(siteId){
+    static async getSiteByIdAdmin(siteId){
         let data = ApiRequest.axiosGet(`/site/admin?id=${siteId}`);
+        // let data = await this.axiosGet(`${this.API_HOST}/site/admin?id=${siteId}`);
+        return data;
+    }
+
+    static async getSiteById(siteId){
+        let data = ApiRequest.axiosGet(`/site/${siteId}`);
         // let data = await this.axiosGet(`${this.API_HOST}/site/admin?id=${siteId}`);
         return data;
     }

@@ -126,7 +126,7 @@ export class AuthenticationService {
     const payload = {
       V: cEncrypt.encryptAes256(
         JSON.stringify({
-          I: member.MemEmail,
+          I: member.MemberId,
           Ae: member.Authentication,
           Ao: member.Authorization,
         }),
