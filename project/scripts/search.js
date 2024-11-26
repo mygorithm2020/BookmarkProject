@@ -11,7 +11,7 @@ console.log(data);
 let spinner = document.querySelector(".loading-spinner");
 spinner.classList.toggle("cover");
 if (data && data[1] >0){
-    mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlForSearch(data[0]));
+    mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlBasic(data[0]));
 } else {
     mainContent01El.insertAdjacentHTML("beforeend", "<h2>검색어에 해당하는 사이트가 없습니다</h2>");
 }

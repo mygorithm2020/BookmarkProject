@@ -10,7 +10,7 @@ let siteId = curUrl.searchParams.get("site");
 let mainContent01El = document.getElementById("main_content01");
 
 // 사이트 조회
-const site = await Site.getSiteById(siteId);
+const site = await Site.getSiteByIdAdmin(siteId);
 
 if (!site){
   alert("존재하지 않는 사이트 입니다.");

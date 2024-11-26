@@ -50,7 +50,6 @@ export class SiteController {
     // 관리자면 통과, 로그인 했으면 통과
 
     const res = this.siteService.create(createSiteDto);
-    console.log(res);
     return res;
   }
 
@@ -212,17 +211,25 @@ export class SiteController {
 
   @Patch('/views')
   async updateViews(@Req() req: Request, @Body() updateSiteDto: Site) {
+
+    // jwt 토큰 payload에 복호화하면 memberId 들어있음
+    // 로그인 상태면 다르게 처리
+    const memberId = "";
     // 조회수 필터링 조건
     if (
       await ServerCache.checkRestrictedViews(
         req.headers['user-agent'],
         req.ip,
         updateSiteDto.SiteId,
+        memberId
       )
     ) {
       return;
     }
     // 멤버별로 조회수 기록 로그형태
+    if (memberId){
+      // 멤버별로 조회수 기록
+    }
 
     const res = await this.siteService.updateViews(updateSiteDto.SiteId);
     if (res.affected > 0) {

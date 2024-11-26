@@ -67,7 +67,7 @@ export class CustomAuthGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.accessSecret,
+        secret: process.env.JWT_ACCESS_SECRET,
       });
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
@@ -113,7 +113,7 @@ export class AdminAuthGuard implements CanActivate {
     // return true;
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstantsAdmin.accessSecret,
+        secret: process.env.JWT_ADMIN_ACCESS_SECRET,
       });
 
       // admin 검증 로직 추가

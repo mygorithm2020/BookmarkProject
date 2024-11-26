@@ -115,6 +115,7 @@
     width: 100%;
     padding: 8px;
     letter-spacing: 0.07rem;
+    line-height: 1.05rem;
     font-size: calc(0.5rem + 0.2vw + 0.2vh);
     margin: 0;
     overflow: hidden;
@@ -137,9 +138,8 @@
 
     .site-card {
         width: 100%;
-        border: 0; 
-        margin-bottom: 1%;  
         
+        margin-bottom: 1%;          
     }
 
     .external_link {
@@ -153,19 +153,20 @@
 
     .site-card-top {
         height: 100%;
-        flex: 0 0 24%;        
+        flex: 0 0 30%;        
         padding: 0;
         justify-content: center;
     }
 
     .site-card-img {
         /* max-width: 90%;         */
-        height: 80%;
+        min-height: 80%;
+        /* min-width: 80%; */
         padding: 1%;
     }
 
     .site-card-text-box {
-        flex: 0 0 76%;
+        flex: 0 0 70%;
         height: 100%;
         width: 70%;
     }

@@ -7,62 +7,20 @@
 const { ApiRequest } = require("./ApiRequest.js");
 const { Builder, By, until, Options } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const { Site } = require("./Site.js");
 // import ('chromedriver');
 
-class Site{
-    // SiteId;
-    // URL;        
-    // Name;        
-    // NameKR;        
-    // IPAddress;        
-    // Img;        
-    // SiteDescription;        
-    // AppLinkAndroid;        
-    // AppLinkIOS;
-    // Views;        
-    // Good;        
-    // Bad;        
-    // MemberId;        
-    // Status;
-    // Title;
-    // FaviconImg;
-    // Description;
-    // Keywords;
-    // OGTitle;
-    // OGSiteName;        
-    // OGImg;
-    // OGDescription;
-    // OGURL; 
-    // IsDeleted;
-    // CreatedDate;
-    // UpdatedDate;
-    constructor(siteObj){        
-        this.SiteId = siteObj.SiteId;
-        this.URL = siteObj.URL;        
-        this.Name = siteObj.Name;        
-        this.NameKR = siteObj.NameKR;        
-        this.IPAddress = siteObj.IPAddress;        
-        this.Img = siteObj.Img;        
-        this.SiteDescription = siteObj.SiteDescription;        
-        // this.AppLinkAndroid = siteObj.AppLinkAndroid;        
-        // this.AppLinkIOS = siteObj.AppLinkIOS;        
-        this.Status = siteObj.Status;
-        this.Title = siteObj.Title;
-        this.FaviconImg = siteObj.FaviconImg;
-        this.Description = siteObj.Description;
-        this.Keywords = siteObj.Keywords;
-        this.OGTitle = siteObj.OGTitle;
-        this.OGSiteName = siteObj.OGSiteName;        
-        this.OGImg = siteObj.OGImg;
-        this.OGDescription = siteObj.OGDescription;
-        this.OGURL = siteObj.OGURL; 
-    }
-}
 
+// 등록 요청 => 배치 작업
+// 배치 등록 => 배치 작업
+// 기존 사이트들(공개, 보류, 자동 등록 실패, 자동 등록 성공) => 정보 업데이트
+
+// 등록 요청 된 사이트를 조회해서 업데이트하고, 배치 작업 + 데몬 용 사이트 추가
 
 const enrollSite = new Set();
 const start = Date.now();
-(async function(){
+batchRegistedStie();
+async function batchRegistedStie(){
     // 웹사이트를 불러와서
     let data = await ApiRequest.axiosGet("/site/daemon");
     // 내가 임의의 사이트를 보내기
@@ -79,10 +37,12 @@ const start = Date.now();
         console.log(`${cnt} : ${one.URL} , ${one.Status}`)
         if (res.Status != 1){
             continue;
-        }
-        
-        await (async function example() {
-            
+        }        
+
+        let tempEnrollSites = new Set();
+
+
+        await (async function example() {            
             let options = new chrome.Options();
             // options.addArguments('--headless'); // 백그라운드 실행 옵션
             options.windowSize({ width : 800,  height : 450});
@@ -90,9 +50,7 @@ const start = Date.now();
             // let driver = await new Builder().forBrowser('chrome').build();
             let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
             // let options = new Options(driver);
-            // options.addArguments('--headless'); // Headless 모드
-
-            let tempEnrollSites = new Set();
+            // options.addArguments('--headless'); // Headless 모드            
 
             try {
                 // 창 열리는 만료 시간
@@ -104,6 +62,7 @@ const start = Date.now();
                 
                 await driver.get(res.URL);                    
                 // let page = await driver.getPageSource();
+                // 실제 브라우저가 여는데 시간이 필요해서 대기 시간
                 await driver.sleep(3000);
 
                 // let links = await driver.findElements(By.css("link"));
@@ -169,21 +128,12 @@ const start = Date.now();
                 
                 const curUrl = await driver.getCurrentUrl();
                 const curUrlObj = new URL(curUrl);                
+                res.Status = 6;
                 // 등록된 url 과 열리는 창이 다르면 (redirect) 된다면 이미 공개된 경우를 제외하곤 비공개로 전환                
-                if (res.URL !== curUrlObj.origin && res.Status != 2){
+                if (res.URL !== curUrlObj.origin){
                     console.log(`다르다고? : ${curUrlObj.origin}`);
                     res.Status = 4;
-                }
-
-                if (res.Status == 1 || res.Status == 5 || res.Status == 8){
-                    res.Status = 6;
-                }
-                
-                // 사이트 업데이트
-                console.log(JSON.stringify(res));
-                if (res.SiteId){
-                    await ApiRequest.axiosPatch("/site/daemon", res);                
-                }
+                }                
 
                 //  새로운 사이트 등록
                 console.log("링크 조회 중");
@@ -225,9 +175,7 @@ const start = Date.now();
                     } catch (err) {
 
                     }                    
-                }
-                console.log("링크 조회 끝");    
-                  
+                }                  
 
             } catch (err) {
                 console.log(err);
@@ -235,34 +183,35 @@ const start = Date.now();
                 // 사이트 조회 실패
                 if (res.Status !== 2 && res.Status !== 3 && res.Status !== 4){
                     res.Status = 5;
-                    await ApiRequest.axiosPatch("/site/daemon", res);
                 }
             } finally {
-                await driver.quit();                 
-                // setTimeout(async () => {
-                                                
-                // }, 1000);           
+                await driver.quit();                                    
             }
+        })();
 
-            console.log("사이트 등록 중" + tempEnrollSites.size);
+        // 사이트 업데이트
+        console.log(JSON.stringify(res));
+        if (res.SiteId){
+            await ApiRequest.axiosPatch("/site/daemon", res);                
+        }
+
+        if (tempEnrollSites.size > 0){
+            console.log("자등등록 중" + tempEnrollSites.size);
             for (const addNewUrl of tempEnrollSites){  
                 console.log(addNewUrl);
                 // 여기에서 새로 등록 api 추가
                 try {
-                    await ApiRequest.axiosPost("/site/daemon", {URL : addNewUrl, Status : 8});
+                    ApiRequest.axiosPost("/site/daemon", {URL : addNewUrl, Status : 8});
                 } catch (err) {
 
                 }                
             }    
-            console.log("사이트 등록 끝");
-        })();    
-        
+        }
+
         console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})    ${parseInt((Date.now() - start)/1000)} 초`);        
         // 생각보다 오래걸려서 일부분씩 하자
         if (cnt/data.length * 100 > 99){
             break;
-        }
-        
-    }
-
-})();
+        }        
+    }    
+}

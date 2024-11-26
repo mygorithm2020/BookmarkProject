@@ -12,11 +12,13 @@ nav {
     top: 80px;
     left: 0;
     right: 0; */
+    /* position: sticky;
+    top : 0; */
     
 }
 
 #navigation{    
-    
+        
 }
 
 a:hover {
@@ -84,8 +86,6 @@ nav .selected {
     align-items: center;
 }
 
-
-
 #category-open {
     padding-left: 4px;
     max-width: 50px;
@@ -130,7 +130,8 @@ nav .selected {
     width: 100%;
     margin: 0;
     transition: all 0.5s;
-    transition-timing-function: ease-out;    
+    transition-timing-function: ease-out; 
+    z-index: 3;   
 }
 
 #category-box-expand-active{
@@ -152,7 +153,6 @@ nav .selected {
     color: black;
     padding: 6px;
     min-width: 16%;
-    font-weight: 600;
     font-size: 1rem;
     text-align: center;
 }

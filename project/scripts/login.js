@@ -37,7 +37,7 @@ loginForm.addEventListener("submit", async (target) => {
   }
   
   const resData = await mem.login(mem);
-  if (resData){
+  if (resData && resData.AccessToken){
     localStorage.setItem(STORAGE_KEY_TOKEN, JSON.stringify({
       AccessToken : resData.AccessToken,
       RefreshToken : resData.RefreshToken

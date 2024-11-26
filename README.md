@@ -24,8 +24,34 @@
 ### [Front](./project/)
     HTML, CSS, JavaScript
 
+### Git Commit Message Convention
+    Feat : 새로운 기능 추가
+    Fix : 버그 수정
+    Design : CSS 또는 UI 디자인 변경
+    !HOTFIX : 급하게 치명적인 버그 수정
+    Style : 코드 포벳 변경, 단순한 코드 정리
+    Refactor : 프로덕션 코드 리팩토링
+    Comment : 필요한 주석 추가 및 변경
+    Docs : 문서(readme etc)변경
+    Test : 테스트 코드 수정
+    New : 파일, 폴더 등의 추가
+    Rename : 파일, 폴더 등의 이름 변경
+    Remove : 파일, 폴더 등의 삭제
 
+    실제 사용 주의사항 : 
+    - 하나의 커밋에는 최대 2개의 제목만 부여하도록 작업 진행 => 최대한 세분화
+    - 변경 사항(기능 추가는 제외)은 한눈에 들어오는 정도로만 하면 best
+    - 같은 내용을 한글과 영문으로 작성
+    - 무엇을 왜 변경했는지 작성한다
+    - 예시
+    Feat : 장바구니 기능 / Style : 물건 조회 페이지
 
+    back. 장바구니 기능 추가 요청으로 api 추가
+    back. add api for shopping cart func
+
+    front. 물건 조회 페이지내 개발 중에 생성된 불필요한 코드 정리
+    front. remove unnecessary code on product list page
+    
 <!-- ### 환경세팅 -->
 ### 배포 체크리스트
     각종 브랜치에서 커밋 및 원격 브랜치로 푸쉬

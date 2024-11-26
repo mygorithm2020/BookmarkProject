@@ -472,15 +472,27 @@ export class SiteService {
         NameKR: true,
         Img: true,
         SiteDescription: true,
+        Keywords : true,
         Views: true,
         Good: true,
         Bad: true,
+        Categories : {
+          Name : true,
+          NameKR : true
+        },
       },
       where: {
         IsDeleted: 0,
         Status: 2,
         SiteId: id,
+        Categories: {
+          IsDeleted: 0,
+          Status: 2,
+        }
       },
+      relations: {
+        Categories : true
+      }
     });
   }
 
@@ -564,15 +576,26 @@ export class SiteService {
   }
 
   async updateViews(id: string): Promise<UpdateResult> {
+
+    if (!id){
+      throw new HttpException(
+        {
+          errCode: 22,
+          error: "siteId is required",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     return await this.sRepo
       .update(id, {
         Views: () => 'Views + 1',
       })
-      .catch((res) => {
+      .catch((reason) => {
         throw new HttpException(
           {
             errCode: 21,
-            error: res,
+            error: reason,
           },
           HttpStatus.BAD_REQUEST,
         );

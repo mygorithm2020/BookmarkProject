@@ -103,3 +103,6 @@ export function getTimeDiff(dt1, dt2){
     }
     return parseInt((dt2 - new Date(dt1).getTime())/1000);
 }
+
+
+// 입력값 중 xss 을 막기 위한 조치 필요, SQL Injection의 경우 ORM이 막아주고 있고 서버에서 처리

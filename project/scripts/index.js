@@ -26,9 +26,9 @@ let mainContent01El = document.getElementById("main_content01");
 let sites = await Site.getRecommendedSite();
 Site.shuffle(sites);
 //  HTML에 추가
-mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlTemp(sites));            
+mainContent01El.insertAdjacentHTML("beforeend", Site.listToHtmlBasic(sites));            
 // 카드 이벤트 효과 추가
-Site.cardEvent();
+Site.siteEvent();
 
 document.querySelector(".site-map-text").textContent = "추천 사이트";
 let spinner = document.querySelector(".loading-spinner");

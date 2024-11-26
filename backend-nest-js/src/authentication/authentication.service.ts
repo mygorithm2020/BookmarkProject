@@ -126,12 +126,13 @@ export class AuthenticationService {
     const payload = {
       V: cEncrypt.encryptAes256(
         JSON.stringify({
-          I: member.MemEmail,
+          I: member.MemberId,
           Ae: member.Authentication,
           Ao: member.Authorization,
         }),
       ),
     };
+  
     const aToken = await this.jwtService.signAsync(payload);
 
     return aToken;
@@ -147,7 +148,7 @@ export class AuthenticationService {
     // JWT 방식
     const refreshPayload = { DT: this.customUtils.getUTCDate() };
     const rToken = await this.jwtService.signAsync(refreshPayload, {
-      secret: jwtConstants.refreshSecret,
+      secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: jwtConstants.refreshExpiresIn,
     });
 
@@ -170,7 +171,7 @@ export class AuthenticationService {
     // 정상이면 엑세스 토큰 생성
     try {
       const payload = await this.jwtService.verifyAsync(tokenObj.Token, {
-        secret: jwtConstants.refreshSecret,
+        secret: process.env.JWT_REFRESH_SECRET,
       });
       console.log(JSON.stringify(payload));
     } catch (err) {
