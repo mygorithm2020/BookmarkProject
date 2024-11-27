@@ -27,6 +27,8 @@ import { LoggingInterceptor } from './middleware/logging.interceptor';
 import { Constraint } from './publicComponents/constraint';
 import { ApiClient } from './publicComponents/apiClient';
 import { MemberBookmarkModule } from './member-bookmark/member-bookmark.module';
+import { MemberCategoryModule } from './member-category/member-category.module';
+import { MemberSiteModule } from './member-site/member-site.module';
 
 dotenv.config();
 
@@ -74,6 +76,8 @@ console.log(process.env.DB_HOST);
     AuthenticationModule,
     HttpModule,
     MemberBookmarkModule,
+    MemberCategoryModule,
+    MemberSiteModule,
   ],
   controllers: [AppController],
   providers: [
