@@ -85,11 +85,51 @@ BEGIN
 END $$
 DELIMITER ;
 
+-- 다대다
+-- 멤버 카테고리 사이트 릴레이션
+CREATE TABLE TA_ReMemberCategoryMemberSite(
+  Id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'PK',
+  MemberCategoryId CHAR(32) NOT NULL,
+  MemberSiteId CHAR(32) NOT NULL,
+
+  CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+  
+  UNIQUE KEY UK_ReMemberCategoryMemberSite (MemberCategoryId, MemberSiteId)
+);
+CREATE INDEX IDX_ReMemberCategoryMemberSite_MemberCategoryId ON TA_ReMemberCategoryMemberSite (MemberCategoryId);
+CREATE INDEX IDX_ReMemberCategoryMemberSite_MemberSiteId ON TA_ReMemberCategoryMemberSite (MemberSiteId);
+
+-- 회원즐겨찾기
+CREATE TABLE TA_MemberSite (
+	MemberSiteId CHAR(32) NOT NULL PRIMARY KEY,    
+    Img VARCHAR(512),
+    Name VARCHAR(255),
+    URL VARCHAR(512),
+    MemberId CHAR(32) NOT NULL,
+    PrevId CHAR(32),
+    NextId CHAR(32),
+    CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
+    UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+);
+CREATE INDEX IDX_MemberSite_MemberId ON TA_MemberSite (MemberId);
+
+-- 회원의 카테고리
+CREATE TABLE TA_MemberCategory(
+    MemberCategoryId CHAR(32) NOT NULL PRIMARY KEY,
+    Name VARCHAR(32) NOT NULL,
+    MemberId CHAR(32) NOT NULL,
+    Sequence INT NOT NULL DEFAULT 99999999,
+    CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+    UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+
+) COMMENT "사이트의 카테고리 구분";
+CREATE INDEX IDX_MemberCategory_MemberId ON TA_MemberCategory (MemberId);
+
 -- 회원과 다른 정보와의 관계
 CREATE TABLE TA_ReMemberOthers (
 	Id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    MemberId CHAR(32) NOT NULL PRIMARY KEY,
-    ForeignId CHAR(32) NOT NULL PRIMARY KEY,
+    MemberId CHAR(32) NOT NULL,
+    ForeignId CHAR(32) NOT NULL,
     Kind INT NOT NULL DEFAULT 0 COMMENT "1 : 조회, 2: 좋아요, 3: 싫어요",
     CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
     UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP)
@@ -111,22 +151,6 @@ CREATE TABLE TA_Comment (
 );
 CREATE INDEX IDX_Comment_MemberId ON TA_Comment (MemberId);
 CREATE INDEX IDX_Comment_SiteId ON TA_Comment (SiteId);
-
--- 회원즐겨찾기
-CREATE TABLE TA_MemberBookmark (
-	BookmarkId CHAR(32) NOT NULL PRIMARY KEY,
-    MemberId CHAR(32) NOT NULL,
-    ParentId CHAR(32),
-    Kind INT NOT NULL DEFAULT 1 COMMENT "1: 폴더, 2: 사이트",
-    Img VARCHAR(512),
-    Name VARCHAR(255),
-    URL VARCHAR(512),
-    PrevId CHAR(32),
-    NextId CHAR(32),
-    CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
-    UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP)
-);
-CREATE INDEX IDX_MemberBookmark_BookmarkIdMemberId ON TA_MemberBookmark (BookmarkId, MemberId);
 
 -- 　이　아래로　서버　등록　완료　-- 
  

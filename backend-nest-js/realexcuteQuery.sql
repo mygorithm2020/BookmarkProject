@@ -30,7 +30,9 @@ select * from ta_site where isdeleted = 0 and (Description LIKE '%중고차%' or
 
 EXPLANE select * from ta_site order by createdDate desc
 select * from ta_site where siteid = '62fe83ca0943461e9e28491ee6260965'
-EXPLANE select * from ta_site where isDeleted = 0 and status = 2;
+describe ta_site
+SHOW INDEX FROM TA_Site
+EXPLAIN select * from ta_site where isDeleted = 0 and status = 2;
 select * from ta_site order by status;
 select * from ta_site order by views;
 
@@ -40,7 +42,9 @@ select * from ta_site order by views;
 select * from ta_category;
 select * from ta_recategorysite;
 select * from ta_site where img = 'favicon.ico'
-update ta_site set img = null where img = ''
+update ta_site set IPAddress = '1' where img = ''
+
+select * from ta_site where SiteId = '6618441af53d42e6ae0ec4d2ce993fe3'
 
 DELETE from ta_AuthToken WHERE TokenId = 51
 select * from ta_member
@@ -149,6 +153,16 @@ select * from ta_category;
 select * from ta_site order by createdDate desc;
 select * from ta_recategorysite;
 
-
-
+SHOW INDEX FROM ta_site;
+(EXPLAIN select * from TA_Site where isDeleted = 0 and status = 2 order by Views DESC LIMIT 25)
+        UNION
+        (EXPLAIN select * from TA_Site where isDeleted = 0 and status = 2 order by Good DESC LIMIT 25)
+        UNION
+        (EXPLAIN select * from TA_Site where isDeleted = 0 and status = 2 order by Bad ASC LIMIT 25)
+        UNION
+        (EXPLAIN select * from TA_Site where isDeleted = 0 and status = 2 order by createdDate DESC LIMIT 25)
+        UNION
+        (EXPLAIN select * from TA_Site where isDeleted = 0 and status = 2 order by UpdatedDate DESC LIMIT 25)
+        UNION
+        (EXPLAIN select * from TA_Site where isDeleted = 0 and status = 2 order by UpdatedDate ASC LIMIT 25)
 
