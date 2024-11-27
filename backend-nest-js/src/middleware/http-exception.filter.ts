@@ -74,7 +74,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
+    } 
 
     // resException = exception as HttpException;
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { MemberCategoryService } from './member-category.service';
 import { CreateMemberCategoryDto } from './dto/create-member-category.dto';
 import { UpdateMemberCategoryDto } from './dto/update-member-category.dto';
@@ -13,8 +13,8 @@ export class MemberCategoryController {
   }
 
   @Get()
-  findAll() {
-    return this.memberCategoryService.findAll();
+  findAllByMember(@Query('memberId') memberId: string) {
+    return this.memberCategoryService.findAll(memberId);
   }
 
   @Get(':id')

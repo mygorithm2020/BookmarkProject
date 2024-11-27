@@ -1,4 +1,4 @@
-import { MemberBookmark } from 'src/member-bookmark/entities/member-bookmark.entity';
+import { MemberCategory } from 'src/member-category/entities/member-category.entity';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'TA_Member' })
@@ -40,8 +40,8 @@ export class Member {
   UpdateDate: Date;
 
   @OneToMany(
-    (type) => MemberBookmark,
-    (memberBookmark) => memberBookmark.MemberId,
+    (type) => MemberCategory,
+    (memberCategory) => memberCategory.MemberId,
   )
-  memberBookmarks: MemberBookmark[];
+  memberCategories: MemberCategory[];
 }

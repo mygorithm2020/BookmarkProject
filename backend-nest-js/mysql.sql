@@ -102,28 +102,27 @@ CREATE INDEX IDX_ReMemberCategoryMemberSite_MemberSiteId ON TA_ReMemberCategoryM
 -- 회원즐겨찾기
 CREATE TABLE TA_MemberSite (
 	MemberSiteId CHAR(32) NOT NULL PRIMARY KEY,    
+    MemberId CHAR(32) NOT NULL,
     Img VARCHAR(512),
     Name VARCHAR(255),
     URL VARCHAR(512),
-    MemberId CHAR(32) NOT NULL,
     PrevId CHAR(32),
     NextId CHAR(32),
-    CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간",
-    UpdateDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+    CreateDate DATETIME NOT NULL default (UTC_TIMESTAMP) COMMENT "utc 시간임 한국시간으로 변환하려면 +9시간"
 );
 CREATE INDEX IDX_MemberSite_MemberId ON TA_MemberSite (MemberId);
 
 -- 회원의 카테고리
 CREATE TABLE TA_MemberCategory(
     MemberCategoryId CHAR(32) NOT NULL PRIMARY KEY,
-    Name VARCHAR(32) NOT NULL,
     MemberId CHAR(32) NOT NULL,
+    Name VARCHAR(32) NOT NULL,    
     Sequence INT NOT NULL DEFAULT 99999999,
-    CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
-    UpdatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
+    CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP)
 
 ) COMMENT "사이트의 카테고리 구분";
 CREATE INDEX IDX_MemberCategory_MemberId ON TA_MemberCategory (MemberId);
+ALTER TABLE TA_MemberCategory ADD UNIQUE (MemberId, Name);
 
 -- 회원과 다른 정보와의 관계
 CREATE TABLE TA_ReMemberOthers (
