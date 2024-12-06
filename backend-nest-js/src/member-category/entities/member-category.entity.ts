@@ -1,4 +1,4 @@
-import { Site } from 'src/site/entities/site.entity';
+import { MemberSite } from 'src/member-site/entities/member-site.entity';
 import {
   Column,
   CreateDateColumn,
@@ -6,43 +6,42 @@ import {
   JoinTable,
   ManyToMany,
   PrimaryColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'TA_MemberCategory' })
 export class MemberCategory {
-  @PrimaryColumn({
-    type: 'char',
-    length: 32,
-    unique: true,
-  })
-  MemberCategoryId: string;
+    @PrimaryColumn({
+      type: 'char',
+      length: 32,
+      unique: true,
+    })
+    MemberCategoryId: string;
 
-  @Column()
-  MemberId: string;
+    @Column()
+    MemberId: string;
 
-  @Column()
-  Name: string;
+    @Column()
+    Name: string;
 
-  @Column()
-  Sequence: number;
+    @Column()
+    Sequence: number;
 
-  @CreateDateColumn({
-    type: 'datetime',
-  })
-  CreatedDate: Date;
+    @CreateDateColumn({
+      type: 'datetime',
+    })
+    CreatedDate: Date;
 
-  // @ManyToMany((type) => Site) //, (category) => category.CategoryId
-  // @JoinTable({
-  //   name: 'TA_ReCategorySite',
-  //   joinColumn: {
-  //     name: 'CategoryId',
-  //     referencedColumnName: 'CategoryId',
-  //   },
-  //   inverseJoinColumn: {
-  //     name: 'SiteId',
-  //     referencedColumnName: 'SiteId', //타겟 테이블의 id값
-  //   },
-  // })
-  // Sites: Site[];
+    // @ManyToMany((type) => MemberSite) //, (category) => category.CategoryId
+    // @JoinTable({
+    //   name: 'TA_ReMemberCategoryMemberSite',
+    //   joinColumn: {
+    //     name: 'MemberCategoryId',
+    //     referencedColumnName: 'MemberCategoryId',
+    //   },
+    //   inverseJoinColumn: {
+    //     name: 'MemberSiteId',
+    //     referencedColumnName: 'MemberSiteId', //타겟 테이블의 id값
+    //   },
+    // })
+    // MemberSites: MemberSite[];
 }

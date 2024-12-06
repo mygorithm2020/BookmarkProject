@@ -608,7 +608,7 @@ export class SiteService {
   async updateByAdmin(updateSite: Site): Promise<UpdateResult> {
     console.log(`This action updates a #${updateSite.SiteId}`);
     console.log(updateSite);
-    if (updateSite.Status && updateSite.Status > 4) {
+    if (updateSite.Status && (updateSite.Status > 4 || updateSite.Status < 1)) {
       throw new HttpException(
         {
           errCode: 21,

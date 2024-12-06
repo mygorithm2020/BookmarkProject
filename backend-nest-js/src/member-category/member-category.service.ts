@@ -3,19 +3,31 @@ import { CreateMemberCategoryDto } from './dto/create-member-category.dto';
 import { UpdateMemberCategoryDto } from './dto/update-member-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberCategory } from './entities/member-category.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CustomUtils } from 'src/publicComponents/utils';
 import { Constraint } from 'src/publicComponents/constraint';
+import { MemberCategorySite } from 'src/member-site/entities/member-category-member-site';
 
 @Injectable()
 export class MemberCategoryService {
   constructor(
     @InjectRepository(MemberCategory) private mcRepo: Repository<MemberCategory>,
+    @InjectRepository(MemberCategorySite) private mcsRepo: Repository<MemberCategorySite>,
     private readonly customUtils: CustomUtils,
     private readonly constraint: Constraint,
+    private dataSource: DataSource,
   ) {}
   
   async create(memCate: CreateMemberCategoryDto) {
+    if (!memCate.MemberId || !memCate.Name){
+      throw new HttpException(
+        {
+          errCode: 21,
+          error: "Missing required value",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     // 개수 제한 무료버전은 최대 5개
     const newCategory = this.mcRepo.create(memCate);
     newCategory.MemberCategoryId = this.customUtils.get32UuId();
@@ -50,6 +62,7 @@ export class MemberCategoryService {
         MemberId : memberId
       },
       order: {
+        Sequence : 'ASC',
         CreatedDate : 'ASC'
       },
     });
@@ -62,8 +75,65 @@ export class MemberCategoryService {
     return `This action returns a #${id} memberCategory`;
   }
 
-  update(id: number, updateMemberCategoryDto: UpdateMemberCategoryDto) {
-    return `This action updates a #${id} memberCategory`;
+  async update(updateMemberCategoryDto: UpdateMemberCategoryDto) {
+    let res = false;
+
+    if (!updateMemberCategoryDto.Name){
+      throw new HttpException(
+        {
+          errCode: 21,
+          error: 'Missing required value',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+
+    }
+
+    // 트랜잭션으로 묶기
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    updateMemberCategoryDto = queryRunner.manager.create(MemberCategory, updateMemberCategoryDto);
+
+    // lets now open a new transaction:
+    await queryRunner.startTransaction();
+    try {
+      // 사이트 업데이트 하고
+      await queryRunner.manager.update(
+        MemberCategory,
+        {
+          MemberCategoryId : updateMemberCategoryDto.MemberCategoryId,
+        },
+        {
+          Name: updateMemberCategoryDto.Name,
+          // Sequence : updateMemberCategoryDto.se          
+        },
+      );
+
+      //  카테고리 사이트 연결 리스트 삭제 후 다시 만들기
+      await queryRunner.manager.delete(MemberCategorySite, {
+        MemberCategoryId : updateMemberCategoryDto.MemberCategoryId
+      });
+
+      queryRunner.manager.insert(MemberCategorySite, this.mcsRepo.create(updateMemberCategoryDto.Sites));
+
+      // commit transaction now:
+      await queryRunner.commitTransaction();
+      res = true;
+    } catch (err) {
+      // since we have errors let's rollback changes we made
+      await queryRunner.rollbackTransaction();
+      throw new HttpException(
+        {
+          errCode: 22,
+          error: 'An error occured during change',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } finally {
+      // you need to release query runner which is manually created:
+      await queryRunner.release();
+    }
+    return res;
   }
 
   remove(id: number) {

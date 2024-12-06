@@ -23,8 +23,8 @@ export class MemberCategoryController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMemberCategoryDto: UpdateMemberCategoryDto) {
-    return this.memberCategoryService.update(+id, updateMemberCategoryDto);
+  update(@Body() updateMemberCategoryDto: UpdateMemberCategoryDto) {
+    return this.memberCategoryService.update(updateMemberCategoryDto);
   }
 
   @Delete(':id')

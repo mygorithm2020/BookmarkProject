@@ -91,7 +91,6 @@ CREATE TABLE TA_ReMemberCategoryMemberSite(
   Id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'PK',
   MemberCategoryId CHAR(32) NOT NULL,
   MemberSiteId CHAR(32) NOT NULL,
-
   CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
   
   UNIQUE KEY UK_ReMemberCategoryMemberSite (MemberCategoryId, MemberSiteId)
@@ -201,6 +200,20 @@ CREATE INDEX IDX_Member_MemEmail ON TA_Member (MemEmail);
 -- ALTER TABLE TA_Member MODIFY COLUMN password VARCHAR(64) NOT NULL;
 -- ALTER TABLE TA_Member ADD CONSTRAINT CHECK (Gender IN ('M', 'F'));  -- null 은 상관 없음
 
+-- 다대다
+-- 카테고리 사이트 릴레이션
+CREATE TABLE TA_ReCategorySite(
+  Id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'PK',
+  CategoryId CHAR(32) NOT NULL,
+  SiteId CHAR(32) NOT NULL,
+
+  CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
+  
+  UNIQUE KEY UK_ReCategorySite (CategoryId, SiteId)
+);
+CREATE INDEX IDX_ReCategorySite_CategoryId ON TA_ReCategorySite (CategoryId);
+CREATE INDEX IDX_ReCategorySite_SiteId ON TA_ReCategorySite (SiteId);
+
 -- 카테고리
 CREATE TABLE TA_Category(
     CategoryId CHAR(32) NOT NULL PRIMARY KEY,
@@ -211,6 +224,7 @@ CREATE TABLE TA_Category(
     Status INT NOT NULL default 1 COMMENT "카테고리 등록상태 1:등록, 2: 사용, 3:보류",
     Sequence INT NOT NULL DEFAULT 99999999,
     Views BIGINT default 0,
+    Kind INT NOT NULL DEFAULT 1 COMMENT "카테고리의 종류를 구분하기 위한 용도 1 행위 2 객체",
 
     IsDeleted SMALLINT NOT NULL DEFAULT 0,
     CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
@@ -218,6 +232,7 @@ CREATE TABLE TA_Category(
 
 ) COMMENT "사이트의 카테고리 구분";
 ALTER TABLE TA_Category ADD UNIQUE (ParentId, Layer, Name);
+ALTER TABLE TA_Category ADD COLUMN Kind INT NOT NULL DEFAULT 1;
 
 
 describe TA_Site
@@ -277,18 +292,6 @@ CREATE INDEX IDX_Site_UpdatedDate ON TA_Site (UpdatedDate);
 
 describe ta_site;
 
--- 다대다
--- 카테고리 사이트 릴레이션
-CREATE TABLE TA_ReCategorySite(
-  Id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'PK',
-  CategoryId CHAR(32) NOT NULL,
-  SiteId CHAR(32) NOT NULL,
 
-  CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),
-  
-  UNIQUE KEY UK_ReCategorySite (CategoryId, SiteId)
-);
-CREATE INDEX IDX_ReCategorySite_CategoryId ON TA_ReCategorySite (CategoryId);
-CREATE INDEX IDX_ReCategorySite_SiteId ON TA_ReCategorySite (SiteId);
 
 

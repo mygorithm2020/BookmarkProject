@@ -7,9 +7,11 @@ import { HttpModule } from '@nestjs/axios';
 import { CustomUtils, FileAdapter } from 'src/publicComponents/utils';
 import { Constraint } from 'src/publicComponents/constraint';
 import { ApiClient } from 'src/publicComponents/apiClient';
+import { MemberCategorySite } from 'src/member-site/entities/member-category-member-site';
+import { MemberSite } from 'src/member-site/entities/member-site.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MemberCategory]), HttpModule],
+  imports: [TypeOrmModule.forFeature([MemberSite, MemberCategory, MemberCategorySite, ]), HttpModule],
   controllers: [MemberCategoryController],
   providers: [MemberCategoryService, CustomUtils, Constraint, ApiClient, FileAdapter],
 })
