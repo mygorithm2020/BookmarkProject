@@ -22,13 +22,13 @@ export class MemberCategoryController {
     return this.memberCategoryService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch()
   update(@Body() updateMemberCategoryDto: UpdateMemberCategoryDto) {
     return this.memberCategoryService.update(updateMemberCategoryDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.memberCategoryService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return (await this.memberCategoryService.remove(id)).affected;
   }
 }

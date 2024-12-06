@@ -3,7 +3,7 @@ import { CreateMemberCategoryDto } from './dto/create-member-category.dto';
 import { UpdateMemberCategoryDto } from './dto/update-member-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberCategory } from './entities/member-category.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, DeleteResult, Repository } from 'typeorm';
 import { CustomUtils } from 'src/publicComponents/utils';
 import { Constraint } from 'src/publicComponents/constraint';
 import { MemberCategorySite } from 'src/member-site/entities/member-category-member-site';
@@ -90,53 +90,58 @@ export class MemberCategoryService {
     }
 
     // 트랜잭션으로 묶기
-    const queryRunner = this.dataSource.createQueryRunner();
+    // const queryRunner = this.dataSource.createQueryRunner();
 
-    updateMemberCategoryDto = queryRunner.manager.create(MemberCategory, updateMemberCategoryDto);
+    // updateMemberCategoryDto = queryRunner.manager.create(MemberCategory, updateMemberCategoryDto);
 
-    // lets now open a new transaction:
-    await queryRunner.startTransaction();
-    try {
-      // 사이트 업데이트 하고
-      await queryRunner.manager.update(
-        MemberCategory,
-        {
-          MemberCategoryId : updateMemberCategoryDto.MemberCategoryId,
-        },
-        {
-          Name: updateMemberCategoryDto.Name,
-          // Sequence : updateMemberCategoryDto.se          
-        },
-      );
+    // // lets now open a new transaction:
+    // await queryRunner.startTransaction();
+    // try {
+    //   // 사이트 업데이트 하고
+    //   await queryRunner.manager.update(
+    //     MemberCategory,
+    //     {
+    //       MemberCategoryId : updateMemberCategoryDto.MemberCategoryId,
+    //     },
+    //     {
+    //       Name: updateMemberCategoryDto.Name,
+    //       // Sequence : updateMemberCategoryDto.se          
+    //     },
+    //   );
 
-      //  카테고리 사이트 연결 리스트 삭제 후 다시 만들기
-      await queryRunner.manager.delete(MemberCategorySite, {
-        MemberCategoryId : updateMemberCategoryDto.MemberCategoryId
-      });
+    //   //  카테고리 사이트 연결 리스트 삭제 후 다시 만들기
+    //   await queryRunner.manager.delete(MemberCategorySite, {
+    //     MemberCategoryId : updateMemberCategoryDto.MemberCategoryId
+    //   });
 
-      queryRunner.manager.insert(MemberCategorySite, this.mcsRepo.create(updateMemberCategoryDto.Sites));
+    //   queryRunner.manager.insert(MemberCategorySite, this.mcsRepo.create(updateMemberCategoryDto.Sites));
 
-      // commit transaction now:
-      await queryRunner.commitTransaction();
-      res = true;
-    } catch (err) {
-      // since we have errors let's rollback changes we made
-      await queryRunner.rollbackTransaction();
-      throw new HttpException(
-        {
-          errCode: 22,
-          error: 'An error occured during change',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    } finally {
-      // you need to release query runner which is manually created:
-      await queryRunner.release();
-    }
-    return res;
+    //   // commit transaction now:
+    //   await queryRunner.commitTransaction();
+    //   res = true;
+    // } catch (err) {
+    //   // since we have errors let's rollback changes we made
+    //   await queryRunner.rollbackTransaction();
+    //   throw new HttpException(
+    //     {
+    //       errCode: 22,
+    //       error: 'An error occured during change',
+    //     },
+    //     HttpStatus.INTERNAL_SERVER_ERROR,
+    //   );
+    // } finally {
+    //   // you need to release query runner which is manually created:
+    //   await queryRunner.release();
+    // }
+    // return res;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} memberCategory`;
+  remove(id: string) : Promise<DeleteResult> {
+    const res = this.mcRepo.delete(
+      {
+        MemberCategoryId : id
+      }
+    );
+    return res;
   }
 }
