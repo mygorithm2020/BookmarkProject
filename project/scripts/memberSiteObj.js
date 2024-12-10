@@ -9,16 +9,16 @@ export class MemberSite {
     CreatedDate;
     Sites;
 
-    // 카테고리 조회
-    async getMemCategory(){
-        const resData = await ApiRequest.axiosGet("member-category");
+    // 사이트 조회
+    async getMemSite(){
+        const resData = await ApiRequest.axiosGet("member-site");
         console.log(resData);
         return resData;
     }
 
-    // 카테고리 추가
-    async addMemCategory(name){
-        const resData = await ApiRequest.axiosPost("member-category", 
+    // 추가
+    async addMemSite(name){
+        const resData = await ApiRequest.axiosPost("member-site", 
             {Name : name}
         );
         if (resData.errCode){
@@ -33,14 +33,19 @@ export class MemberSite {
 
     }
 
-    // 카테고리 수정
-    updateMemCategory(body){
+    // 수정
+    updateMemSite(body){
         let data = ApiRequest.axiosPatch("member-category", body);
 
     }
 
-    // 카테고리 삭제
-    async removeMemCategory(id){
+    // 연결된 카테고리 수정
+    updateMemCategorySite(body){
+        let data = ApiRequest.axiosPut("member-site", body);
+    }
+
+    // 삭제
+    async removeMemSite(id){
         let res = await ApiRequest.axiosDelete(`member-category/${id}`);
         if (res){
 

@@ -39,14 +39,22 @@ select * from ta_site order by views;
 -- UPDATE TA_Site p1 SET p1.IsDeleted= 1 WHERE p1.SiteId IN 
 --     (SELECT p2.SiteId from (SELECT * FROM TA_Site) p2 WHERE p2.createdDate > '2024-08-05');
 
-select * from ta_category;
+show tables
+describe ta_category
+
+select * from ta_site where isDeleted = 0
+
+INSERT INTO ta_membersite VALUES('7592eb69ed58470fb668d38a185088e6', '', 'test', 'https://miniwebtool.com/ko/guid-uuid-generator/', '3cf1c866d24e4eafa4ff972ee8d2a7a1', null, null, UTC_TIMESTAMP, UTC_TIMESTAMP)
+select * from ta_membersite;
+select * from ta_membercategory;
+select * from ta_member;
 select * from ta_recategorysite;
 select * from ta_site where img = 'favicon.ico'
 update ta_site set IPAddress = '1' where img = ''
 
 select * from ta_site where SiteId = '6618441af53d42e6ae0ec4d2ce993fe3'
+select * from TA_MemberCategory
 
-DELETE from ta_AuthToken WHERE TokenId = 51
 select * from ta_member
 select * from ta_AuthToken where Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJWIjoiOXQvRWtGa2FUMUJINzJvaUZNR2wxUVNsSkdLQU9ETVVHN0RpZkxtcjJweGFGVjlJUWd2OTR5QzN6T3NXNTVaSG9nd2IiLCJpYXQiOjE3MjYwMTg0NDQsImV4cCI6MTcyNjAxODUwNH0.QKRxYtWYAuAVDMm0TKpZjrQwjw0SDkfvzWi0VUAzrsg'
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJEVCI6IjIwMjQtMDktMTFUMDE6MzQ6MDQuMDAwWiIsImlhdCI6MTcyNjAxODQ0NCwiZXhwIjoxNzI2MDkwNDQ0fQ.Dn9ioc7xch5aNH9F_LLQq1Q6WBWyq0msX7Or1IiPhl0

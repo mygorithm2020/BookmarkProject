@@ -53,7 +53,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
 
     try {
       // 파일에 기록하는 부분 추가
-      const logData = JSON.stringify(log);
+      const logData = JSON.stringify(log) + ",";
       console.log(logData);
       const logDate =
         log.timeStamp.getUTCFullYear() +

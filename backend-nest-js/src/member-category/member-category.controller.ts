@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req, Put } from '@nestjs/common';
 import { MemberCategoryService } from './member-category.service';
 import { CreateMemberCategoryDto } from './dto/create-member-category.dto';
 import { UpdateMemberCategoryDto } from './dto/update-member-category.dto';
@@ -26,14 +26,25 @@ export class MemberCategoryController {
 
   @Patch()
   async update(@Body() updateMemberCategoryDto: UpdateMemberCategoryDto) {
-    if (await this.memberCategoryService.update(updateMemberCategoryDto)){
+    if ((await this.memberCategoryService.update(updateMemberCategoryDto)).affected > 0){
       return updateMemberCategoryDto.MemberCategoryId;
     }
     return null;
   }
 
+  @Put("/site")
+  async updateReCategory(@Body() updateMemberCategoryDto: UpdateMemberCategoryDto) {
+    if(await this.memberCategoryService.updateMemberCategorySite(updateMemberCategoryDto)){
+      return updateMemberCategoryDto.MemberCategoryId;
+    }    
+    return null;
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return (await this.memberCategoryService.remove(id)).affected;
+    if ((await this.memberCategoryService.remove(id)).affected > 0){
+      return id;
+    }
+    return null;
   }
 }

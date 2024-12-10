@@ -81,6 +81,7 @@ async function setCategoryPage(){
             return 1;
         }
         if (a.Kind === b.Kind){
+            return 0;
             if (a.Status < b.Status){
                 return 1;
             }

@@ -3,7 +3,7 @@ import { CreateMemberCategoryDto } from './dto/create-member-category.dto';
 import { UpdateMemberCategoryDto } from './dto/update-member-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MemberCategory } from './entities/member-category.entity';
-import { DataSource, DeleteResult, Repository } from 'typeorm';
+import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CustomUtils } from 'src/publicComponents/utils';
 import { Constraint } from 'src/publicComponents/constraint';
 import { MemberCategorySite } from 'src/member-site/entities/member-category-member-site';
@@ -99,46 +99,78 @@ export class MemberCategoryService {
     return `This action returns a #${id} memberCategory`;
   }
 
-  async update(updateMemberCategoryDto: UpdateMemberCategoryDto) : Promise<boolean> {
-    let res = false;
-
-    if (!updateMemberCategoryDto.Name){
+  async update(updateMemberCategoryDto: UpdateMemberCategoryDto) : Promise<UpdateResult> {
+    if (!updateMemberCategoryDto.MemberCategoryId){
       throw new HttpException(
         {
           errCode: 21,
-          error: 'Missing required value',
+          error: "Missing required value",
         },
         HttpStatus.BAD_REQUEST,
       );
-
     }
+
+    if (updateMemberCategoryDto.Name && updateMemberCategoryDto.Name.length > 30){
+      throw new HttpException(
+        {
+          errCode: 22,
+          error: "too long name",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const res = this.mcRepo.update(
+      {MemberCategoryId : updateMemberCategoryDto.MemberCategoryId},
+      {Name : updateMemberCategoryDto.Name}
+    )
+    return res;
+  }
+
+  async updateMemberCategorySite(updateMemberCategoryDto: UpdateMemberCategoryDto) : Promise<boolean>{
+
+    if (!updateMemberCategoryDto.MemberCategoryId){
+      throw new HttpException(
+        {
+          errCode: 21,
+          error: "Missing required value",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!updateMemberCategoryDto.Sites){
+      throw new HttpException(
+        {
+          errCode: 22,
+          error: "Missing required value",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    let res = false;
 
     // 트랜잭션으로 묶기
     const queryRunner = this.dataSource.createQueryRunner();
 
-    updateMemberCategoryDto = queryRunner.manager.create(MemberCategory, updateMemberCategoryDto);
-
     // // lets now open a new transaction:
     await queryRunner.startTransaction();
     try {
-      // 사이트 업데이트 하고
-      await queryRunner.manager.update(
-        MemberCategory,
-        {
-          MemberCategoryId : updateMemberCategoryDto.MemberCategoryId,
-        },
-        {
-          Name: updateMemberCategoryDto.Name,
-          // Sequence : updateMemberCategoryDto.se          
-        },
-      );
-
       //  카테고리 사이트 연결 리스트 삭제 후 다시 만들기
       await queryRunner.manager.delete(MemberCategorySite, {
         MemberCategoryId : updateMemberCategoryDto.MemberCategoryId
       });
 
-      queryRunner.manager.insert(MemberCategorySite, this.mcsRepo.create(updateMemberCategoryDto.Sites));
+      let tempMemCategorySites = [];
+      for(const one of updateMemberCategoryDto.Sites){
+        tempMemCategorySites.push({
+          MemberCategoryId : updateMemberCategoryDto.MemberCategoryId,
+          MemberSiteId : one.MemberSiteId
+        })
+      }
+      
+      queryRunner.manager.insert(MemberCategorySite, this.mcsRepo.create(tempMemCategorySites));
 
       // commit transaction now:
       await queryRunner.commitTransaction();
@@ -148,7 +180,7 @@ export class MemberCategoryService {
       await queryRunner.rollbackTransaction();
       throw new HttpException(
         {
-          errCode: 22,
+          errCode: 23,
           error: 'An error occured during change',
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -158,6 +190,7 @@ export class MemberCategoryService {
       await queryRunner.release();
     }
     return res;
+
   }
 
   remove(id: string) : Promise<DeleteResult> {
@@ -166,6 +199,9 @@ export class MemberCategoryService {
         MemberCategoryId : id
       }
     );
+
+    // 릴레이션도 삭제
+    
     return res;
   }
 }

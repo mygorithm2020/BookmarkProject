@@ -6,6 +6,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryColumn,
 } from 'typeorm';
 
@@ -32,17 +33,20 @@ export class MemberCategory {
     })
     CreatedDate: Date;
 
-    @ManyToMany((t) => MemberCategorySite) //, (category) => category.CategoryId
-    @JoinTable({
-      name: 'TA_ReMemberCategoryMemberSite',
-      joinColumn: {
-        name: 'MemberCategoryId',
-        referencedColumnName: 'MemberCategoryId',
-      },
-      inverseJoinColumn: {
-        name: 'MemberSiteId',
-        referencedColumnName: 'MemberSiteId', //타겟 테이블의 id값
-      },
-    })
+    @OneToMany(() => MemberCategorySite, (memCaSi) => memCaSi.Category)
     Sites: MemberSite[];
+
+    // @ManyToMany(() => MemberSite) //, (category) => category.CategoryId
+    // @JoinTable({
+    //   name: 'TA_ReMemberCategoryMemberSite',
+    //   joinColumn: {
+    //     name: 'MemberCategoryId',
+    //     referencedColumnName: 'MemberCategoryId',
+    //   },
+    //   inverseJoinColumn: {
+    //     name: 'MemberSiteId',
+    //     referencedColumnName: 'MemberSiteId', //타겟 테이블의 id값
+    //   },
+    // })
+    // Sites: MemberSite[];
 }

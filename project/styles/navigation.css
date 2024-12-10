@@ -75,7 +75,7 @@ nav a:hover {
 
 nav .selected {
     font-weight: bold;
-    font-size: calc(0.9rem + 0.2vw + 0.2vh);
+    /* font-size: calc(0.9rem + 0.2vw + 0.2vh); */
 }
 
 #main-nav-box{
@@ -93,7 +93,7 @@ nav .selected {
 }
 
 #nav_list_box {
-    font-size: calc(0.7rem + 0.2vw + 0.2vh);
+    font-size: calc(0.75rem + 0.2vw + 0.2vh);
     display: flex;
     justify-content: space-around;
     flex-direction: row;
@@ -103,7 +103,7 @@ nav .selected {
 }
 
 #nav_list_box > li {
-    flex: 1 0 14%;
+    flex: 1 0 15%;
     display: inline-block;
     margin: 5px; 
     padding: 4px;

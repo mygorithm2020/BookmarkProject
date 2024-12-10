@@ -1,3 +1,5 @@
 export class CreateMemberSiteDto {
-    MemberId: string;
+    
+    Name : string;
+    URL : string;
 }

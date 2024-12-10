@@ -41,7 +41,7 @@ export class LoggingInterceptor implements NestInterceptor {
       orgin: req.headers['origin'],
       userAgent: req.headers['user-agent'],
     };
-    const logData = JSON.stringify(log);
+    const logData = JSON.stringify(log) +",";
     console.log(logData);
     const logDate =
       log.timeStamp.getUTCFullYear() +
@@ -70,7 +70,7 @@ export class LoggingInterceptor implements NestInterceptor {
           logKey: key,
           status: res.statusCode,
         };
-        const resLogData = JSON.stringify(resLog);
+        const resLogData = JSON.stringify(resLog) + ",";
         console.log(resLogData);
         this.fAdapter.writeLog(
           resLogData,

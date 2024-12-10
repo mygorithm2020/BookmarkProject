@@ -1,10 +1,15 @@
 import { MemberCategory } from "./memberCategoryObj.js";
+import { MemberSite } from "./memberSiteObj.js";
 
 let curUrl = new URL(document.location.toString());
 let pageKey = curUrl.searchParams.get("key");
 
 const siteMapTextEl = document.querySelector(".site-map-text");
 const mainContentEl = document.querySelector("#main_content01");
+
+
+const memCa = new MemberCategory();
+const memSite = new MemberSite();
 
 switch (pageKey){
     case "favorite" :
@@ -25,19 +30,26 @@ switch (pageKey){
         break;
     default:
         console.log("default");
+        setFavorite();
         break;
 }
+
+
 
 
 async function setFavorite(){
     document.querySelector(".site-map-text").textContent = "즐겨찾기";
     // 데이터 조회
-    const memCa = new MemberCategory();
-    const memCaList = await memCa.getMemCategory();
+    
+    const memCategories = await memCa.getMemCategory();
 
     // 화면 표출
-    mainContentEl.insertAdjacentHTML("beforeend", showMemCategory(memCaList));
-    ;
+    mainContentEl.insertAdjacentHTML("beforeend", showMemCategory(memCategories));
+
+    const memSites = await memSite.getMemSite();
+    mainContentEl.insertAdjacentHTML("beforeend", showMemSite(memSites));
+
+    
 }
 
 function showMemCategory(memCaList){
@@ -67,4 +79,10 @@ function showMemCategory(memCaList){
         </ul>
     </fieldset>`;
     return res;
+}
+
+function showMemSite(memSites){
+    let res = "";
+    return res;
+    
 }

@@ -11,7 +11,7 @@ import { Constraint } from 'src/publicComponents/constraint';
 import { ApiClient } from 'src/publicComponents/apiClient';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MemberSite, MemberCategory, MemberCategorySite, ]), HttpModule],
+  imports: [TypeOrmModule.forFeature([MemberCategorySite, MemberSite, MemberCategory,]), HttpModule],
   controllers: [MemberSiteController],
   providers: [MemberSiteService, CustomUtils, Constraint, ApiClient, FileAdapter],
 })

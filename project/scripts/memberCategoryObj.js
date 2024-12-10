@@ -39,6 +39,11 @@ export class MemberCategory {
 
     }
 
+    // 연결된 사이트 수정
+    updateMemCategorySite(body){
+        let data = ApiRequest.axiosPut("member-category", body);
+    }
+
     // 카테고리 삭제
     async removeMemCategory(id){
         let res = await ApiRequest.axiosDelete(`member-category/${id}`);

@@ -16,11 +16,11 @@ export class MemberCategorySite {
   @Column()
   CreatedDate: Date;
 
-  @ManyToOne((type) => MemberCategory, (category) => category.MemberCategoryId)
+  @ManyToOne(() => MemberCategory, (category) => category.Sites)
   @JoinColumn({ name: 'MemberCategoryId', referencedColumnName: 'MemberCategoryId' })
   Category: MemberCategory;
 
-  // @ManyToOne((type) => MemberSite, (site) => site.MemberSiteId)
+  // @ManyToOne(() => MemberSite, (site) => site.Categories)
   // @JoinColumn({ name: 'MemberSiteId', referencedColumnName: 'MemberSiteId' })
-  // MemSite: MemberSite;
+  // Site: MemberSite;
 }

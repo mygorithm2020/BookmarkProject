@@ -11,7 +11,7 @@ import { MemberCategorySite } from 'src/member-site/entities/member-category-mem
 import { MemberSite } from 'src/member-site/entities/member-site.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MemberSite, MemberCategory, MemberCategorySite, ]), HttpModule],
+  imports: [TypeOrmModule.forFeature([MemberCategorySite, MemberSite, MemberCategory, ]), HttpModule],
   controllers: [MemberCategoryController],
   providers: [MemberCategoryService, CustomUtils, Constraint, ApiClient, FileAdapter],
 })

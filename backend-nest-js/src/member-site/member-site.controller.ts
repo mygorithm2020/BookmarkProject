@@ -1,20 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseGuards, Put } from '@nestjs/common';
 import { MemberSiteService } from './member-site.service';
 import { CreateMemberSiteDto } from './dto/create-member-site.dto';
 import { UpdateMemberSiteDto } from './dto/update-member-site.dto';
+import { CustomAuthGuard } from 'src/middleware/auth.guard';
+
 
 @Controller('member-site')
+@UseGuards(CustomAuthGuard)
 export class MemberSiteController {
   constructor(private readonly memberSiteService: MemberSiteService) {}
 
   @Post()
-  create(@Body() createMemberSiteDto: CreateMemberSiteDto) {
-    return this.memberSiteService.create(createMemberSiteDto);
+  create(@Req() req: Request, @Body() createMemberSiteDto: CreateMemberSiteDto) {
+    return this.memberSiteService.create(JSON.parse(req["user"]).I, createMemberSiteDto);
   }
 
   @Get()
-  findAllByMember(@Query('memberId') memberId: string) {
-    return this.memberSiteService.findAll(memberId);
+  findAllByMember(@Req() req: Request) {
+    return this.memberSiteService.findAll(JSON.parse(req["user"]).I);
   }
 
   @Get(':id')
@@ -22,13 +25,27 @@ export class MemberSiteController {
     return this.memberSiteService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMemberSiteDto: UpdateMemberSiteDto) {
-    return this.memberSiteService.update(+id, updateMemberSiteDto);
+  @Patch()
+  async update(@Body() updateMemberSiteDto: UpdateMemberSiteDto) {
+    if ((await this.memberSiteService.update(updateMemberSiteDto)).affected > 0){
+      return updateMemberSiteDto.MemberSiteId;
+    }
+    return null;
+  }
+
+  @Put("/category")
+  async updateReCategory(@Body() updateMemberSiteDto: UpdateMemberSiteDto) {
+    if (await this.memberSiteService.updateMemberCategorySite(updateMemberSiteDto)){
+      return updateMemberSiteDto.MemberSiteId;
+    }
+    return null;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.memberSiteService.remove(id);
+  async remove(@Param('id') id: string) {
+    if ((await this.memberSiteService.remove(id)).affected > 0){
+      return id;
+    }
+    return null;
   }
 }
