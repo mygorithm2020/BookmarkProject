@@ -160,20 +160,6 @@ export class Category{
 
     async updateCategoryAdmin(category){
         let data = ApiRequest.axiosPatch("/category/admin", category);
-        
-        // let data = await axios.patch(`${this.API_HOST}/category/admin`, category)
-        // .then((result) => {
-        //     console.log(result); 
-        //     return result.data;   
-        // })
-        // .catch((error) => {
-        //     console.error(error);            
-        //     if (error.code === "ERR_NETWORK"){
-        //         // 현재 이용 불가능한 무언가 띄우기...
-        //         // alert("현재 서버 점검 중으로 이용할 수 없습니다.")                
-        //     }
-        //     return error.response.data;
-        // });
         return data;
     }
 
@@ -196,48 +182,11 @@ export class Category{
             });
         }
         
-
-
-        // 카테고리 불러오기
-        // let data = axios.get(`${this.API_HOST}/category/admin`, { withCredentials: true })
-        // .then((result) => {
-        //     console.log(result);
-        //     return result.data;
-            
-        // })
-        // .catch((error) => {
-        //     console.error(error);
-        //     if (error.code === "ERR_NETWORK"){
-        //         // 현재 이용 불가능한 무언가 띄우기...
-        //         // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-        //         document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
-
-        //     }
-        //     return null;
-        // });
-        
         return data;
     }
 
     getCategoryOneAdmin(categoryId){
-        let data = ApiRequest.axiosGet(`/category/admin/${categoryId}`);
-        // 카테고리 불러오기
-        // let data = axios.get(`${this.API_HOST}/category/admin/${categoryId}`)
-        // .then((result) => {
-        //     console.log(result);
-        //     return result.data;            
-        // })
-        // .catch((error) => {
-        //     console.error(error);
-        //     if (error.code === "ERR_NETWORK"){
-        //         // 현재 이용 불가능한 무언가 띄우기...
-        //         // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-        //         document.querySelector("main").innerHTML = "<h2 id='server_check'>현재 서버 점검 중으로 이용할 수 없습니다.</h2>";
-
-        //     }
-        //     return null;
-        // });
-        
+        let data = ApiRequest.axiosGet(`/category/admin/${categoryId}`);        
         return data;
     }
 

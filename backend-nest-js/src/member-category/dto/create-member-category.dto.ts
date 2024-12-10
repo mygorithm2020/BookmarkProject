@@ -7,7 +7,6 @@ export class CreateMemberCategoryDto {
     }
 
     Name: string;
-    MemberId : string;
 
     getEntity(obj : CreateMemberCategoryDto) : MemberCategory{
         const result : MemberCategory = new MemberCategory();

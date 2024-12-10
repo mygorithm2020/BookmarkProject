@@ -264,7 +264,6 @@ export class ApiRequest {
                         window.location.href = "login.html";
                     }
                     return;
-                    break;
                 // case 1:
                 //     alert("내부 오류가 발생했습니다.");
                 //     break;

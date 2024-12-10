@@ -1,20 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req } from '@nestjs/common';
 import { MemberCategoryService } from './member-category.service';
 import { CreateMemberCategoryDto } from './dto/create-member-category.dto';
 import { UpdateMemberCategoryDto } from './dto/update-member-category.dto';
+import { CustomAuthGuard } from 'src/middleware/auth.guard';
 
+@UseGuards(CustomAuthGuard)
 @Controller('member-category')
 export class MemberCategoryController {
   constructor(private readonly memberCategoryService: MemberCategoryService) {}
 
   @Post()
-  create(@Body() createMemberCategoryDto: CreateMemberCategoryDto) {
-    return this.memberCategoryService.create(createMemberCategoryDto);
+  create(@Req() req: Request, @Body() createMemberCategoryDto: CreateMemberCategoryDto) {
+    return this.memberCategoryService.create(JSON.parse(req["user"]).I, createMemberCategoryDto);
   }
 
   @Get()
-  findAllByMember(@Query('memberId') memberId: string) {
-    return this.memberCategoryService.findAll(memberId);
+  findAllByMember(@Req() req: Request) {
+    return this.memberCategoryService.findAll(JSON.parse(req["user"]).I);
   }
 
   @Get(':id')
@@ -23,8 +25,11 @@ export class MemberCategoryController {
   }
 
   @Patch()
-  update(@Body() updateMemberCategoryDto: UpdateMemberCategoryDto) {
-    return this.memberCategoryService.update(updateMemberCategoryDto);
+  async update(@Body() updateMemberCategoryDto: UpdateMemberCategoryDto) {
+    if (await this.memberCategoryService.update(updateMemberCategoryDto)){
+      return updateMemberCategoryDto.MemberCategoryId;
+    }
+    return null;
   }
 
   @Delete(':id')

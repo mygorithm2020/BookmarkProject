@@ -20,8 +20,8 @@ export class MemberCategoryService {
     private dataSource: DataSource,
   ) {}
   
-  async create(memCate: CreateMemberCategoryDto) {
-    if (!memCate.MemberId || !memCate.Name){
+  async create(memberId, memCate: CreateMemberCategoryDto) {
+    if (!memberId || !memCate.Name){
       throw new HttpException(
         {
           errCode: 21,
@@ -30,6 +30,16 @@ export class MemberCategoryService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    if (memCate.Name.length > 31){
+      throw new HttpException(
+        {
+          errCode: 22,
+          error: "too long category name",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     // 개수 제한 무료버전은 최대 5개
     const newCategory = this.mcRepo.create(memCate);
     newCategory.MemberCategoryId = this.customUtils.get32UuId();
@@ -53,6 +63,18 @@ export class MemberCategoryService {
   }
 
   async findAll(memberId : string) : Promise<MemberCategory[]> {
+
+    if(!memberId){
+      throw new HttpException(
+        {
+          errCode: 21,
+          error: "Missing required value",
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+
+    }
+
     const categories = await this.mcRepo.find({
       select: {
         MemberCategoryId : true,
@@ -77,7 +99,7 @@ export class MemberCategoryService {
     return `This action returns a #${id} memberCategory`;
   }
 
-  async update(updateMemberCategoryDto: UpdateMemberCategoryDto) {
+  async update(updateMemberCategoryDto: UpdateMemberCategoryDto) : Promise<boolean> {
     let res = false;
 
     if (!updateMemberCategoryDto.Name){
