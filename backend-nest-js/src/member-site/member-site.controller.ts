@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { MemberSiteService } from './member-site.service';
 import { CreateMemberSiteDto } from './dto/create-member-site.dto';
 import { UpdateMemberSiteDto } from './dto/update-member-site.dto';
@@ -13,8 +13,8 @@ export class MemberSiteController {
   }
 
   @Get()
-  findAll() {
-    return this.memberSiteService.findAll();
+  findAllByMember(@Query('memberId') memberId: string) {
+    return this.memberSiteService.findAll(memberId);
   }
 
   @Get(':id')
@@ -29,6 +29,6 @@ export class MemberSiteController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.memberSiteService.remove(+id);
+    return this.memberSiteService.remove(id);
   }
 }

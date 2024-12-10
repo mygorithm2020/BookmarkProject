@@ -6,10 +6,13 @@ import { MemberCategory } from 'src/member-category/entities/member-category.ent
 import { MemberCategorySite } from './entities/member-category-member-site';
 import { MemberSite } from './entities/member-site.entity';
 import { HttpModule } from '@nestjs/axios';
+import { CustomUtils, FileAdapter } from 'src/publicComponents/utils';
+import { Constraint } from 'src/publicComponents/constraint';
+import { ApiClient } from 'src/publicComponents/apiClient';
 
 @Module({
   imports: [TypeOrmModule.forFeature([MemberSite, MemberCategory, MemberCategorySite, ]), HttpModule],
   controllers: [MemberSiteController],
-  providers: [MemberSiteService],
+  providers: [MemberSiteService, CustomUtils, Constraint, ApiClient, FileAdapter],
 })
 export class MemberSiteModule {}

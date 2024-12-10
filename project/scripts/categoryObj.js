@@ -13,6 +13,11 @@ export class Category{
     CreatedDate;
     UpdatedDate;
     Sites;
+
+    static categoryKind = {
+        1 : "행동",
+        2 : "객체",
+    }
     
     childCategories = [];
 
@@ -365,7 +370,8 @@ export class Category{
                   <th>&nbsp;</th>
                   <th>계층</th>
                   <th>이 름</th>
-                  <th>한글 이름</th>                  
+                  <th>한글 이름</th>
+                  <th>종류</th>
                   <th>상태</th>
                   <th>생성 일시</th>
                 </tr>`
@@ -375,7 +381,8 @@ export class Category{
                 <td><a href="categoryDetail.html?key=${categories[i].CategoryId}">${i+1}</a></td>
                 <td>${categories[i].Layer}</td>
                 <td>${categories[i].Name}</td>
-                <td>${categories[i].NameKR}</td>                
+                <td>${categories[i].NameKR}</td>
+                <td>${Category.categoryKind[categories[i].Kind]}</td>
                 <td>${categories[i].Status}</td>
                 <td>${categories[i].CreatedDate}</td>                
             </tr>

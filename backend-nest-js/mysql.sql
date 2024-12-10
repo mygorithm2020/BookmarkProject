@@ -221,10 +221,11 @@ CREATE TABLE TA_Category(
     Layer INT NOT NULL DEFAULT 1 COMMENT "카테고리간의 계층을 의미 1이 최상위 단계",
     Name VARCHAR(32) NOT NULL,
     NameKR VARCHAR(32),
+    Kind INT NOT NULL DEFAULT 1 COMMENT "카테고리의 종류를 구분하기 위한 용도 1 행위 2 객체",
     Status INT NOT NULL default 1 COMMENT "카테고리 등록상태 1:등록, 2: 사용, 3:보류",
     Sequence INT NOT NULL DEFAULT 99999999,
     Views BIGINT default 0,
-    Kind INT NOT NULL DEFAULT 1 COMMENT "카테고리의 종류를 구분하기 위한 용도 1 행위 2 객체",
+    
 
     IsDeleted SMALLINT NOT NULL DEFAULT 0,
     CreatedDate DATETIME NOT NULL default (UTC_TIMESTAMP),

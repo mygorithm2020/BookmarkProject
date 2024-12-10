@@ -22,5 +22,5 @@ export class MemberCategorySite {
 
   // @ManyToOne((type) => MemberSite, (site) => site.MemberSiteId)
   // @JoinColumn({ name: 'MemberSiteId', referencedColumnName: 'MemberSiteId' })
-  // Sites: MemberSite;
+  // MemSite: MemberSite;
 }

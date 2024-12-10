@@ -1,3 +1,4 @@
+import { MemberCategorySite } from 'src/member-site/entities/member-category-member-site';
 import { MemberSite } from 'src/member-site/entities/member-site.entity';
 import {
   Column,
@@ -31,17 +32,17 @@ export class MemberCategory {
     })
     CreatedDate: Date;
 
-    // @ManyToMany((type) => MemberSite) //, (category) => category.CategoryId
-    // @JoinTable({
-    //   name: 'TA_ReMemberCategoryMemberSite',
-    //   joinColumn: {
-    //     name: 'MemberCategoryId',
-    //     referencedColumnName: 'MemberCategoryId',
-    //   },
-    //   inverseJoinColumn: {
-    //     name: 'MemberSiteId',
-    //     referencedColumnName: 'MemberSiteId', //타겟 테이블의 id값
-    //   },
-    // })
-    // MemberSites: MemberSite[];
+    @ManyToMany((t) => MemberCategorySite) //, (category) => category.CategoryId
+    @JoinTable({
+      name: 'TA_ReMemberCategoryMemberSite',
+      joinColumn: {
+        name: 'MemberCategoryId',
+        referencedColumnName: 'MemberCategoryId',
+      },
+      inverseJoinColumn: {
+        name: 'MemberSiteId',
+        referencedColumnName: 'MemberSiteId', //타겟 테이블의 id값
+      },
+    })
+    Sites: MemberSite[];
 }

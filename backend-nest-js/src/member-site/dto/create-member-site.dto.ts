@@ -1,1 +1,3 @@
-export class CreateMemberSiteDto {}
+export class CreateMemberSiteDto {
+    MemberId: string;
+}

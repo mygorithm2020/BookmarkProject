@@ -48,6 +48,13 @@ export class Category {
     nullable: true,
     default: 1,
   })
+  Kind: number;
+
+  @Column({
+    type: 'int',
+    nullable: true,
+    default: 1,
+  })
   Status: number;
 
   @Column()
