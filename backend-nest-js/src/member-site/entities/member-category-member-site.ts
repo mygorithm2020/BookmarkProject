@@ -20,7 +20,7 @@ export class MemberCategorySite {
   @JoinColumn({ name: 'MemberCategoryId', referencedColumnName: 'MemberCategoryId' })
   Category: MemberCategory;
 
-  // @ManyToOne(() => MemberSite, (site) => site.Categories)
-  // @JoinColumn({ name: 'MemberSiteId', referencedColumnName: 'MemberSiteId' })
-  // Site: MemberSite;
+  @ManyToOne(() => MemberSite, (site) => site.Categories)
+  @JoinColumn({ name: 'MemberSiteId', referencedColumnName: 'MemberSiteId' })
+  Site: MemberSite;
 }

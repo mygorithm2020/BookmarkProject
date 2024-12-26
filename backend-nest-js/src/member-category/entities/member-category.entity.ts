@@ -33,20 +33,17 @@ export class MemberCategory {
     })
     CreatedDate: Date;
 
-    @OneToMany(() => MemberCategorySite, (memCaSi) => memCaSi.Category)
+    @ManyToMany(() => MemberSite) //, (category) => category.CategoryId
+    @JoinTable({
+      name: 'TA_ReMemberCategoryMemberSite',
+      joinColumn: {
+        name: 'MemberCategoryId',
+        referencedColumnName: 'MemberCategoryId',
+      },
+      inverseJoinColumn: {
+        name: 'MemberSiteId',
+        referencedColumnName: 'MemberSiteId', //타겟 테이블의 id값
+      },
+    })
     Sites: MemberSite[];
-
-    // @ManyToMany(() => MemberSite) //, (category) => category.CategoryId
-    // @JoinTable({
-    //   name: 'TA_ReMemberCategoryMemberSite',
-    //   joinColumn: {
-    //     name: 'MemberCategoryId',
-    //     referencedColumnName: 'MemberCategoryId',
-    //   },
-    //   inverseJoinColumn: {
-    //     name: 'MemberSiteId',
-    //     referencedColumnName: 'MemberSiteId', //타겟 테이블의 id값
-    //   },
-    // })
-    // Sites: MemberSite[];
 }
