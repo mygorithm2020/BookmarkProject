@@ -25,9 +25,10 @@ categoryEdit.addEventListener("submit", async (target) => {
     const reqData = {
         CategoryId : categoryId
     }
-    reqData.Name = categoryEdit.querySelector("input[name='name").value;
-    reqData.NameKR = categoryEdit.querySelector("input[name='nameKR").value;
-    for (const one of categoryEdit.querySelectorAll("input[name='status")){
+    reqData.Name = categoryEdit.querySelector("input[name='name']").value;
+    reqData.NameKR = categoryEdit.querySelector("input[name='nameKR']").value;
+    reqData.Kind = categoryEdit.querySelector("input[name='kind']").value
+    for (const one of categoryEdit.querySelectorAll("input[name='status']")){
         
         if(one.checked){
             reqData.Status = parseInt(one.value);
@@ -35,6 +36,9 @@ categoryEdit.addEventListener("submit", async (target) => {
         }
     }
 
+    reqData.Kind
+
+    console.log(reqData);
     
     if (!reqData.Name || !reqData.NameKR || !reqData.Status){
         alert("누락된 입력값이 있습니다.");
@@ -100,7 +104,11 @@ function categoryToHtmlAdmin(category){
             </li>
             <li>
                 <label for="layer">계층(1이면 최상단)</label>
-                <input type="number" id="layer" name="layer" value="${category.Layer}">                                                
+                <input type="number" id="layer" name="layer" value="${category.Layer}" required>                                                
+            </li>
+            <li>
+                <label for="layer">종류(1이면 행동/ 2면 객체)</label>
+                <input type="number" id="kind" name="kind" value="${category.Kind}" required min="1" max="2">
             </li>
             <li>
                 <label>상태</label>                        

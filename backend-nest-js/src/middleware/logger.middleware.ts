@@ -76,7 +76,7 @@ export class FirewallMiddleware implements NestMiddleware {
     '::1',
     '127.0.0.1',
     'localhost',
-    '::ffff:220.72.179.212',
+    '::ffff:218.39.50.91',
   ]);
   constructor(
     private readonly cUtil: CustomUtils,

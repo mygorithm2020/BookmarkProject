@@ -16,6 +16,7 @@ import {
 } from 'src/authentication/entities/Auth.constant';
 import { Request } from 'express';
 import { HttpErrorCode } from 'src/publicComponents/ExceptionHandler';
+import { CustomEncrypt } from 'src/publicComponents/utils';
 
 // @Injectable()
 // export class AuthGuard implements CanActivate {
@@ -69,10 +70,11 @@ export class CustomAuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_ACCESS_SECRET,
       });
+      const originPayload = CustomEncrypt.getInstance().decryptAes256(payload.V);
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      console.log(payload);
-      request['user'] = payload;
+      console.log(originPayload);
+      request['user'] = originPayload;
     } catch (err) {
       console.log(err);
       throw new HttpException(

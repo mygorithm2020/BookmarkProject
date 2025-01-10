@@ -51,16 +51,18 @@
         <aside>
             <ul id="my-list">
                 <li><a href="myPage.html?key=favorite">즐겨찾기</a></li>
-                <li><a href="myPage.html?key=manager">관리중인 사이트</a></li>
+                <!-- <li><a href="myPage.html?key=manager">관리중인 사이트</a></li>
                 <li><a href="myPage.html?key=myinfo">정보변경</a></li>
                 <li><a href="myPage.html?key=password">비밀번호 변경</a></li>
-                <li><a href="myPage.html?key=resign">회원 탈퇴</a></li>
+                <li><a href="myPage.html?key=resign">회원 탈퇴</a></li> -->
+                
+                
              </ul>
         </aside>   
         <section id="main_content01">
-            <h2 class="site-map-text">즐겨찾기</h2>
-            <!-- <div class="loading-spinner"></div>             -->
-            <div>
+            <h2 class="site-map-text"></h2>
+            <!-- <div class="loading-spinner"></div>-->
+            <!-- <div>
                 <button>폴더 추가</button>
                 <button>사이트 추가</button>
                 <ul>
@@ -155,7 +157,7 @@
             </div>
 
             <div>
-                <form id="signup-form" action="" method="post">
+                <form id="member-info-change-form" action="" method="post">
                 
                     <label class="labels" for="uemail-f">이메일</label>
                     <span>dsdsdsdds</span>
@@ -176,13 +178,13 @@
                                 <option value="female">여자</option>                    
                             </select>
                         </div>                                
-                        <button id="signup-btn" class="buttons" type="submit">수정</button>    
+                        <button id="member-info-change-btn" class="buttons" type="submit">수정</button>    
                     </div>                      
                 </form>
             </div>
 
             <div>
-                <form id="signup-form" action="" method="post">
+                <form id="pw-change-form" action="" method="post">
                     <div>
                         <label class="labels" for="uemail-f">이메일</label>
                         <span>dsdsdsdds</span>
@@ -193,7 +195,7 @@
                         <div class="container">                    
                             <input type="text" name="auth-code" required>
                             <button id="check-auth-code" class="buttons" type="button">이메일 인증</button>
-                            <!-- 중복 확인은 자동 -->                 
+                                             
                         </div>    
                     </div>
                     <div id="detail-info-box" class="hidden">                        
@@ -205,14 +207,14 @@
                             <label class="labels" for="psw-confirm">새로운 비밀번호 확인</label>
                             <input type="password" placeholder="Enter Password" name="psw-confirm" minlength="6" maxlength="20" required>   
                         </div>    
-                    <button id="signup-btn" class="buttons" type="submit">변경</button>    
+                    <button id="pw-change-btn" class="buttons" type="submit">변경</button>    
                     </div>  
                     
                 </form>
             </div>
 
             <div>
-                <form id="signup-form" action="" method="post">
+                <form id="unregister-form" action="" method="post">
                     <div>
                         <label class="labels" for="uemail-f">이메일</label>
                         <span>dsdsdsdds</span>
@@ -225,11 +227,10 @@
                         <div>
                             회원 탈퇴시 모든 정보가 삭제되며, 다시 복구할 수 없습니다.
                         </div>   
-                    <button id="signup-btn" class="buttons" type="submit">회원 탈퇴</button>    
+                    <button id="unregister-btn" class="buttons" type="submit">회원 탈퇴</button>    
                     </div>                      
                 </form>
-            </div>
-                     
+            </div> -->                     
                
         </section>
     </main>

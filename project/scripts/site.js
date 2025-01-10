@@ -260,80 +260,74 @@ export class Site {
         return data;        
     }
 
-    static async axiosPost(url, body){
-        let data = await axios.post(url, body)
-        .then((result) => {
-            console.log(result); 
-            return result.data;   
-        })
-        .catch((error) => {
-            console.error(error);            
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                alert("현재 서버 점검 중으로 수정할 수 없습니다.");
-            } else if (error.response.data.errCode){
-                // 백엔드에서 미리 처리못한 에러 발생 문의 필요
-                if (error.response.data.errCode === 1){
-                    alert("내부 오류가 발생했습니다.");
-                }
-            }
-            return error.response.data;
-        });
-        return data;
-    }
+    // static async axiosPost(url, body){
+    //     let data = await axios.post(url, body)
+    //     .then((result) => {
+    //         console.log(result); 
+    //         return result.data;   
+    //     })
+    //     .catch((error) => {
+    //         console.error(error);            
+    //         if (error.code === "ERR_NETWORK"){
+    //             // 현재 이용 불가능한 무언가 띄우기...
+    //             // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+    //             alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+    //         } else if (error.response.data.errCode){
+    //             // 백엔드에서 미리 처리못한 에러 발생 문의 필요
+    //             if (error.response.data.errCode === 1){
+    //                 alert("내부 오류가 발생했습니다.");
+    //             }
+    //         }
+    //         return error.response.data;
+    //     });
+    //     return data;
+    // }
 
-    static async axiosGet(url){
-        let data = await axios.get(url,{
-            headers : {
-                authorization : `Bearer ${ACCESSTOKEN}`            
-            },
-        })
-        .then((result) => {
-            console.log(result);
-            return result.data;   
-        })
-        .catch((error) => {
-            console.error(error);            
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                alert("현재 서버 점검 중으로 수정할 수 없습니다.");
-            } else if (error.response.data.errCode){
-                // 백엔드에서 미리 처리못한 에러 발생 문의 필요
-                if (error.response.data.errCode === 1){
-                    alert("내부 오류가 발생했습니다.");
-                }
-            }
-            return error.response.data;
-        });
-        return data;
-    }
+    // static async axiosGet(url){
+    //     let data = await axios.get(url)
+    //     .then((result) => {
+    //         console.log(result);
+    //         return result.data;   
+    //     })
+    //     .catch((error) => {
+    //         console.error(error);            
+    //         if (error.code === "ERR_NETWORK"){
+    //             // 현재 이용 불가능한 무언가 띄우기...
+    //             // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+    //             alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+    //         } else if (error.response.data.errCode){
+    //             // 백엔드에서 미리 처리못한 에러 발생 문의 필요
+    //             if (error.response.data.errCode === 1){
+    //                 alert("내부 오류가 발생했습니다.");
+    //             }
+    //         }
+    //         return error.response.data;
+    //     });
+    //     return data;
+    // }
 
-    static async axiosPut(url, body){
-        let data = await axios.put(url, body)
-        .then((result) => {
-            console.log(result); 
-            return result.data;   
-        })
-        .catch((error) => {
-            console.error(error);            
-            if (error.code === "ERR_NETWORK"){
-                // 현재 이용 불가능한 무언가 띄우기...
-                // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
-                alert("현재 서버 점검 중으로 수정할 수 없습니다.");
-            } else if (error.response.data.errCode){
-                // 백엔드에서 미리 처리못한 에러 발생 문의 필요
-                if (error.response.data.errCode === 1){
-                    alert("내부 오류가 발생했습니다.");
-                }
-            }
-            return error.response.data;
-        });
-        return data;
-    }
-
-    
+    // static async axiosPut(url, body){
+    //     let data = await axios.put(url, body)
+    //     .then((result) => {
+    //         console.log(result); 
+    //         return result.data;   
+    //     })
+    //     .catch((error) => {
+    //         console.error(error);            
+    //         if (error.code === "ERR_NETWORK"){
+    //             // 현재 이용 불가능한 무언가 띄우기...
+    //             // alert("현재 서버 점검 중으로 이용할 수 없습니다.")
+    //             alert("현재 서버 점검 중으로 수정할 수 없습니다.");
+    //         } else if (error.response.data.errCode){
+    //             // 백엔드에서 미리 처리못한 에러 발생 문의 필요
+    //             if (error.response.data.errCode === 1){
+    //                 alert("내부 오류가 발생했습니다.");
+    //             }
+    //         }
+    //         return error.response.data;
+    //     });
+    //     return data;
+    // }   
 
     
 }

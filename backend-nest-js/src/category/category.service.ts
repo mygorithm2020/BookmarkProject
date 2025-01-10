@@ -53,6 +53,7 @@ export class CategoryService {
         NameKR: true,
         Layer: true,
         Sequence: true,
+        Kind : true
       },
       where: {
         IsDeleted: 0,

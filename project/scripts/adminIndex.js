@@ -78,19 +78,29 @@ async function setCategoryPage(){
     Category.categories = await cqdsd.getCategoryAdmin();
     if (Category.categories){
         Category.categories.sort(function(a, b){
-            if (a.Status < b.Status){
+            if (a.Kind > b.Kind){
                 return 1;
             }
-            if (a.Status === b.Status){
+            if (a.Kind === b.Kind){
                 return 0;
+                if (a.Status < b.Status){
+                    return 1;
+                }
+                if (a.Status === b.Status){
+                    return 0;
+                }
+                if (a.Status > b.Status){
+                    return -1;
+                }
             }
-            if (a.Status > b.Status){
+            if (a.Kind < b.Kind){
                 return -1;
-    
             }
-        });
-    }
     
+            
+        });
+        
+    };
     mainContent01El.insertAdjacentHTML("beforeend", cqdsd.listToHtmlForAdmin(cqdsd.transFormCategories(Category.categories)));
     spinner.classList.toggle("cover");
 }
