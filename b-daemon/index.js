@@ -26,6 +26,9 @@ async function batchRegistedStie(){
     // 내가 임의의 사이트를 보내기
     // data = [{URL : "test.com"}]
     //  크롬을 띄워서 해당 사이트 정보 스캔
+    if (!data){
+        return;
+    }
     for (const one of data){
         enrollSite.add(one.URL);
     }
