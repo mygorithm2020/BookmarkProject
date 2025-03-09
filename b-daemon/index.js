@@ -34,12 +34,22 @@ async function batchRegistedStie(){
     }
 
     let cnt = 0;    
+    let updateCnt = 0;
     for (const one of data){                
         const res = new Site(one);        
         cnt += 1;
-        console.log(`${cnt} : ${one.URL} , ${one.Status}`)
+        console.log(`${cnt} : ${one.URL} , ${one.Status}`);
         if (res.Status != 1){
             continue;
+        }        
+
+        
+        console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})    ${parseInt((Date.now() - start)/1000)} 초`);
+        console.log(`자동등록 개수 : ${updateCnt}`);
+        // 생각보다 오래걸려서 일부분씩 하자        
+
+        if (updateCnt > 10){
+            break;
         }        
 
         let tempEnrollSites = new Set();
@@ -195,6 +205,7 @@ async function batchRegistedStie(){
         // 사이트 업데이트
         console.log(JSON.stringify(res));
         if (res.SiteId){
+            updateCnt ++;
             await ApiRequest.axiosPatch("/site/daemon", res);                
         }
 
@@ -210,11 +221,5 @@ async function batchRegistedStie(){
                 }                
             }    
         }
-
-        console.log(`진행률 : ${parseInt(cnt/data.length * 100)}% (${cnt}/${data.length})    ${parseInt((Date.now() - start)/1000)} 초`);        
-        // 생각보다 오래걸려서 일부분씩 하자
-        if (cnt/data.length * 100 > 99){
-            break;
-        }        
     }    
 }
