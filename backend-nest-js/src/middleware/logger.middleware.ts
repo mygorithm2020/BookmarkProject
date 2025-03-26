@@ -105,16 +105,18 @@ export class FirewallMiddleware implements NestMiddleware {
 
     // 허용되지 않은 접근은 여기서 리턴
     // 허용 조건 : ip가 로컬이거나, origin이 맞아야 함
+    // console.log(req.headers);
+    // console.log(req.headers['origin']);
     if (
       this.permittedIP.has(req.ip) ||
-      (req.headers['origin'] && this.permittedOrigin.has(req.headers['origin']))
+      (req.headers['origin'] && this.permittedOrigin.has(req.headers['origin'].trim()))
     ) {
       next();
     } else {
       throw new HttpException(
         {
           code: HttpErrorCode.MiddleAuth,
-          message: 'restricted',
+          message: 'restricted ' + req.ip + req.headers['origin'],
         },
         HttpStatus.UNAUTHORIZED,
       );
