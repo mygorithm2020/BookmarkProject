@@ -70,6 +70,8 @@ export class FirewallMiddleware implements NestMiddleware {
     'https://mygorithm2020.mycafe24.com',
     'https://browseys.site',
     'http://browseys.site',
+    'https://www.browseys.site',
+    'http://www.browseys.site',
   ]);
 
   private readonly permittedIP = new Set([
